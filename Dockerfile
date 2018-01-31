@@ -1,0 +1,1 @@
+FROM chussenot/tiny-server
