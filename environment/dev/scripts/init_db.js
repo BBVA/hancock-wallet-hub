@@ -9,7 +9,7 @@ try {
     let res = [
       collection.drop(),
       collection.createIndex({ 'name': 1 }),
-      collection.insert({ "alias": "covault", "endpoint": "https://covault/request-sign" }),
+      collection.insert({ "alias": "covault", "endpoint": "https://covault/eth/request-sign" }),
       collection.insert({ "alias": "mock", "endpoint": "http://hancock_mock_provider/request-sign" }),
     ];
 

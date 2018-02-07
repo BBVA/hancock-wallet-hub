@@ -10,12 +10,12 @@ import {
   IEthereumContractModel,
 } from '../models/eth';
 
-export function SingTxController(req: Request, res: Response, next: NextFunction) {
+export function SignTxController(req: Request, res: Response, next: NextFunction) {
 
   const body: IApiSignTxRequest = req.body;
 
   domain
-    .singTx(body.rawTx, body.provider)
+    .signTx(body.rawTx, body.provider)
     .then((response: IApiSignTxResponse) => res.send(response))
     .catch(next);
 

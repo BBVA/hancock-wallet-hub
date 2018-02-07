@@ -6,7 +6,7 @@ app:
     base: '/api/v1'
   blockchain:
     eth:
-      host: ganache
+      host:
       port: 8545
   db:
     protocol: mongodb
@@ -16,7 +16,6 @@ app:
     params: ''
     user: ''
     pass: ''
-
     eth:
       database: ETH
       collections:

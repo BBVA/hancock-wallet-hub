@@ -1,0 +1,18 @@
+app:
+  blockchain:
+    eth:
+      host: ETH_HOST
+      port: ETH_PORT
+  db:
+    protocol: DB_PROTO
+    host: DB_HOST
+    port: DB_PORT
+    database: DB_DATABASE
+    user: DB_USER
+    pass: DB_PASS
+
+    eth:
+      database: DB_ETH_DATABASE
+      collections:
+        contracts: DB_ETH_COLL_CONTRACTS
+        providers: DB_ETH_COLL_PROVIDERS

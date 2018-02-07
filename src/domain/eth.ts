@@ -15,7 +15,7 @@ import config from '../utils/config';
 // tslint:disable-next-line:no-var-requires
 const Web3 = require('web3');
 
-export async function singTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
+export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
 
   const providerModel: IEthereumProviderModel | null = await ethDb.getProviderByAlias(provider);
   const sender: string = getSenderFromRawTx(rawTx);

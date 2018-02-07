@@ -3,6 +3,14 @@ app:
   server:
     host: 'https://hancock-wallet-hub-blockchain-demo.kickstartteam.es'
     port: 80
+  blockchain:
+    eth:
+      host: kst-hancock-ms-ganache-cli.blockchainhub-develop
   db:
-    host: # TODO: Set that
-    params: # replicaSet=rs0
+    host: mongo.blockchainhub-develop
+    database: hancock
+    eth:
+      database: hancock
+      collections:
+        contracts: smartcontracts
+        providers: providers
