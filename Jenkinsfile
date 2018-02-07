@@ -1,20 +1,21 @@
-// Please read the documentation about Shuttle's Jenkins Pipelines for further information
-// https://ndbkickstart.atlassian.net/wiki/spaces/XTEAM/pages/153550863/Jenkinsfile+Reference
-
-// Default pipeline for NodeJS
 nodePipeline{
 
-      // Make some custom commands (generate unit tests, etc.)
-      stage("Custom Stage"){
-        container("node"){
-          sh "node --version"
-        }
-      }
+  // TODO: Activate when it works
+  // sonar_shuttle_stage(source: ".", exclusions: "tests/**,raml/**,node_modules/**")
 
-      // Docker build and push. The image will be: registry-dev.kickstartteam.es/PROJECT/REPO_NAME:GIT_COMMIT
-      // It also tag the build with the branch name
-      docker_shuttle_stage()
+  // stage('unit-test'){
+  //   container('node'){
+  //     // sh "make test"
+  //     sh "yarn run test"
+  //   }
+  // }
 
-      // Deploy the image to Kubernetes
-      deploy_shuttle_stage()
+  docker_shuttle_stage()
+  
+  qa_data_shuttle_stage()
+
+  deploy_shuttle_stage()
+  
+  // set2rc_shuttle_stage()
+
 }

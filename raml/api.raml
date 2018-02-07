@@ -1,0 +1,49 @@
+#%RAML 1.0
+---
+title: Hancock Wallet HUB
+version: v1
+baseUri: https://hancock-wallet-hub-blockchain-demo.kickstartteam.es/api/{version}
+mediaType: application/json
+
+documentation:
+ - title: Summary
+   content: !include README.md
+
+securitySchemes:
+  oauth_2_0: !include securitySchemes/oauth_2_0.yml
+
+/health:
+  description: |
+    Healthcheck.
+  get:
+    description: !include docs/get-healthcheck.md
+    responses: !include responses/get-healthcheck.yml
+
+/{dlt_type}:
+  uriParameters:
+    dlt_type:
+      type: string
+
+  /sign-tx:
+    description: |
+      Send a sign request to one of the providers.
+    post:
+      body:
+        application/json:
+          type: !include schemas/eth/sign-tx.json
+          example: !include examples/eth/sign-tx.example
+  
+      description: !include docs/eth/sign-tx.md
+      responses: !include responses/eth/sign-tx.yml
+
+  /send-signed-tx:
+    description: |
+      Sends a signed transaction to the DLT.
+    post:
+      body:
+        application/json:
+          type: !include schemas/eth/send-signed-tx.json
+          example: !include examples/eth/send-signed-tx.example
+  
+      description: !include docs/eth/send-signed-tx.md
+      responses: !include responses/eth/send-signed-tx.yml

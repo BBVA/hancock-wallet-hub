@@ -1,0 +1,27 @@
+env:
+app:
+  server:
+    host:
+    port:
+    base: '/api/v1'
+  blockchain:
+    eth:
+      host: ganache
+      port: 8545
+  db:
+    protocol: mongodb
+    host: ''
+    port: 27017
+    database: ''
+    params: ''
+    user: ''
+    pass: ''
+
+    eth:
+      database: ETH
+      collections:
+        contracts: contracts
+        providers: providers
+  api:
+    signTxResource: '/sign-tx'
+    sendSignedTxResource: '/send-signed-tx'

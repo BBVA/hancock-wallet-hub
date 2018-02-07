@@ -1,0 +1,74 @@
+{
+	"info": {
+		"name": "Hancock Wallet",
+		"_postman_id": "87b48e58-5540-861f-a23a-9bd9c7a5d744",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sign-tx",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"rawTx\": {\n    \"from\": \"0xF33De5370Cc4AF2cF155d0bfEc5aA6888Cfcd9F6\",\n    \"nonce\": \"0x00\",\n    \"gasPrice\": \"0x04a817c800\",\n    \"gasLimit\": \"0x5208\",\n    \"to\": \"0xd452cb5c4ba4c71ef7c14db0d930dc35c4c97ac7\",\n    \"value\": \"0x0de0b6b3a7640000\",\n    \"data\": \"\",\n    \"chainId\": 1\n  },\n  \"provider\": \"covault\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/eth/sign-tx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"eth",
+						"sign-tx"
+					]
+				},
+				"description": "Send a sign request to one of the providers"
+			},
+			"response": []
+		},
+		{
+			"name": "send-signed-tx",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tx\": \"0xf86c808504a817c80082520894d452cb5c4ba4c71ef7c14db0d930dc35c4c97ac7880de0b6b3a76400008026a02f15224e0d6996e7ab7e31d848e1f65eee0eafb941dbfe3d3d35d1951452d316a057a7ac401d5ab83be3dc97771ad9093afcc2f6d08255cbcff308b614cd1bd1c5\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3010/api/v1/eth/send-signed-tx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3010",
+					"path": [
+						"api",
+						"v1",
+						"eth",
+						"send-signed-tx"
+					]
+				},
+				"description": "Send a sign request to one of the providers"
+			},
+			"response": []
+		}
+	]
+}

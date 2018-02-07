@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "id": "http://jsonschema.net",
+  "description": "Sign transaction schema",
+  "properties": {
+    "rawTx": {
+      "type": "object",
+      "description": "Raw transaction which will be signed",
+      "properties": {
+        "from": { "type": "string" },
+        "nonce": { "type": "string" },
+        "gasPrice": { "type": "string" },
+        "gasLimit": { "type": "string" },
+        "to": { "type": "string" },
+        "value": { "type": "string" },
+        "data": { "type": "string" },
+        "chainId": { "type": "integer" }
+      },
+      "required": [ "from", "nonce", "gasPrice", "gasLimit", "to", "value", "data", "chainId" ]
+    },
+    "provider": {
+      "type": "string",
+      "description": "A provider who will sign the transaction"
+    }
+  },
+  "required": [ "rawTx", "provider" ]
+}

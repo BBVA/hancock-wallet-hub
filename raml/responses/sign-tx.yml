@@ -1,0 +1,6 @@
+200:
+  description: Success sign response
+  body:
+    application/json:
+      example: |
+        {}

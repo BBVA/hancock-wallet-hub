@@ -1,0 +1,8 @@
+env: production
+app:
+  server:
+    host: 'https://hancock-wallet-hub-blockchain-demo.kickstartteam.es'
+    port: 80
+  db:
+    host: # TODO: Set that
+    params: # replicaSet=rs0

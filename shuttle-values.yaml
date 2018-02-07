@@ -1,34 +1,19 @@
-# These values define how this microservice is deployed.
-# Please read Reference: https://ndbkickstart.atlassian.net/wiki/spaces/XTEAM/pages/151093276/shuttle-values.yaml+Reference
-
-### The port to expose from your Docker. Required
-### This port is mapped to 80 and 443 once the service is deployed.
 port: 80
-
-### Healthcheck, to know if the service is down and restart it automatically. Required
 healthcheck:
-  type: HTTP
-  http_path: /    # Only if healtchcheck type is HTTP
+  type: http
+  http_path: /api/v1/health
 
-### Resource allocation and top limit. Required
 resources:
   request:
-    cpu: 10m      # 10m for 0.01 CPU. 100m for 0.1 CPU. 1 is for 1 CPU
-    memory: 10Mi  # 10 Mi for 10MB. 500Mi for 500MB. 1Gi for 1024MB
+    cpu: 100m
+    memory: 100Mi
   limit:
-    cpu: 20m
-    memory: 20Mi    
+    cpu: 200m
+    memory: 200Mi
 
-### Forward logs to ElasticSearch and GrayLog. Optional
-forward_logs: false
+forward_logs: true
+monitoring: true
 
-### Monitor your service uptime with prometheus and slack. Optional
-monitoring: false
-slack_receiver:    # Webhook to your Slack Account
-slack_channel:     # Name of the channel
-
-### externalDNS - Use it to create a DNS record. Optional
-### The final URL will be <externalDns>-<namespace>.kickstartteam.es
-externalDns:
-### Enable HTTPS. Optional
-SSL: false
+## only external services
+externalDns: hancock-wallet-hub
+SSL: true

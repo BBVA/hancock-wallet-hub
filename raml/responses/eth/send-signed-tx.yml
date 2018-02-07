@@ -1,0 +1,6 @@
+200:
+  description: Success dlt write response
+  body:
+    application/json:
+      example: |
+        {}
