@@ -5,7 +5,7 @@ app:
     port:
     base: '/api/v1'
   blockchain:
-    eth:
+    ethereum:
       host:
       port: 8545
   db:

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { Collection, Db } from 'mongodb';
-import { IEthereumContractModel, IEthereumProviderModel } from '../models/eth';
+import { IEthereumContractModel, IEthereumProviderModel } from '../models/ethereum';
 import config from '../utils/config';
 import * as db from '../utils/db';
 

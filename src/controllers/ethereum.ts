@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import * as http from 'http';
 import * as url from 'url';
-import * as domain from '../domain/eth';
+import * as domain from '../domain/ethereum';
 import {
   IApiSendSignedTxRequest,
   IApiSendSignedTxResponse,
   IApiSignTxRequest,
   IApiSignTxResponse,
   IEthereumContractModel,
-} from '../models/eth';
+} from '../models/ethereum';
 
 export function SignTxController(req: Request, res: Response, next: NextFunction) {
 
