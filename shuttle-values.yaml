@@ -1,7 +1,7 @@
 port: 80
 healthcheck:
   type: http
-  http_path: /api/v1/health
+  http_path: /health
 
 resources:
   request:
@@ -15,5 +15,5 @@ forward_logs: true
 monitoring: true
 
 ## only external services
-externalDns: hancock-wallet-hub
-SSL: true
+#externalDns: hancock-wallet-hub
+#SSL: true
