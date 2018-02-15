@@ -4,7 +4,7 @@ app:
     host: 'https://hancock-wallet-hub-blockchain-demo.kickstartteam.es'
     port: 80
   blockchain:
-    eth:
+    ethereum:
       host: kst-hancock-ms-ganache-cli.blockchainhub-develop
   db:
     host: mongo.blockchainhub-develop

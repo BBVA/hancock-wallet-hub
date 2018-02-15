@@ -1,6 +1,6 @@
 app:
   blockchain:
-    eth:
+    ethereum:
       host: ETH_HOST
       port: ETH_PORT
   db:

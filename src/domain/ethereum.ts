@@ -1,5 +1,5 @@
 import * as request from 'request-promise-native';
-import * as ethDb from '../db/eth';
+import * as ethDb from '../db/ethereum';
 import {
   IApiSendSignedTxResponse,
   IApiSignTxProviderRequest,
@@ -9,7 +9,7 @@ import {
   IEthereumProviderModel,
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
-} from '../models/eth';
+} from '../models/ethereum';
 import config from '../utils/config';
 
 // tslint:disable-next-line:no-var-requires

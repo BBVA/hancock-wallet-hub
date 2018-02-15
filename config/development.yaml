@@ -4,7 +4,7 @@ app:
     host: 'http://localhost'
     port: 3000
   blockchain:
-    eth:
+    ethereum:
       host: ganache
   db:
     host: mongo

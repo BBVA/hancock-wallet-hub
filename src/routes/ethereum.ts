@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router as ExpressRouter } from 'expres
 import { validate } from 'express-jsonschema';
 import { readFileSync } from 'fs';
 import * as path from 'path';
-import { SendSignedTxController, SignTxController } from '../controllers/eth';
+import { SendSignedTxController, SignTxController } from '../controllers/ethereum';
 import config from '../utils/config';
 
 export const Router = ExpressRouter();
