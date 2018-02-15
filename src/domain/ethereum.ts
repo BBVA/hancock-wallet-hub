@@ -26,7 +26,7 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
 
   const body: IApiSignTxProviderRequest = {
     // tslint:disable-next-line:max-line-length
-    callback: `${config.server.host}:${config.server.port}${config.server.base}/eth${config.api.sendSignedTxResource}`,
+    callback: `${config.server.host}:${config.server.port}${config.server.base}/ethereum${config.api.sendSignedTxResource}`,
     sender,
     tx: rawTx,
   };

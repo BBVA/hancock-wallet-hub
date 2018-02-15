@@ -3,7 +3,7 @@ app:
   server:
     host:
     port:
-    base: '/api/v1'
+    base: '/'
   blockchain:
     ethereum:
       host:
