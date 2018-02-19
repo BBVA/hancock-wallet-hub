@@ -27,8 +27,8 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
   const body: IApiSignTxProviderRequest = {
     // tslint:disable-next-line:max-line-length
     callback: `${config.server.host}:${config.server.port}${config.server.base}/ethereum${config.api.sendSignedTxResource}`,
+    rawTx,
     sender,
-    tx: rawTx,
   };
 
   return request
@@ -42,9 +42,9 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
 
 }
 
-export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse> {
+export async function sendSignedTx(rawTx: string): Promise<IApiSendSignedTxResponse> {
 
-  if (!tx) {
+  if (!rawTx) {
     throw new Error('DEFAULT_ERROR');
   }
 
@@ -52,7 +52,7 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
   const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
 
   return web3.eth
-    .sendSignedTransaction(tx)
+    .sendSignedTransaction(rawTx)
     .then((txReceipt: IEthTransactionReceiptBody) => {
 
       console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);

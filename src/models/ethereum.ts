@@ -35,7 +35,7 @@ export interface IApiSignTxRequest {
 }
 
 export interface IApiSignTxProviderRequest {
-  tx: IEthereumRawTransaction;
+  rawTx: IEthereumRawTransaction;
   sender: ethAddress;
   callback: string;
 }
