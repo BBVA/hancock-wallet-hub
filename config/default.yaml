@@ -5,14 +5,13 @@ app:
     host: 'localhost'
     port: 3000
     base: ''
-    externalBase: '/v1'
   blockchain:
     ethereum:
       host: ganache
       port: 8545
   db:
     protocol: mongodb
-    host: 'localhost'
+    host: mongo
     port: 27017
     database: 'hancock'
     params: ''
@@ -21,7 +20,7 @@ app:
     ethereum:
       database: hancock
       collections:
-        contracts: contracts
+        contracts: smartcontracts
         providers: providers
   api:
     signTxResource: '/sign-tx'

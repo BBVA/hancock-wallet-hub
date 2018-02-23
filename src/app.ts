@@ -1,4 +1,5 @@
 import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import * as express from 'express';
 import * as http from 'http';
 import { AppRouter } from './routes/index';
@@ -12,6 +13,7 @@ export function run() {
     const app = express();
 
     // parse application/json
+    app.use(cors());    
     app.use(bodyParser.json());
 
     app.use(config.server.base, AppRouter);

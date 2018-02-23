@@ -26,12 +26,12 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
 
   const body: IApiSignTxProviderRequest = {
     // tslint:disable-next-line:max-line-length
-    callback: `${config.server.protocol}://${config.server.host}:${config.server.port}${config.server.externalBase}/ethereum${config.api.sendSignedTxResource}`,
+    callback: `${config.server.protocol}://${config.server.host}:${config.server.port}${config.server.base}/ethereum${config.api.sendSignedTxResource}`,
     rawTx,
     sender,
   };
 
-  console.log(JSON.stringify(body));
+  console.log(providerModel.endpoint);
   return request
     .post(providerModel.endpoint,
     {
@@ -52,6 +52,8 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
   const cfg: any = config.blockchain.ethereum;
   const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
 
+  const r = await web3.eth.net.isListening();
+
   return web3.eth
     .sendSignedTransaction(tx)
     .then((txReceipt: IEthTransactionReceiptBody) => {
@@ -60,7 +62,9 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
       return { success: true };
 
     })
-    .catch((error: string) => { throw new Error('DLT_ERROR'); });
+    .catch((error: string) => {
+      throw new Error('DLT_ERROR');
+    });
 
 }
 

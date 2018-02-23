@@ -9,5 +9,5 @@
     "data": "",
     "chainId": 1
   },
-  "provider": "covault"
+  "provider": "signer-local"
 }
