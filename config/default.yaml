@@ -4,6 +4,7 @@ app:
     protocol: 'http'
     host: 'localhost'
     port: 3000
+    externalPort: 3000
     base: ''
     externalBase: ''
   blockchain:
