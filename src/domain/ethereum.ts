@@ -1,7 +1,8 @@
 import * as request from 'request-promise-native';
-import * as ethDb from '../db/ethereum';
+import * as db from '../db/ethereum';
 import {
   IApiSendSignedTxResponse,
+  IApiSendTxResponse,
   IApiSignTxProviderRequest,
   IApiSignTxProviderResponse,
   IApiSignTxResponse,
@@ -17,7 +18,7 @@ const Web3 = require('web3');
 
 export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
 
-  const providerModel: IEthereumProviderModel | null = await ethDb.getProviderByAlias(provider);
+  const providerModel: IEthereumProviderModel | null = await db.getProviderByAlias(provider);
   const sender: string = getSenderFromRawTx(rawTx);
 
   if (!sender || !providerModel) {
@@ -34,12 +35,38 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
   console.log(providerModel.endpoint);
   return request
     .post(providerModel.endpoint,
-    {
-      body,
-      json: true,
-    })
+      {
+        body,
+        json: true,
+      })
     .then((response: IApiSignTxProviderResponse) => response)
     .catch((error: string) => { throw new Error('PROVIDER_ERROR'); });
+
+}
+
+export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
+
+  if (!rawTx) {
+    throw new Error('DEFAULT_ERROR');
+  }
+
+  // TODO: Refactor web3 provider global to all the app
+  const cfg: any = config.blockchain.ethereum;
+  const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
+
+  const r = await web3.eth.net.isListening();
+
+  return web3.eth
+    .sendTransaction(rawTx)
+    .then((txReceipt: IEthTransactionReceiptBody) => {
+
+      console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
+      return { success: true, txReceipt };
+
+    })
+    .catch((error: string) => {
+      throw new Error('DLT_ERROR');
+    });
 
 }
 
@@ -59,7 +86,7 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
     .then((txReceipt: IEthTransactionReceiptBody) => {
 
       console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
-      return { success: true };
+      return { success: true, txReceipt };
 
     })
     .catch((error: string) => {
@@ -71,5 +98,11 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
 function getSenderFromRawTx(rawTx: IEthereumRawTransaction): string {
 
   return rawTx.from;
+
+}
+
+function getReceiverFromRawTx(rawTx: IEthereumRawTransaction): string {
+
+  return rawTx.to;
 
 }

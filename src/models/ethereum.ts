@@ -48,6 +48,16 @@ export interface IApiSignTxResponse {
   success: boolean;
 }
 
+// SendTx Models
+
+export interface IApiSendTxRequest {
+  tx: string;
+}
+
+export interface IApiSendTxResponse {
+  success: boolean;
+}
+
 // SendSignedTx Models
 
 export interface IApiSendSignedTxRequest {
