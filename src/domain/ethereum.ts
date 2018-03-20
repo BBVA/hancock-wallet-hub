@@ -83,13 +83,18 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
 
   return web3.eth
     .sendSignedTransaction(tx)
+    .on('error', (err: string) => {
+      console.error(err);
+      throw new Error('DLT_ERROR');
+    })
     .then((txReceipt: IEthTransactionReceiptBody) => {
 
-      console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
+      console.log(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
       return { success: true, txReceipt };
 
     })
-    .catch((error: string) => {
+    .catch((err: string) => {
+      console.error(err);
       throw new Error('DLT_ERROR');
     });
 
