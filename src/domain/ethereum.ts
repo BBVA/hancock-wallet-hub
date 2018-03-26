@@ -50,23 +50,30 @@ export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
     throw new Error('DEFAULT_ERROR');
   }
 
-  // TODO: Refactor web3 provider global to all the app
-  const cfg: any = config.blockchain.ethereum;
-  const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
+  try {
 
-  const r = await web3.eth.net.isListening();
+    // TODO: Refactor web3 provider global to all the app
+    const cfg: any = config.blockchain.ethereum;
+    const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
 
-  return web3.eth
-    .sendTransaction(rawTx)
-    .then((txReceipt: IEthTransactionReceiptBody) => {
+    const r = await web3.eth.net.isListening();
 
-      console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
-      return { success: true, txReceipt };
+    return web3.eth
+      .sendTransaction(rawTx)
+      .then((txReceipt: IEthTransactionReceiptBody) => {
 
-    })
-    .catch((error: string) => {
-      throw new Error('DLT_ERROR');
-    });
+        console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
+        return { success: true, txReceipt };
+
+      })
+      .catch((err: string) => dltError(err));
+
+  } catch (err) {
+
+    dltError(err);
+    return Promise.reject(err);
+
+   }
 
 }
 
@@ -76,27 +83,33 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
     throw new Error('DEFAULT_ERROR');
   }
 
-  const cfg: any = config.blockchain.ethereum;
-  const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
+  try {
 
-  const r = await web3.eth.net.isListening();
+    const cfg: any = config.blockchain.ethereum;
+    const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
 
-  return web3.eth
-    .sendSignedTransaction(tx)
-    .on('error', (err: string) => {
-      console.error(err);
-      throw new Error('DLT_ERROR');
-    })
-    .then((txReceipt: IEthTransactionReceiptBody) => {
+    const r = await web3.eth.net.isListening();
 
-      console.log(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
-      return { success: true, txReceipt };
+    return web3.eth
+      .sendSignedTransaction(tx)
+      .on('error', (err: string) => {
+        console.error(err);
+        throw new Error('DLT_ERROR');
+      })
+      .then((txReceipt: IEthTransactionReceiptBody) => {
 
-    })
-    .catch((err: string) => {
-      console.error(err);
-      throw new Error('DLT_ERROR');
-    });
+        console.log(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
+        return { success: true, txReceipt };
+
+      })
+      .catch((err: string) => dltError(err));
+
+  } catch (err) {
+
+    dltError(err);
+    return Promise.reject(err);
+
+  }
 
 }
 
@@ -109,5 +122,12 @@ function getSenderFromRawTx(rawTx: IEthereumRawTransaction): string {
 function getReceiverFromRawTx(rawTx: IEthereumRawTransaction): string {
 
   return rawTx.to;
+
+}
+
+function dltError(err: any): Promise<any> {
+
+  console.error(err);
+  throw new Error('DLT_ERROR');
 
 }
