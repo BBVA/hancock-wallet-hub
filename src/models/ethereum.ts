@@ -56,6 +56,7 @@ export interface IApiSendTxRequest {
 
 export interface IApiSendTxResponse {
   success: boolean;
+  txReceipt: IEthTransactionReceiptBody;
 }
 
 // SendSignedTx Models
@@ -66,6 +67,7 @@ export interface IApiSendSignedTxRequest {
 
 export interface IApiSendSignedTxResponse {
   success: boolean;
+  txReceipt: IEthTransactionReceiptBody;
 }
 
 // DLT

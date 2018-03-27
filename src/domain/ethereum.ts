@@ -12,9 +12,7 @@ import {
   IEthTransactionReceiptBody,
 } from '../models/ethereum';
 import config from '../utils/config';
-
-// tslint:disable-next-line:no-var-requires
-const Web3 = require('web3');
+import { getWeb3 } from '../utils/web3';
 
 export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
 
@@ -50,30 +48,22 @@ export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
     throw new Error('DEFAULT_ERROR');
   }
 
-  try {
+  const web3 = await getWeb3();
 
-    // TODO: Refactor web3 provider global to all the app
-    const cfg: any = config.blockchain.ethereum;
-    const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
+  return new Promise<IApiSendTxResponse>((resolve, reject) => {
 
-    const r = await web3.eth.net.isListening();
-
-    return web3.eth
+    web3.eth
       .sendTransaction(rawTx)
+      .on('error', (err: string) => reject(new Error('DLT_ERROR')))
       .then((txReceipt: IEthTransactionReceiptBody) => {
 
         console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
-        return { success: true, txReceipt };
+        resolve({ success: true, txReceipt });
 
       })
-      .catch((err: string) => dltError(err));
+      .catch((err: string) => reject(new Error('DLT_ERROR')));
 
-  } catch (err) {
-
-    dltError(err);
-    return Promise.reject(err);
-
-   }
+  });
 
 }
 
@@ -83,33 +73,22 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
     throw new Error('DEFAULT_ERROR');
   }
 
-  try {
+  const web3 = await getWeb3();
 
-    const cfg: any = config.blockchain.ethereum;
-    const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
+  return new Promise<IApiSendSignedTxResponse>((resolve, reject) => {
 
-    const r = await web3.eth.net.isListening();
-
-    return web3.eth
+    const promise = web3.eth
       .sendSignedTransaction(tx)
-      .on('error', (err: string) => {
-        console.error(err);
-        throw new Error('DLT_ERROR');
-      })
+      .on('error', (err: string) => reject(new Error('DLT_ERROR')))
       .then((txReceipt: IEthTransactionReceiptBody) => {
 
         console.log(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
-        return { success: true, txReceipt };
+        resolve({ success: true, txReceipt });
 
       })
-      .catch((err: string) => dltError(err));
+      .catch((err: string) => reject(new Error('DLT_ERROR')));
 
-  } catch (err) {
-
-    dltError(err);
-    return Promise.reject(err);
-
-  }
+  });
 
 }
 
@@ -122,12 +101,5 @@ function getSenderFromRawTx(rawTx: IEthereumRawTransaction): string {
 function getReceiverFromRawTx(rawTx: IEthereumRawTransaction): string {
 
   return rawTx.to;
-
-}
-
-function dltError(err: any): Promise<any> {
-
-  console.error(err);
-  throw new Error('DLT_ERROR');
 
 }
