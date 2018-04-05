@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "id": "http://jsonschema.net",
+  "description": "Send transaction schema",
+  "properties": {
+    "tx": {
+      "type": "object",
+      "description": "Transaction which will be sent to the DLT"
+    }
+  },
+  "required": [ "tx" ]
+}

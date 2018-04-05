@@ -1,7 +1,8 @@
 import * as request from 'request-promise-native';
-import * as ethDb from '../db/ethereum';
+import * as db from '../db/ethereum';
 import {
   IApiSendSignedTxResponse,
+  IApiSendTxResponse,
   IApiSignTxProviderRequest,
   IApiSignTxProviderResponse,
   IApiSignTxResponse,
@@ -11,13 +12,11 @@ import {
   IEthTransactionReceiptBody,
 } from '../models/ethereum';
 import config from '../utils/config';
-
-// tslint:disable-next-line:no-var-requires
-const Web3 = require('web3');
+import { getWeb3 } from '../utils/web3';
 
 export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
 
-  const providerModel: IEthereumProviderModel | null = await ethDb.getProviderByAlias(provider);
+  const providerModel: IEthereumProviderModel | null = await db.getProviderByAlias(provider);
   const sender: string = getSenderFromRawTx(rawTx);
 
   if (!sender || !providerModel) {
@@ -26,20 +25,45 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
 
   const body: IApiSignTxProviderRequest = {
     // tslint:disable-next-line:max-line-length
-    callback: `${config.server.protocol}://${config.server.host}:${config.server.port}${config.server.externalBase}/ethereum${config.api.sendSignedTxResource}`,
+    callback: `${config.server.protocol}://${config.server.host}:${config.server.externalPort}${config.server.externalBase}/ethereum${config.api.sendSignedTxResource}`,
     rawTx,
     sender,
   };
 
-  console.log(JSON.stringify(body));
+  console.log(providerModel.endpoint);
   return request
     .post(providerModel.endpoint,
-    {
-      body,
-      json: true,
-    })
+      {
+        body,
+        json: true,
+      })
     .then((response: IApiSignTxProviderResponse) => response)
     .catch((error: string) => { throw new Error('PROVIDER_ERROR'); });
+
+}
+
+export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
+
+  if (!rawTx) {
+    throw new Error('DEFAULT_ERROR');
+  }
+
+  const web3 = await getWeb3();
+
+  return new Promise<IApiSendTxResponse>((resolve, reject) => {
+
+    web3.eth
+      .sendTransaction(rawTx)
+      .on('error', (err: string) => reject(new Error('DLT_ERROR')))
+      .then((txReceipt: IEthTransactionReceiptBody) => {
+
+        console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
+        resolve({ success: true, txReceipt });
+
+      })
+      .catch((err: string) => reject(new Error('DLT_ERROR')));
+
+  });
 
 }
 
@@ -49,23 +73,33 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
     throw new Error('DEFAULT_ERROR');
   }
 
-  const cfg: any = config.blockchain.ethereum;
-  const web3 = new Web3(new Web3.providers.WebsocketProvider(`ws://${cfg.host}:${cfg.port}`));
+  const web3 = await getWeb3();
 
-  return web3.eth
-    .sendSignedTransaction(tx)
-    .then((txReceipt: IEthTransactionReceiptBody) => {
+  return new Promise<IApiSendSignedTxResponse>((resolve, reject) => {
 
-      console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
-      return { success: true };
+    const promise = web3.eth
+      .sendSignedTransaction(tx)
+      .on('error', (err: string) => reject(new Error('DLT_ERROR')))
+      .then((txReceipt: IEthTransactionReceiptBody) => {
 
-    })
-    .catch((error: string) => { throw new Error('DLT_ERROR'); });
+        console.log(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
+        resolve({ success: true, txReceipt });
+
+      })
+      .catch((err: string) => reject(new Error('DLT_ERROR')));
+
+  });
 
 }
 
 function getSenderFromRawTx(rawTx: IEthereumRawTransaction): string {
 
   return rawTx.from;
+
+}
+
+function getReceiverFromRawTx(rawTx: IEthereumRawTransaction): string {
+
+  return rawTx.to;
 
 }

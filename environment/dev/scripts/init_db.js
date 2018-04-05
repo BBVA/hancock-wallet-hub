@@ -3,14 +3,15 @@ try {
 
   function initProviders() {
 
-    ethereumDb = db.getSiblingDB("ETH");
+    ethereumDb = db.getSiblingDB("hancock");
     collection = ethereumDb['providers'];
 
     let res = [
       collection.drop(),
       collection.createIndex({ 'name': 1 }),
-      collection.insert({ "alias": "covault", "endpoint": "https://covault/eth/request-sign" }),
-      collection.insert({ "alias": "mock", "endpoint": "http://hancock_mock_provider/request-sign" }),
+      collection.insert({ "alias": "signer-local", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign" }),
+      collection.insert({ "alias": "signer-develop", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign" }),
+      collection.insert({ "alias": "signer-demo", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign" }),      
     ];
 
     printjson(res);

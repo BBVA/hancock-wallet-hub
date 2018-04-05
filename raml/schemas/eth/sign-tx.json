@@ -12,12 +12,13 @@
         "nonce": { "type": "string" },
         "gasPrice": { "type": "string" },
         "gasLimit": { "type": "string" },
+        "gas": { "type": "string" },
         "to": { "type": "string" },
         "value": { "type": "string" },
         "data": { "type": "string" },
         "chainId": { "type": "integer" }
       },
-      "required": [ "from", "nonce", "gasPrice", "gasLimit", "to", "value", "data", "chainId" ]
+      "required": [ "from", "nonce", "gasPrice", "to", "data" ]
     },
     "provider": {
       "type": "string",

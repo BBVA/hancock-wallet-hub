@@ -12,6 +12,8 @@ services:
     ports:
       - "3010:3000"
       - "9229:9229"
+    environment:
+      - HANCOCK_SERVER_HOST=hancock_wallet_hub
     depends_on:
       mongo:
         condition: service_healthy
@@ -37,12 +39,12 @@ services:
       mongo:
         condition: service_healthy
     volumes:
-      - './scripts/:/scripts/'
+      - './scripts/:/scripts/wallet/'
 
 volumes:
   hancock_wallet_hub_mongodb_data:
 
-networks:
-  default:
-    external:
-      name: dev_eth_local_net
+# networks:
+#   default:
+#     external:
+#       name: dev_eth_local_net
