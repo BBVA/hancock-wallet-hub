@@ -1,4 +1,6 @@
-import * as request from 'request-promise-native';
+import {ISigner} from '../signers/iSigner';
+import {CryptvaultSigner} from '../signers/cryptvaultSigner';
+import {Signer} from "../signers/signer";
 import * as db from '../db/ethereum';
 import {
   IApiSendSignedTxResponse,
@@ -11,36 +13,59 @@ import {
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
 } from '../models/ethereum';
-import config from '../utils/config';
 import { getWeb3 } from '../utils/web3';
+import {SIGNERS} from "../types";
 
-export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
-
+export async function getSigner(provider: string): Promise<ISigner> {
   const providerModel: IEthereumProviderModel | null = await db.getProviderByAlias(provider);
-  const sender: string = getSenderFromRawTx(rawTx);
 
-  if (!sender || !providerModel) {
-    throw new Error('DEFAULT_ERROR');
+  console.log(`Provider: ${JSON.stringify(providerModel)}`);
+
+  let signer: ISigner;
+
+  if(providerModel !== null) {
+    switch (providerModel.className) {
+      case SIGNERS.CryptvaultSigner:
+        signer = new CryptvaultSigner();
+        break;
+      case SIGNERS.Signer:
+      default:
+        signer = new Signer(providerModel.endpoint);
+    }
+    return Promise.resolve(signer);
+  } else {
+    return Promise.reject("not found");
   }
 
-  const body: IApiSignTxProviderRequest = {
-    // tslint:disable-next-line:max-line-length
-    callback: `${config.server.protocol}://${config.server.host}:${config.server.externalPort}${config.server.externalBase}/ethereum${config.api.sendSignedTxResource}`,
-    rawTx,
-    sender,
-  };
-
-  console.log(providerModel.endpoint);
-  return request
-    .post(providerModel.endpoint,
-      {
-        body,
-        json: true,
-      })
-    .then((response: IApiSignTxProviderResponse) => response)
-    .catch((error: string) => { throw new Error('PROVIDER_ERROR'); });
-
 }
+
+// export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
+//
+//   const providerModel: IEthereumProviderModel | null = await db.getProviderByAlias(provider);
+//   const sender: string = getSenderFromRawTx(rawTx);
+//
+//   if (!sender || !providerModel) {
+//     throw new Error('DEFAULT_ERROR');
+//   }
+//
+//   const body: IApiSignTxProviderRequest = {
+//     // tslint:disable-next-line:max-line-length
+//     callback: `${config.server.protocol}://${config.server.host}:${config.server.externalPort}${config.server.externalBase}/ethereum${config.api.sendSignedTxResource}`,
+//     rawTx,
+//     sender,
+//   };
+//
+//   console.log(providerModel.endpoint);
+//   return request
+//     .post(providerModel.endpoint,
+//       {
+//         body,
+//         json: true,
+//       })
+//     .then((response: IApiSignTxProviderResponse) => response)
+//     .catch((error: string) => { throw new Error('PROVIDER_ERROR'); });
+//
+// }
 
 export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
 

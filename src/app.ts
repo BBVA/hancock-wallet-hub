@@ -2,35 +2,37 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as express from 'express';
 import * as http from 'http';
-import { AppRouter } from './routes/index';
+import {AppRouter} from './routes/index';
 import config from './utils/config';
 import * as db from './utils/db';
 
 export function run() {
 
-  return db.connect().then(() => {
+  return db.connect()
+    .then(() => {
 
-    const app = express();
+      const app = express();
 
-    // parse application/json
-    app.use(cors());    
-    app.use(bodyParser.json());
+      // parse application/json
+      app.use(cors());
+      app.use(bodyParser.json());
 
-    app.use(config.server.base, AppRouter);
+      app.use(config.server.base, AppRouter);
 
-    app.listen(config.server.port, (error: any) => {
+      app.listen(config.server.port, (error: any) => {
 
-      if (error) {
-        return console.error('Service is not available', error);
-      }
+        if (error) {
+          return console.error('Service is not available', error);
+        }
 
-      console.log('-----------------------------------------------------------------------');
-      console.log('Service available in port', config.server.port);
-      console.log('-----------------------------------------------------------------------');
+        console.log('-----------------------------------------------------------------------');
+        console.log('Service available in port', config.server.port);
+        console.log('-----------------------------------------------------------------------');
 
-    });
+      });
 
-  });
+    })
+    .catch(console.log);
 
 }
 

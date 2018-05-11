@@ -13,6 +13,7 @@ export interface IEthereumContractModel {
 
 export interface IEthereumProviderModel {
   alias: string;
+  className: string;
   endpoint: string;
 }
 

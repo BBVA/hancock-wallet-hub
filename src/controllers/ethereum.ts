@@ -1,6 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import * as http from 'http';
-import * as url from 'url';
+import {NextFunction, Request, Response, Router} from 'express';
 import * as domain from '../domain/ethereum';
 import {
   IApiSendSignedTxRequest,
@@ -9,20 +7,22 @@ import {
   IApiSignTxRequest,
   IApiSignTxResponse,
 } from '../models/ethereum';
+import {ISigner} from "../signers/iSigner";
 
 export function SignTxController(req: Request, res: Response, next: NextFunction) {
-
   const body: IApiSignTxRequest = req.body;
 
+  console.log(JSON.stringify(body));
+
   domain
-    .signTx(body.rawTx, body.provider)
+    .getSigner(body.provider)
+    .then((signer: ISigner) => signer.signTx(body.rawTx))
     .then((response: IApiSignTxResponse) => res.send(response))
     .catch(next);
 
 }
 
 export function SendTxController(req: Request, res: Response, next: NextFunction) {
-
   const body: IApiSendSignedTxRequest = req.body;
 
   domain
@@ -33,7 +33,6 @@ export function SendTxController(req: Request, res: Response, next: NextFunction
 }
 
 export function SendSignedTxController(req: Request, res: Response, next: NextFunction) {
-
   const body: IApiSendSignedTxRequest = req.body;
 
   domain

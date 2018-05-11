@@ -14,10 +14,12 @@ export async function getProviderByAlias(alias: string): Promise<IEthereumProvid
 
   const coll = await getCollection(config.db.ethereum.collections.providers);
 
-  return coll
+  let provider = coll
     .findOne({
       alias,
     });
+
+  return provider;
 
 }
 
