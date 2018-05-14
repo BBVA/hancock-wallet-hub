@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import {util, cipher, pki, md} from "node-forge";
+import * as forge from "node-forge";
 import {Bytes} from "node-forge";
 import {
   asymmetricPrivateKey, asymmetricPublicKey, encryptedData, IRSAKeyPair, ISignature, ISymmetricEncData, signature,
@@ -27,29 +27,28 @@ export class CryptoUtils {
 
   /**
    *
-   * @param {string} data Encrypted data base64-encoded
-   * @param {symmetricKey} iv Vector
+   * @param {string} data To encrypt
+   * @param {symmetricKey} iv Vector, should be a 12-byte binary-encoded string
    * @param {string} aad Plain String
    * @param {symmetricKey} key String Hex key to be used to cipher data.
    * @returns {ISymmetricEncData} Object which contains the data encrypted with a symmetric key
    */
   public static aesGCMEncrypt(data: string, iv: symmetricKey, aad: string, key: symmetricKey): ISymmetricEncData {
-    let byteBuffer = new util.ByteStringBuffer(key);
-    const newCipher = cipher.createCipher('AES-GCM', byteBuffer);
-    newCipher.start({
-      iv: util.hexToBytes(iv), // should be a 12-byte binary-encoded string or byte buffer
-      // additionalData: aad, // optional
-      // tagLength: 128 // optional, defaults to 128 bits
+    const cipher = forge.cipher.createCipher('AES-GCM', forge.util.hexToBytes(key));
+    cipher.start({
+      iv: forge.util.hexToBytes(iv), // should be a 12-byte binary-encoded string or byte buffer
+      additionalData: aad, // optional
+      tagLength: 128 // optional, defaults to 128 bits
     });
-    newCipher.update(util.createBuffer(data, "utf8"));
-    newCipher.finish();
-    const tag = newCipher.mode.tag;
+    cipher.update(forge.util.createBuffer(data, "utf8"));
+    cipher.finish();
+    const tag = cipher.mode.tag;
 
-    const encription = newCipher.output.data;
-    const encription64 = util.encode64(encription);
-    const tagHex = tag.toHex();
+    const encription = cipher.output.data;
+    const encription64 = forge.util.encode64(encription);
+    const tagHex	 = tag.toHex();
 
-    return {data: encription64, iv: iv, aad: aad, tag: tagHex};
+    return {data:encription64, iv: iv, aad: aad, tag: tagHex};
   }
 
   /**
@@ -62,21 +61,20 @@ export class CryptoUtils {
    * @returns {string | Object | null} Decrypted data
    */
   public static aesGCMDecrypt(encData: encryptedData, iv: symmetricKey, aad: string, tag: string, key: symmetricKey): string | Object | null {
-    let byteBuffer = new util.ByteStringBuffer(key);
-    const decipher = cipher.createDecipher('AES-GCM', byteBuffer);
-    const data64 = util.decode64(encData);
-    const data = util.createBuffer(data64, "utf8");
+    const decipher = forge.cipher.createDecipher('AES-GCM', forge.util.hexToBytes(key));
+    const data64 = forge.util.decode64(encData);
+    const data = forge.util.createBuffer(data64);
 
     decipher.start({
-      iv: util.createBuffer(util.hexToBytes(iv), "utf8"),
+      iv: forge.util.createBuffer(forge.util.hexToBytes(iv)),
       additionalData: aad, // optional
       tagLength: 128, // optional, defaults to 128 bits
-      tag: util.createBuffer(util.hexToBytes(tag), "utf8") // authentication tag from encryption
-    } as any);
+      tag: forge.util.createBuffer(forge.util.hexToBytes(tag)) // authentication tag from encryption
+    });
     decipher.update(data);
     const pass = decipher.finish();
-    if (pass) {
-      return util.decodeUtf8(decipher.output.data);
+    if(pass) {
+      return forge.util.decodeUtf8(decipher.output.data);
     }
     else {
       return null;
@@ -85,10 +83,10 @@ export class CryptoUtils {
 
   /**
    * @param {int} length
-   * @returns {string} Hex String containin a 16-Byte symmetic key
+   * @returns {string} Hex String containin a length-Byte symmetic key
    */
-  public static generateSymmetricKey(length: number): string {
-    return util.bytesToHex(random.getBytesSync(length));
+  public static generateSymmetricKey(length: number): symmetricKey {
+    return forge.util.bytesToHex(forge.random.getBytesSync(length));
   }
 
   /**
@@ -98,8 +96,8 @@ export class CryptoUtils {
    * @returns {encryptedData} Encrypted data
    */
   public static encryptRSA(publicKey: asymmetricPublicKey, data: string): encryptedData {
-    const pk = pki.publicKeyFromPem(util.decode64(publicKey));
-    return util.encode64(pk.encrypt(data, 'RSA-OAEP'));
+    const pk = forge.pki.publicKeyFromPem(forge.util.decode64(publicKey));
+    return forge.util.encode64(pk.encrypt(data, 'RSA-OAEP'));
   }
 
   /**
@@ -109,11 +107,11 @@ export class CryptoUtils {
    * @returns {string | Object | null} Decrypted data
    */
   public static decryptRSA(privateKey: asymmetricPrivateKey, data: encryptedData): string | Object | null {
-    try {
-      const sk = pki.privateKeyFromPem(util.decode64(privateKey));
-      return sk.decrypt(util.decode64(data), 'RSA-OAEP');
+    try{
+      const sk = forge.pki.privateKeyFromPem(forge.util.decode64(privateKey));
+      return sk.decrypt(forge.util.decode64(data), 'RSA-OAEP');
     }
-    catch (e) {
+    catch(e) {
       return null;
     }
   }
@@ -124,7 +122,7 @@ export class CryptoUtils {
    * @returns {string} String Containin result
    */
   public static getMD5Hash(data: string): string {
-    const hash = crypto.createHash('md5');
+    const hash = forge.crypto.createHash('md5');
     hash.update(data);
     return hash.digest('hex');
   }
@@ -135,7 +133,7 @@ export class CryptoUtils {
    * @returns {string} String Containin result
    */
   public static getSHA1Hash(data: string): string {
-    const hash = crypto.createHash('sha1');
+    const hash = forge.crypto.createHash('sha1');
     hash.update(data);
     return hash.digest('hex');
   }
@@ -146,7 +144,7 @@ export class CryptoUtils {
    * @returns {string} String Containin result
    */
   public static getSHA256Hash(data: string): string {
-    const hash = crypto.createHash('sha256');
+    const hash = forge.crypto.createHash('sha256');
     hash.update(data);
     return hash.digest('hex');
   }
@@ -157,7 +155,7 @@ export class CryptoUtils {
    * @returns {string} String representing data base64-encoded
    */
   public static base64encode(data: string) {
-    return util.encode64(data);
+    return forge.util.encode64(data);
   }
 
   /**
@@ -166,7 +164,7 @@ export class CryptoUtils {
    * @returns {string} Plain-text data
    */
   public static base64decode(data: string): string {
-    return util.decode64(data);
+    return forge.util.decode64(data);
   }
 
   /**
@@ -176,22 +174,22 @@ export class CryptoUtils {
    * @returns {ISignature | null} Object containing SHA1 Hash of data and signed data
    */
   public static signData(data: string, skPem: asymmetricPrivateKey): ISignature | null {
-    const sk = pki.privateKeyFromPem(skPem);
-    const md = md.sha1.create();
-    md.update(data, 'utf8');
-    const pss = pss.create({
-      md: md.sha1.create(),
-      mgf: mgf.mgf1.create(md.sha1.create()),
+    const sk = forge.pki.privateKeyFromPem(skPem);
+    const new_md = forge.md.sha1.create();
+    new_md.update(data, 'utf8');
+    const pss = forge.pss.create({
+      md: forge.md.sha1.create(),
+      mgf: forge.mgf.mgf1.create(forge.md.sha1.create()),
       saltLength: 20
       // optionally pass 'prng' with a custom PRNG implementation
     });
-    const signature = sk.sign(md, pss);
-    if (!signature) {
+    const signature = sk.sign(new_md, pss);
+    if(!signature) {
       return null;
     }
     else {
-      const signature64 = util.encode64(signature);
-      const itemHash = md.digest().toHex();
+      const signature64 = forge.util.encode64(signature);
+      const itemHash = new_md.digest().toHex();
       return {
         hash: itemHash,
         signature: signature64
@@ -208,14 +206,14 @@ export class CryptoUtils {
    */
   public static verifySignature(hash: string, signature: signature, pkPem: asymmetricPublicKey): boolean {
     let verified = false;
-    const pk = pki.publicKeyFromPem(pkPem);
-    const pss = pss.create({
-      md: md.sha1.create(),
-      mgf: mgf.mgf1.create(md.sha1.create()),
+    const pk = forge.pki.publicKeyFromPem(pkPem);
+    const pss = forge.pss.create({
+      md: forge.md.sha1.create(),
+      mgf: forge.mgf.mgf1.create(forge.md.sha1.create()),
       saltLength: 20
     });
     try {
-      verified = pk.verify(util.hexToBytes(hash), util.decode64(signature), pss);
+      verified = pk.verify(forge.util.binary.hex.decode(hash), forge.util.decode64(signature), pss);
     }
     catch (verException) {
       verified = false;
@@ -233,13 +231,13 @@ export class CryptoUtils {
    * @returns {IRSAKeyPair}
    */
   public static generateRSAKeyPair(): IRSAKeyPair | null {
-    try {
-      const keyPair = pki.rsa.generateKeyPair({bits: 2048, e: 0x10001, workers: -1});
-      const pk = util.encode64(pki.publicKeyToPem(keyPair.publicKey));
-      const sk = util.encode64(pki.privateKeyToPem(keyPair.privateKey));
+    try{
+      const keyPair = forge.rsa.generateKeyPair({bits: 2048, e: 0x10001, workers: -1});
+      const pk = forge.util.encode64(forge.pki.publicKeyToPem(keyPair.publicKey));
+      const sk = forge.util.encode64(forge.pki.privateKeyToPem(keyPair.privateKey));
       return {public_key: pk, private_key: sk};
     }
-    catch (e) {
+    catch(e) {
       return null;
     }
   }

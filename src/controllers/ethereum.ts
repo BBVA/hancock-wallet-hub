@@ -15,8 +15,7 @@ export function SignTxController(req: Request, res: Response, next: NextFunction
   console.log(JSON.stringify(body));
 
   domain
-    .getSigner(body.provider)
-    .then((signer: ISigner) => signer.signTx(body.rawTx))
+    .signTx(body.rawTx, body.provider)
     .then((response: IApiSignTxResponse) => res.send(response))
     .catch(next);
 

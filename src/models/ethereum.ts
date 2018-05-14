@@ -1,4 +1,5 @@
-export type ethAddress = string;
+import {dltAddress, IRawTransaction} from "./general";
+
 export type ethContractAddress = string;
 export type ethTxHash = string;
 export type ethBlockHash = string;
@@ -17,12 +18,12 @@ export interface IEthereumProviderModel {
   endpoint: string;
 }
 
-export interface IEthereumRawTransaction {
-  from: ethAddress;
+export class IEthereumRawTransaction implements IRawTransaction {
+  from: dltAddress;
   nonce: string;
   gasPrice: string;
   gasLimit: string;
-  to: ethAddress;
+  to: dltAddress;
   value: string;
   data: string;
   chainId?: number;
@@ -37,7 +38,7 @@ export interface IApiSignTxRequest {
 
 export interface IApiSignTxProviderRequest {
   rawTx: IEthereumRawTransaction;
-  sender: ethAddress;
+  sender: dltAddress;
   callback: string;
 }
 

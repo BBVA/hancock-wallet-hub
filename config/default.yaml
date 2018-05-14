@@ -24,7 +24,16 @@ app:
       collections:
         contracts: smartcontracts
         providers: providers
+  cryptvault:
+    api:
+      getByAddressEndpoint: 'http://kong:8000/v1/wallets/:address'
+      signEndpoint: 'http://kong:8000/v1/wallets/:address/sign'
+    credentials:
+      key: 'OiYdLKOblAicxiasy2tJolbc3oBYkiyg'
+      secret: 'umFfDtKwdv9k6uhu7EEA2Hwoe3aWaoTT'
+      expires_in: '1555674519'
   api:
     signTxResource: '/sign-tx'
     sendTxResource: '/send-tx'    
     sendSignedTxResource: '/send-signed-tx'
+    signedTxHookResource: '/signed-tx-hook'

@@ -17,6 +17,12 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+    networks:
+      - default
+      - kstcryptvaultdockercompose_default
+      - dev_default
+    external_links:
+      - kong
 
   mongo:
     image: 'bitnami/mongodb:latest'
@@ -44,6 +50,11 @@ services:
 volumes:
   hancock_wallet_hub_mongodb_data:
 
+networks:
+  dev_default:
+    external: true
+  kstcryptvaultdockercompose_default:
+    external: true
 # networks:
 #   default:
 #     external:
