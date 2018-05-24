@@ -9,9 +9,10 @@ try {
     let res = [
       collection.drop(),
       collection.createIndex({ 'name': 1 }),
-      collection.insert({ "alias": "signer-local", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign", "className": "Signer" }),
-      collection.insert({ "alias": "signer-develop", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign", "className": "Signer" }),
-      collection.insert({ "alias": "signer-demo", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign", "className": "Signer" }),
+      collection.insert({ "alias": "fake-provider-local", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign", "className": "Signer" }),
+      collection.insert({ "alias": "fake-provider-develop", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign", "className": "Signer" }),
+      collection.insert({ "alias": "fake-provider-demo", "endpoint": "http://hancock_sign_provider:3000/ethereum/request-tx-sign", "className": "Signer" }),
+      collection.insert({ "alias": "cryptvault", "className": "CryptvaultSigner" }),
     ];
 
     printjson(res);
