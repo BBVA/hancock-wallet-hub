@@ -17,8 +17,8 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-    networks:
-      - kstcryptvaultdockercompose_default
+    # networks:
+    #   - kstcryptvaultdockercompose_default
     external_links:
       - kong
 
@@ -48,9 +48,9 @@ services:
 volumes:
   hancock_wallet_hub_mongodb_data:
 
-networks:
-  kstcryptvaultdockercompose_default:
-    external: true
+# networks:
+#   kstcryptvaultdockercompose_default:
+#     external: true
 # networks:
 #   default:
 #     external:
