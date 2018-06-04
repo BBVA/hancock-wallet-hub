@@ -50,7 +50,7 @@
     "js-yaml": "3.10.0",
     "jsonwebtoken": "^7.1.9",
     "mongodb": "3.0.2",
-    "node-forge": "0.7.1",
+    "node-forge": "0.7.5",
     "nodemon": "1.14.12",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5",
