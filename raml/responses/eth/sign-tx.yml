@@ -2,5 +2,6 @@
   description: Success sign response
   body:
     application/json:
+      type: IApiSignTxResponse
       example: |
         {}

@@ -2,5 +2,6 @@
   description: Success dlt write response
   body:
     application/json:
+      type: IApiSendTxResponse
       example: |
         {}
