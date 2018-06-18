@@ -12,7 +12,9 @@
     "watch:ts": "tsc -w --inlineSources --inlineSourceMap",
     "test": "jest",
     "coverage": "jest --coverage",
-    "docs": "rimraf documentation && mkdirp documentation && raml2html --theme raml2html-markdown-theme raml/api.raml > documentation/api.md"
+    "docs": "rimraf documentation && mkdirp documentation && raml2html --theme raml2html-markdown-theme raml/api.raml > documentation/api.md",
+    "plato": "plato -r -d complexity dist",
+    "watch:plato": "plato -r -d complexity dist && open complexity/index.html"
   },
   "repository": {
     "type": "git",
@@ -56,6 +58,7 @@
     "mongodb": "3.0.2",
     "node-forge": "0.7.5",
     "nodemon": "1.14.12",
+    "plato": "^1.7.0",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5",
     "uuid": "^3.2.1",
