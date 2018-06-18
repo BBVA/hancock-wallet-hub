@@ -5,3 +5,9 @@
       type: IApiSendSignedTxResponse
       example: |
         {}
+400: 
+  description: Bad Request
+404:
+  description: Not Found
+504:
+  description: Gateway Time-out
