@@ -13,21 +13,22 @@ securitySchemes:
   oauth_2_0: !include securitySchemes/oauth_2_0.yml
 
 #INTERNAL SERVICE
-#/health:
-#  displayName: Health
-#  description: |
-#    Healthcheck.
-#  get:
-#    description: !include docs/get-healthcheck.md
-#    responses: !include responses/get-healthcheck.yml
+/health:
+  displayName: Health
+  description: |
+    Healthcheck.
+  get:
+    description: !include docs/get-healthcheck.md
+    responses: !include responses/get-healthcheck.yml
 
 /{dlt_type}:
-  displayName: Ethereum
+  displayName: DLT
   description: API to discover signature providers and send signed transactions to DLT
 
   uriParameters:
     dlt_type:
       type: string
+      description: Dlt to work with  
 
   /sign-tx:
     description: |
