@@ -20,7 +20,7 @@
 
     /* Strict Type-Checking Options */
     "strict": true,                           /* Enable all strict type-checking options. */
-    //"strictPropertyInitialization": false,    /* Ensure that each instance property of a class gets initialized in the constructor body, or by a property initializer.*/
+    "strictPropertyInitialization": false,    /* Ensure that each instance property of a class gets initialized in the constructor body, or by a property initializer.*/
     // "noImplicitAny": true,                 /* Raise error on expressions and declarations with an implied 'any' type. */
     // "strictNullChecks": true,              /* Enable strict null checks. */
     // "strictFunctionTypes": true,           /* Enable strict checking of function types. */
@@ -34,7 +34,7 @@
     // "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
 
     /* Module Resolution Options */
-    "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+    "moduleResolution": "node"            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     // "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
     // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
