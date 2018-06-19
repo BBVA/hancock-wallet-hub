@@ -47,20 +47,27 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
     throw new Error('DEFAULT_ERROR');
   }
 
+  console.log(`Connecting to DLT`);
   const web3 = await getWeb3();
+  console.log(`Initialized web3`);
 
   return new Promise<IApiSendSignedTxResponse>((resolve, reject) => {
 
     const promise = web3.eth
       .sendSignedTransaction(tx)
-      .on('error', (err: string) => reject(new Error('DLT_ERROR')))
+      .on('error', (err: string) => {
+        console.error(`On error: ${err}`);
+        reject(new Error('DLT_ERROR'))
+      })
       .then((txReceipt: IEthTransactionReceiptBody) => {
-
         console.log(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
         resolve({success: true, txReceipt});
 
       })
-      .catch((err: string) => reject(new Error('DLT_ERROR')));
+      .catch((err: string) => {
+        console.error(`Catch error: ${err}`);
+        reject(new Error('DLT_ERROR'))
+      });
 
   });
 

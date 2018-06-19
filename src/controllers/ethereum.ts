@@ -34,6 +34,7 @@ export function SendTxController(req: Request, res: Response, next: NextFunction
 export function SendSignedTxController(req: Request, res: Response, next: NextFunction) {
   const body: IApiSendSignedTxRequest = req.body;
 
+  console.log(`Request to send-signed-tx`);
   domain
     .sendSignedTx(body.tx)
     .then((response: IApiSendSignedTxResponse) => res.send(response))
