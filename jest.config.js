@@ -10,10 +10,10 @@ module.exports = {
         "!**/node_modules/**",
         "!src/custom-typings.d.ts",
     ],
-    // coverageReporters: [
-    //     "json",
-    //     "lcov",
-    //     "text",
-    //     "cobertura"
-    //   ]
+     coverageReporters: [
+         "json",
+         "lcov",
+         "text",
+         "cobertura"
+       ]
 };
