@@ -8,3 +8,5 @@ documentation/
 dist/
 config/local.yaml
 *.html
+coverage/
+complexity/
