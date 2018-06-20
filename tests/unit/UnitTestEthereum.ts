@@ -6,15 +6,17 @@ import {
 
 import {NextFunction, Request, Response, Router} from 'express';
 
-import {
-    IApiSendSignedTxRequest,
-    IApiSendSignedTxResponse,
-    IApiSendTxResponse,
-    IApiSignTxRequest,
-    IApiSignTxResponse,
-  } from '../../src/models/ethereum';
+//import {
+//    IApiSendSignedTxRequest,
+//    IApiSendSignedTxResponse,
+//    IApiSendTxResponse,
+//    IApiSignTxRequest,
+//    IApiSignTxResponse,
+//  } from '../../src/models/ethereum';
 
-  const controller = require('../src/controllers/ethereum.ts')
+  import "jest";
+
+//  const controller = require('../src/controllers/ethereum.ts')
 
 //import {} from "jest";
 
@@ -30,8 +32,9 @@ describe("SignTxController", async () => {
 
   it("should sign tx success", async () => {
     await SignTxController(req, res, next);
-    responseData = JSON.parse(res.body)
-    expect(responseData.success).toEqual(success);
+    //responseData = JSON.parse(res)
+    //expect(() => validateSender(req)).toThrow();
+    expect(SignTxController).toEqual(success);
   });
 
   it("should call sign tx", async () => {
@@ -59,8 +62,7 @@ describe("SendTxController", async () => {
 
   it("should send tx success", async () => {
     await SendTxController(req, res, next);
-    responseData = JSON.parse(res)
-    expect(responseData.success).toEqual(success);
+    expect(SignTxController).toEqual(success);
   });
 
   it("should call send tx", async () => {
@@ -87,8 +89,7 @@ describe("SendSignedTxController", async () => {
 
   it("should send signed tx success", async () => {
     await SendSignedTxController(req, res, next);
-    responseData = JSON.parse(res)
-    expect(responseData.success).toEqual(success);
+    expect(SignTxController).toEqual(success);
   });
 
   it("should call send signed tx", async () => {

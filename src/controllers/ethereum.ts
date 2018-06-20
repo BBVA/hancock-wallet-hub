@@ -3,6 +3,7 @@ import * as domain from '../domain/ethereum';
 import {
   IApiSendSignedTxRequest,
   IApiSendSignedTxResponse,
+  IApiSendTxRequest,
   IApiSendTxResponse,
   IApiSignTxRequest,
   IApiSignTxResponse,
@@ -22,7 +23,7 @@ export function SignTxController(req: Request, res: Response, next: NextFunction
 }
 
 export function SendTxController(req: Request, res: Response, next: NextFunction) {
-  const body: IApiSendSignedTxRequest = req.body;
+  const body: IApiSendTxRequest = req.body;
 
   domain
     .sendTx(body.tx)
