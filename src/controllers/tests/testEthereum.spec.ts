@@ -2,55 +2,53 @@ import {
     SignTxController,
     SendTxController,
     SendSignedTxController,
-  } from '../../src/controllers/ethereum';
+  } from '../../controllers/ethereum';
 
 import {NextFunction, Request, Response, Router} from 'express';
 
-//import {
-//    IApiSendSignedTxRequest,
-//    IApiSendSignedTxResponse,
-//    IApiSendTxResponse,
-//    IApiSignTxRequest,
-//    IApiSignTxResponse,
-//  } from '../../src/models/ethereum';
+import "jest";
+import * as domain from '../../domain/ethereum';
 
-  import "jest";
-
-//  const controller = require('../src/controllers/ethereum.ts')
-
-//import {} from "jest";
+jest.mock('../../domain/ethereum');
 
 describe("SignTxController", async () => {
-  let req: Request;
-  let res: Response;
-  let next: NextFunction;
-
-  const success = true;
+  let req: any = {
+    body: {
+      rawTx: 'whatever',
+      provider: 'mockProvider'
+    }
+  };
+  let res: any = {
+    send: jest.fn()
+  };
+  let next = jest.fn();
 
   beforeEach(() => {
+    next.mockReset();
+    res.send.mockReset();
   });
 
   it("should sign tx success", async () => {
     await SignTxController(req, res, next);
-    //responseData = JSON.parse(res)
-    //expect(() => validateSender(req)).toThrow();
-    expect(SignTxController).toEqual(success);
-  });
-
-  it("should call sign tx", async () => {
-    await SignTxController(req, res, next);
-    expect(SignTxController).toHaveBeenCalled();
+    expect((domain.signTx as jest.Mock).mock.calls.length).toBe(1);
+    expect((domain.signTx as jest.Mock).mock.calls).toEqual([['whatever', 'mockProvider']]);
+    expect(res.send.mock.calls.length).toBe(1);
+    expect(res.send.mock.calls).toEqual([['resolved']]);
   });
 
   it("should call next on error", async () => {
-    const err = new Error();
-    //throw err
+
+    (domain.signTx as jest.Mock).mockImplementationOnce((args) => {
+      return Promise.reject('Boom!');
+    })
+
     await SignTxController(req, res, next);
-    expect(next).toHaveBeenCalledWith(err);
+    expect(next.mock.calls.length).toBe(1);
+    expect(next.mock.calls).toEqual([['Boom!']])
   });
 });
 
-describe("SendTxController", async () => {
+/*describe("SendTxController", async () => {
   let req: Request;
   let res: Response;
   let next: NextFunction;
@@ -102,7 +100,7 @@ describe("SendSignedTxController", async () => {
     await SendSignedTxController(req, res, next);
     expect(next).toHaveBeenCalledWith(err);
   });
-});
+});*/
 
 
 

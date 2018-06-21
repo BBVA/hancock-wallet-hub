@@ -10,12 +10,12 @@ import {
 } from '../models/ethereum';
 import {ISigner} from "../signers/iSigner";
 
-export function SignTxController(req: Request, res: Response, next: NextFunction) {
+export async function SignTxController(req: Request, res: Response, next: NextFunction) {
   const body: IApiSignTxRequest = req.body;
 
   console.log(JSON.stringify(body));
 
-  domain
+  await domain
     .signTx(body.rawTx, body.provider)
     .then((response: IApiSignTxResponse) => res.send(response))
     .catch(next);
