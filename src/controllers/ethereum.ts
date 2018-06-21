@@ -22,21 +22,22 @@ export async function SignTxController(req: Request, res: Response, next: NextFu
 
 }
 
-export function SendTxController(req: Request, res: Response, next: NextFunction) {
+export async function SendTxController(req: Request, res: Response, next: NextFunction) {
   const body: IApiSendTxRequest = req.body;
 
-  domain
+  await domain
     .sendTx(body.tx)
     .then((response: IApiSendTxResponse) => res.send(response))
     .catch(next);
 
 }
 
-export function SendSignedTxController(req: Request, res: Response, next: NextFunction) {
+export async function SendSignedTxController(req: Request, res: Response, next: NextFunction) {
   const body: IApiSendSignedTxRequest = req.body;
 
   console.log(`Request to send-signed-tx`);
-  domain
+  
+  await domain
     .sendSignedTx(body.tx)
     .then((response: IApiSendSignedTxResponse) => res.send(response))
     .catch(next);
