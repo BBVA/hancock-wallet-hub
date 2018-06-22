@@ -10,7 +10,10 @@ dev: build-dev down-dev
 	${COMPOSE_DEV} run --rm --service-ports hancock_wallet_hub dev
 
 test: build-dev down-dev
-	${COMPOSE_DEV} run --rm --service-ports hancock_wallet_hub test
+	${COMPOSE_DEV} run --rm --service-ports hancock_dlt_broker test
+
+coverage: build-dev down-dev
+	${COMPOSE_DEV} run --rm --service-ports hancock_dlt_broker coverage
 
 shell: build-dev down-dev
 	${COMPOSE_DEV} run --rm --no-deps hancock_wallet_hub /bin/bash
