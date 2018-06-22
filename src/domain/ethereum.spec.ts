@@ -1,50 +1,52 @@
 import {
-    SignTxController,
-    SendTxController,
-    SendSignedTxController,
-  } from '../controllers/ethereum';
-
-import {NextFunction, Request, Response, Router} from 'express';
+    signTx,
+    sendTx,
+    sendSignedTx,
+  } from '../domain/ethereum';
 
 import "jest";
-import * as domain from '../domain/ethereum';
+import * as signerFactory from '../signers/signerFactory';
 
-jest.mock('../domain/ethereum');
+jest.mock('../signers/signerFactory');
 
-describe("SignTxController", async () => {
-  let req: any = {
-    body: {
-      rawTx: 'whatever',
-      provider: 'mockProvider'
-    }
+describe("signTx", async () => {
+
+  let  rawTx: any;
+  let  provider = 'mockProvider';
+  const signer = {
+    signTx: jest.fn()
   };
-  let res: any = {
-    send: jest.fn()
-  };
-  let next = jest.fn();
+  const aa = signerFactory.getSigner as jest.Mock;
 
   beforeEach(() => {
-    next.mockReset();
-    res.send.mockReset();
+
+    signer.signTx.mockReset();
+    aa.mockReset();
+
   });
 
-  it("should sign tx success", async () => {
-    await SignTxController(req, res, next);
-    expect((domain.signTx as jest.Mock).mock.calls.length).toBe(1);
-    expect((domain.signTx as jest.Mock).mock.calls).toEqual([['whatever', 'mockProvider']]);
-    expect(res.send.mock.calls.length).toBe(1);
-    expect(res.send.mock.calls).toEqual([['resolved']]);
+  fit("should sign tx success", async () => {
+
+    aa.mockResolvedValue(Promise.resolve(signer));
+
+    await signTx(rawTx,provider);
+    expect(aa.mock.calls.length).toBe(1);
+    expect(aa.mock.calls).toEqual([['mockProvider']]);
+
+    //expect(signer.signTx.mock.calls.length).toBe(1);
+    //expect(signer.signTx.mock.calls).toEqual([['mockProvider']]);
+
   });
 
-  it("should call next on error", async () => {
+  it("should throw an error", async () => {
 
-    (domain.signTx as jest.Mock).mockImplementationOnce((args) => {
+    (signerFactory.getSigner as jest.Mock).mockImplementationOnce((args) => {
       return Promise.reject('Boom!');
     })
 
-    await SignTxController(req, res, next);
-    expect(next.mock.calls.length).toBe(1);
-    expect(next.mock.calls).toEqual([['Boom!']])
+    await signTx(rawTx,provider);
+    expect(signer.signTx.mock.calls.length).toBe(1);
+    expect(signer.signTx.mock.calls).toEqual([['Boom!']])
   });
 });
 

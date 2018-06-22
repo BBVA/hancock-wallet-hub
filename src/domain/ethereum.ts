@@ -10,11 +10,9 @@ import {getWeb3} from '../utils/web3';
 import {getSigner} from "../signers/signerFactory";
 
 export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
-  return new Promise<IApiSignTxResponse>((resolve, reject) => {
-    getSigner(provider)
-      .then((signer: ISigner) => resolve(signer.signTx(rawTx)))
-      .catch((err: Error) => reject(err));
-  });
+    
+  return await getSigner(provider)
+    .then((signer: ISigner) => signer.signTx(rawTx));
 
 }
 
