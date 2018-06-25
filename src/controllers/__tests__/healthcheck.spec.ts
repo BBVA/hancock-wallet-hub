@@ -1,34 +1,36 @@
-import {
-    HealthCheckController,
-  } from '../../controllers/healthcheck';
 
-import "jest";
+import 'jest';
+import { HealthCheckController } from '../healthcheck';
 
-import {NextFunction, Request, Response, Router} from 'express';
+jest.mock('../../utils/config');
 
-describe('HealthCheckController', () => {
+describe('HealthcheckController', async () => {
+  let req: any;
+  let res: any;
+  let next: any;
 
-    let req: any = {
-        body: {
-          rawTx: 'whatever',
-          provider: 'mockProvider'
-        }
-      };
-  
-    let next = jest.fn();
+  beforeEach(() => {
 
-    let res= {
-        status: 200,
-        json: {
-          success: true,
-        }
+    req = {};
+
+    res = {
+      json: jest.fn(),
+      status: jest.fn().mockImplementation(() => res),
     };
-  
-    it('should healthcheck return Ok', () => {
-      HealthCheckController(req, res, next);
-      expect(res.status).toEqual(200);
-      expect(res.json.success).toEqual(true);
-  
-    });
+
+    next = jest.fn();
+
   });
-  
+
+  it('should return 200 and state', async () => {
+
+    await HealthCheckController(req, res, next);
+
+    expect(res.status.mock.calls).toEqual([[200]]);
+    expect(res.json.mock.calls).toEqual([[{
+      success: true,
+    }]]);
+
+  });
+
+});
