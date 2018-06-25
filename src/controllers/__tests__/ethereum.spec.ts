@@ -2,14 +2,14 @@ import {
     SignTxController,
     SendTxController,
     SendSignedTxController,
-  } from '../controllers/ethereum';
+  } from '../../controllers/ethereum';
 
 import {NextFunction, Request, Response, Router} from 'express';
 
 import "jest";
-import * as domain from '../domain/ethereum';
+import * as domain from '../../domain/ethereum';
 
-jest.mock('../domain/ethereum');
+jest.mock('../../domain/ethereum');
 
 describe("SignTxController", async () => {
   let req: any = {
@@ -119,60 +119,6 @@ describe("SendSignedTxController", async () => {
     expect(next.mock.calls).toEqual([['Boom!']])
   });
 });
-
-/*describe("SendTxController", async () => {
-  let req: Request;
-  let res: Response;
-  let next: NextFunction;
-
-  const success = true;
-
-  beforeEach(() => {
-  });
-
-  it("should send tx success", async () => {
-    await SendTxController(req, res, next);
-    expect(SignTxController).toEqual(success);
-  });
-
-  it("should call send tx", async () => {
-    await SendTxController(req, res, next);
-    expect(SendTxController).toHaveBeenCalled();
-  });
-
-  it("should call next on error", async () => {
-    const err = new Error();
-    await SendTxController(req, res, next);
-    expect(next).toHaveBeenCalledWith(err);
-  });
-});
-
-describe("SendSignedTxController", async () => {
-  let req: Request;
-  let res: Response;
-  let next: NextFunction;
-
-  const success = true;
-
-  beforeEach(() => {
-  });
-
-  it("should send signed tx success", async () => {
-    await SendSignedTxController(req, res, next);
-    expect(SignTxController).toEqual(success);
-  });
-
-  it("should call send signed tx", async () => {
-    await SendSignedTxController(req, res, next);
-    expect(SendSignedTxController).toHaveBeenCalled();
-  });
-
-  it("should call next on error", async () => {
-    const err = new Error();
-    await SendSignedTxController(req, res, next);
-    expect(next).toHaveBeenCalledWith(err);
-  });
-});*/
 
 
 

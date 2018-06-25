@@ -13,6 +13,7 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
     
   return await getSigner(provider)
     .then((signer: ISigner) => signer.signTx(rawTx));
+    //.catch((err: Error) => {throw err}); 
 
 }
 
