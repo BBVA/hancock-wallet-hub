@@ -18,7 +18,7 @@ describe('dbEthereum', async () => {
 
 
 
-  fit('::getCollection should return the mongodb collection successfully', async () => {
+  it('::getCollection should return the mongodb collection successfully', async () => {
 
     const getDbMock = (db.getDb as jest.Mock);
 
@@ -47,6 +47,8 @@ describe('dbEthereum', async () => {
     let coll: any;
 
     const collName: string = 'mockDatabaseCollectionContracts';
+
+    const collProvider: string = 'mockDatabaseCollectionProviders';
 
 
 
@@ -87,7 +89,7 @@ describe('dbEthereum', async () => {
 
       await ethereumDb.getProviderByAlias(mockedAlias);
 
-      expect(getColl).toHaveBeenCalledWith(collName);
+      expect(getColl).toHaveBeenCalledWith(collProvider);
 
       expect(coll.findOne).toHaveBeenCalledWith({ alias: mockedAlias });
 

@@ -12,12 +12,7 @@ import {ISigner} from './iSigner';
 
 export class Signer implements ISigner {
 
-  protected endpoint: string;
-
-  constructor(endpoint?: string) {
-    if (endpoint) {
-      this.endpoint = endpoint;
-    }
+  constructor(protected endpoint: string) {
   }
 
   public async signTx(rawTx: IEthereumRawTransaction): Promise<IApiSignTxResponse> {

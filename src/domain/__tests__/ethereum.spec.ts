@@ -7,13 +7,14 @@ import {
 import 'jest';
 import * as signerFactory from '../../signers/signerFactory';
 import * as web3 from '../../utils/web3';
+import { IEthereumRawTransaction } from '../../models/ethereum';
 
 jest.mock('../../signers/signerFactory');
 jest.mock('../../utils/web3');
 
 describe('signTx', async () => {
 
-  let  rawTx: any;
+  let  rawTx: IEthereumRawTransaction;
   let  provider = 'mockProvider';
   const signer = {
     signTx: jest.fn()
@@ -31,7 +32,7 @@ describe('signTx', async () => {
 
     aa.mockResolvedValue(Promise.resolve(signer));
 
-    await signTx(rawTx,provider);
+    await signTx(rawTx, provider);
     expect(aa.mock.calls.length).toBe(1);
     expect(aa.mock.calls).toEqual([['mockProvider']]);
 

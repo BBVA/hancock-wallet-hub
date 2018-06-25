@@ -4,6 +4,7 @@ const mock = {
       ethereum: {
         collections: {
           contracts: 'mockDatabaseCollectionContracts',
+          providers: 'mockDatabaseCollectionProviders',
         },
         database: 'mockDatabase',
       },
