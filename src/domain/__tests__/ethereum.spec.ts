@@ -138,7 +138,7 @@ describe('sendSignedTx', async () => {
   });
 });
 
-describe('getSenderFromRawTx', () => {
+describe('_getSenderFromRawTx', () => {
 
   let rawTx: any = {
     from: 'whatever'
@@ -151,7 +151,7 @@ describe('getSenderFromRawTx', () => {
   });
 });
 
-describe('getReceiverFromRawTx', () => {
+describe('_getReceiverFromRawTx', () => {
 
   let rawTx: any = {
     to: 'whatever'

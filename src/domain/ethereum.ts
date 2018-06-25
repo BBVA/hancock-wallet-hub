@@ -72,12 +72,12 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
 
 }
 
-function getSenderFromRawTx(rawTx: IEthereumRawTransaction): string {
+ export const _getSenderFromRawTx = (rawTx: IEthereumRawTransaction): string => {
   return rawTx.from;
 
 }
 
-function getReceiverFromRawTx(rawTx: IEthereumRawTransaction): string {
+export const _getReceiverFromRawTx = (rawTx: IEthereumRawTransaction): string => {
   return rawTx.to;
 
 }
