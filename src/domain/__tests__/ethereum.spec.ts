@@ -67,7 +67,7 @@ describe('sendTx', async () => {
     expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
   });
 
-  it('should reject on error', async () => {
+  it('should reject on error when try to send a tx', async () => {
 
     (__mockWeb3__ as jest.Mock).mockImplementationOnce((args) => {
       const promise = Promise.reject('Boom!');
@@ -98,20 +98,20 @@ describe('sendSignedTx', async () => {
   
   let tx = 'whatever';
 
-  const __mockWeb3__ = (web3 as any).__mockWeb3__.eth.sendTransaction as jest.Mock;
+  const __mockWeb3__ = (web3 as any).__mockWeb3__.eth.sendSignedTransaction as jest.Mock;
 
   beforeEach(() => {
     __mockWeb3__.mockClear();
   });
 
-  it('should send tx success', async () => {
+  it('should send and sign tx success', async () => {
 
-    await sendTx(tx);
+    await sendSignedTx(tx);
     expect(__mockWeb3__.mock.calls.length).toBe(1);
     expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
   });
 
-  it('should reject on error', async () => {
+  it('should reject on error when try send and sign a tx', async () => {
 
     (__mockWeb3__ as jest.Mock).mockImplementationOnce((args) => {
       const promise = Promise.reject('Boom!');
@@ -121,7 +121,7 @@ describe('sendSignedTx', async () => {
 
     try {
 
-      await sendTx(tx);
+      await sendSignedTx(tx);
 
       fail('test should not reach this step')
 
@@ -138,5 +138,30 @@ describe('sendSignedTx', async () => {
   });
 });
 
+describe('getSenderFromRawTx', () => {
+
+  let rawTx: any = {
+    from: 'whatever'
+  };
+
+  it('should return a string with receiver of tx', () => {
+
+    expect(rawTx.from).toEqual('whatever');
+
+  });
+});
+
+describe('getReceiverFromRawTx', () => {
+
+  let rawTx: any = {
+    to: 'whatever'
+  };
+
+  it('should return a string with transmitter of tx', () => {
+
+    expect(rawTx.to).toEqual('whatever');
+
+  });
+});
 
 
