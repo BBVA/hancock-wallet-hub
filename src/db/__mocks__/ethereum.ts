@@ -4,4 +4,4 @@ export const coll = {
         })
   };
 
-export const getCollection = jest.fn().mockResolvedValue(coll);
+export const _getCollection = jest.fn().mockResolvedValue(coll);
