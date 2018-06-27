@@ -1,4 +1,4 @@
-.PHONY: build-dev dev test shell db-shell-prod docs db-dev db-shell-dev db-init-dev down-dev
+.PHONY: build-dev dev test coverage shell db-shell-prod docs db-dev db-shell-dev db-init-dev down-dev
 
 YML_DEV=environment/dev/docker-compose.yml
 COMPOSE_DEV=docker-compose -f ${YML_DEV}
@@ -11,6 +11,9 @@ dev: build-dev down-dev
 
 test: build-dev down-dev
 	${COMPOSE_DEV} run --rm --service-ports hancock_wallet_hub test
+
+coverage: build-dev down-dev
+	${COMPOSE_DEV} run --rm --service-ports hancock_wallet_hub coverage
 
 shell: build-dev down-dev
 	${COMPOSE_DEV} run --rm --no-deps hancock_wallet_hub /bin/bash
