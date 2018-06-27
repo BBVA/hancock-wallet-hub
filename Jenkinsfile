@@ -48,15 +48,15 @@ nodePipeline{
         """
       }
     }
-    
+
     docker_shuttle_stage()
 
     qa_data_shuttle_stage()
 
     deploy_shuttle_stage(project: "blockchainhub", environment: "qa", askForConfirmation: false)
 
-    stage ('Starting Functional Tests') {
-      build job: '/BlockchainHub/kst-hancock-ms-wallet-hub-tests/master'
+    stage ('Functional Tests') {
+      build job: '/blockchainhub/kst-hancock-ms-wallet-hub-tests/master'
     }
 
   }
