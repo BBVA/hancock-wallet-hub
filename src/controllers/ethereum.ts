@@ -8,7 +8,7 @@ import {
   IApiSignTxRequest,
   IApiSignTxResponse,
 } from '../models/ethereum';
-import {ISigner} from "../signers/iSigner";
+import {ISigner} from '../signers/iSigner';
 
 export async function SignTxController(req: Request, res: Response, next: NextFunction) {
   const body: IApiSignTxRequest = req.body;

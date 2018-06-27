@@ -5,12 +5,21 @@ const mock = {
     sendSignedTxResource: '/send-signed-tx',
     signedTxHookResource: '/signed-tx-hook',
   },
+  cryptvault: {
+    api: {
+      getByAddressEndpoint: 'mockgetbyAddress',
+      notifyEndpoint: 'mockNotify',
+      signEndpoint: 'mockSign',
+    },
+    credentials: {
+      expires_in: 'mockexpires',
+      key: 'mockkey',
+      secret: 'mocksecret',
+    },
+  },
   application: 'applicationName',
   blockchain: {
-    ethereum: {
-      host: 'mockhost',
-      port: 'mockport',
-    },
+    ethereum: 'mockBlockchain',
   },
   db: {
     ethereum: {
