@@ -23,8 +23,7 @@ describe('run', async () => {
 
     await run();
 
-    expect(connectDbMock.mock.calls.length).toBe(1);
+    expect(connectDbMock).toHaveBeenCalled();
 
   });
 });
-
