@@ -1,16 +1,16 @@
 import {
-    sendSignedTx,
-    sendTx,
-    signTx,
-  } from '../../domain/ethereum';
+  sendSignedTx,
+  sendTx,
+  signTx,
+} from '../../domain/ethereum';
 
 import 'jest';
 import { IEthereumRawTransaction } from '../../models/ethereum';
 import * as signerFactory from '../../signers/signerFactory';
-import * as web3 from '../../utils/web3';
+import * as ethereumUtils from '../../utils/ethereum';
 
 jest.mock('../../signers/signerFactory');
-jest.mock('../../utils/web3');
+jest.mock('../../utils/ethereum');
 
 describe('signTx', async () => {
 
@@ -52,10 +52,11 @@ describe('signTx', async () => {
 });
 
 describe('sendTx', async () => {
-  
-  let  rawTx = 'whatever';
 
-  const __mockWeb3__ = (web3 as any).__mockWeb3__.eth.sendTransaction as jest.Mock;
+  const rawTx = 'whatever';
+
+  // tslint:disable-next-line:variable-name
+  const __mockWeb3__ = (ethereumUtils as any).__mockWeb3__.eth.sendTransaction as jest.Mock;
 
   beforeEach(() => {
     __mockWeb3__.mockClear();
@@ -74,15 +75,15 @@ describe('sendTx', async () => {
       const promise = Promise.reject('Boom!');
       (promise as any).on = jest.fn().mockReturnValue(promise);
       return promise;
-    })
+    });
 
     try {
 
       await sendTx(rawTx);
 
-      fail('test should not reach this step')
+      fail('test should not reach this step');
 
-    } catch(e) {
+    } catch (e) {
 
       expect(e).toEqual(new Error('DLT_ERROR'));
 
@@ -99,7 +100,7 @@ describe('sendSignedTx', async () => {
   const tx = 'whatever';
 
   // tslint:disable-next-line:variable-name
-  const __mockWeb3__ = (web3 as any).__mockWeb3__.eth.sendSignedTransaction as jest.Mock;
+  const __mockWeb3__ = (ethereumUtils as any).__mockWeb3__.eth.sendSignedTransaction as jest.Mock;
 
   beforeEach(() => {
     __mockWeb3__.mockClear();
@@ -124,9 +125,9 @@ describe('sendSignedTx', async () => {
 
       await sendSignedTx(tx);
 
-      fail('test should not reach this step')
+      fail('test should not reach this step');
 
-    } catch(e) {
+    } catch (e) {
 
       expect(e).toEqual(new Error('DLT_ERROR'));
 
@@ -163,5 +164,3 @@ describe('_getReceiverFromRawTx', () => {
 
   });
 });
-
-

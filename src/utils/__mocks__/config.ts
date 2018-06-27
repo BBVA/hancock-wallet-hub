@@ -1,5 +1,8 @@
 const mock = {
     application: 'applicationName',
+    blockchain: {
+      ethereum: 'mockBlockchain',
+    },
     db: {
       ethereum: {
         collections: {
@@ -10,5 +13,5 @@ const mock = {
       },
     },
    };
-   
-   export default mock;
+
+export default mock;
