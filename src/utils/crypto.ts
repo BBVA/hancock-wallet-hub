@@ -34,7 +34,6 @@ export class CryptoUtils {
    * @returns {ISymmetricEncData} Object which contains the data encrypted with a symmetric key
    */
   public static aesGCMEncrypt(data: string, iv: symmetricKey, aad: string, key: symmetricKey): ISymmetricEncData { 
-    console.log('11111', forge);
     const cipher = forge.cipher.createCipher('AES-GCM', forge.util.hexToBytes(key));
     cipher.start({
       additionalData: aad, // optional

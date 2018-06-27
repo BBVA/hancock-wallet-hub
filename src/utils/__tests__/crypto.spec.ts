@@ -1,122 +1,80 @@
 import {
-    CryptoUtils,
-  } from '../crypto';
+  CryptoUtils,
+} from '../crypto';
 
-import {NextFunction, Request, Response, Router} from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 
 import 'jest';
 
 import * as forge from 'node-forge';
 jest.mock('node-forge');
 
-describe('aesGCMEncrypt', async () => {
+describe('crypto', () => {
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('aesGCMEncrypt', () => {
 
     const data = 'data';
     const iv = 'symetrickey';
     const aad = 'address';
     const key = 'key';
 
-  // beforeEach(() => {
-  // });
-
     (forge.__cipher__.mode.tag.toHex as jest.Mock).mockReturnValue('mockedTag');
-    (forge.util.encode64 as jest.Mock).mockReturnValue('mockedData');
+    (forge.util.encode64 as jest.Mock).mockReturnValue('mockedEncode');
     (forge.util.hexToBytes as jest.Mock).mockReturnValue('mockedKey');
-    it('should Encrypt the message', () => {
-    const result = CryptoUtils.aesGCMEncrypt(data, iv, aad, key);
-    expect((forge.cipher.createCipher as jest.Mock)).toHaveBeenCalled();
-    expect((forge.cipher.createCipher as jest.Mock)).toHaveBeenCalledWith('AES-GCM', 'mockedKey');
-    // expect(res.send.mock.calls.length).toBe(1);
-    // expect(res.send.mock.calls).toEqual([['resolved']]);
 
-    expect(result).toEqual({
-      aad: 'address',
-      data: 'mockedData',
-      iv: 'symetrickey',
-      tag: 'mockedTag',
+    it('should Encrypt the message', () => {
+      const result = CryptoUtils.aesGCMEncrypt(data, iv, aad, key);
+      expect((forge.cipher.createCipher as jest.Mock)).toHaveBeenCalled();
+      expect((forge.cipher.createCipher as jest.Mock)).toHaveBeenCalledWith('AES-GCM', 'mockedKey');
+
+      expect(result).toEqual({
+        aad: 'address',
+        data: 'mockedEncode',
+        iv: 'symetrickey',
+        tag: 'mockedTag',
+      });
     });
   });
 
-//   it("should call next on error", async () => {
+  describe('generateSymmetricKey', () => {
 
-//     (domain.signTx as jest.Mock).mockImplementationOnce((args) => {
-//       return Promise.reject('Boom!');
-//     })
+    const length = 0;
 
-//     await SignTxController(req, res, next);
-//     expect(next.mock.calls.length).toBe(1);
-//     expect(next.mock.calls).toEqual([['Boom!']])
-//   });
-// });
+    (forge.random.getBytesSync as jest.Mock).mockReturnValue('mockedBytes');
+    (forge.util.bytesToHex as jest.Mock).mockReturnValue('mockedHex');
+    it('should generate Symmetric Key', () => {
+      const result = CryptoUtils.generateSymmetricKey(length);
+      expect((forge.util.bytesToHex as jest.Mock)).toHaveBeenCalled();
+      expect((forge.util.bytesToHex as jest.Mock)).toHaveBeenCalledWith('mockedBytes');
 
-// describe("SendTxController", async () => {
-//   let req: any = {
-//     body: {
-//       tx: 'whatever'
-//     }
-//   };
-//   let res: any = {
-//     send: jest.fn()
-//   };
-//   let next = jest.fn();
+      expect(result).toEqual('mockedHex');
+    });
+  });
 
-//   beforeEach(() => {
-//     next.mockReset();
-//     res.send.mockReset();
-//   });
+  describe('encryptRSA', () => {
 
-//   it("should send tx success", async () => {
-//     await SendTxController(req, res, next);
-//     expect((domain.sendTx as jest.Mock).mock.calls.length).toBe(1);
-//     expect((domain.sendTx as jest.Mock).mock.calls).toEqual([['whatever']]);
-//     expect(res.send.mock.calls.length).toBe(1);
-//     expect(res.send.mock.calls).toEqual([['resolved']]);
-//   });
+    const publicKey = 'asymmetricPublicKey';
+    const dataEnc = 'data';
 
-//   it("should call next on error", async () => {
+    (forge.util.decode64 as jest.Mock).mockReturnValue('mockedDecode');
+    (forge.util.encode64 as jest.Mock).mockReturnValue('mockedEncode');
 
-//     (domain.sendTx as jest.Mock).mockImplementationOnce((args) => {
-//       return Promise.reject('Boom!');
-//     })
+    it('should encrypt public Key', () => {
 
-//     await SendTxController(req, res, next);
-//     expect(next.mock.calls.length).toBe(1);
-//     expect(next.mock.calls).toEqual([['Boom!']])
-//   });
-// });
+      (forge.__publicKeyFromPem__.encrypt as jest.Mock).mockReturnValue('mockedEncrypt');
 
-// describe("SendSignedTxController", async () => {
-//   let req: any = {
-//     body: {
-//       tx: 'whatever'
-//     }
-//   };
-//   let res: any = {
-//     send: jest.fn()
-//   };
-//   let next = jest.fn();
+      const result = CryptoUtils.encryptRSA(publicKey, dataEnc);
 
-//   beforeEach(() => {
-//     next.mockReset();
-//     res.send.mockReset();
-//   });
+      expect((forge.pki.publicKeyFromPem as jest.Mock)).toHaveBeenCalled();
+      expect((forge.pki.publicKeyFromPem as jest.Mock)).toHaveBeenCalledWith('mockedDecode');
+      expect((forge.util.encode64 as jest.Mock)).toHaveBeenCalled();
+      expect((forge.util.encode64 as jest.Mock)).toHaveBeenCalledWith('mockedEncrypt');
 
-//   it("should send tx success", async () => {
-//     await SendSignedTxController(req, res, next);
-//     expect((domain.sendSignedTx as jest.Mock).mock.calls.length).toBe(1);
-//     expect((domain.sendSignedTx as jest.Mock).mock.calls).toEqual([['whatever']]);
-//     expect(res.send.mock.calls.length).toBe(1);
-//     expect(res.send.mock.calls).toEqual([['resolved']]);
-//   });
-
-//   it("should call next on error", async () => {
-
-//     (domain.sendSignedTx as jest.Mock).mockImplementationOnce((args) => {
-//       return Promise.reject('Boom!');
-//     })
-
-//     await SendSignedTxController(req, res, next);
-//     expect(next.mock.calls.length).toBe(1);
-//     expect(next.mock.calls).toEqual([['Boom!']])
-//   });
-// });
+      expect(result).toEqual('mockedEncode');
+    });
+  });
+});

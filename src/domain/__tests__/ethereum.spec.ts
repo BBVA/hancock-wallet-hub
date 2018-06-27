@@ -1,23 +1,23 @@
 import {
-    signTx,
-    sendTx,
     sendSignedTx,
+    sendTx,
+    signTx,
   } from '../../domain/ethereum';
 
 import 'jest';
+import { IEthereumRawTransaction } from '../../models/ethereum';
 import * as signerFactory from '../../signers/signerFactory';
 import * as web3 from '../../utils/web3';
-import { IEthereumRawTransaction } from '../../models/ethereum';
 
 jest.mock('../../signers/signerFactory');
 jest.mock('../../utils/web3');
 
 describe('signTx', async () => {
 
-  let  rawTx: IEthereumRawTransaction;
-  let  provider = 'mockProvider';
+  const provider = 'mockProvider';
+  const rawTx: IEthereumRawTransaction = {} as any;
   const signer = {
-    signTx: jest.fn()
+    signTx: jest.fn(),
   };
   const aa = signerFactory.getSigner as jest.Mock;
 
@@ -91,14 +91,14 @@ describe('sendTx', async () => {
     expect(__mockWeb3__.mock.calls.length).toBe(1);
     expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
 
-    
   });
 });
 
 describe('sendSignedTx', async () => {
-  
-  let tx = 'whatever';
 
+  const tx = 'whatever';
+
+  // tslint:disable-next-line:variable-name
   const __mockWeb3__ = (web3 as any).__mockWeb3__.eth.sendSignedTransaction as jest.Mock;
 
   beforeEach(() => {
@@ -118,7 +118,7 @@ describe('sendSignedTx', async () => {
       const promise = Promise.reject('Boom!');
       (promise as any).on = jest.fn().mockReturnValue(promise);
       return promise;
-    })
+    });
 
     try {
 
@@ -135,14 +135,13 @@ describe('sendSignedTx', async () => {
     expect(__mockWeb3__.mock.calls.length).toBe(1);
     expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
 
-    
   });
 });
 
 describe('_getSenderFromRawTx', () => {
 
-  let rawTx: any = {
-    from: 'whatever'
+  const rawTx: any = {
+    from: 'whatever',
   };
 
   it('should return a string with receiver of tx', () => {
@@ -154,8 +153,8 @@ describe('_getSenderFromRawTx', () => {
 
 describe('_getReceiverFromRawTx', () => {
 
-  let rawTx: any = {
-    to: 'whatever'
+  const rawTx: any = {
+    to: 'whatever',
   };
 
   it('should return a string with transmitter of tx', () => {
