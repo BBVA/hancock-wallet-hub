@@ -1,14 +1,21 @@
 const mock = {
-    application: 'applicationName',
-    db: {
-      ethereum: {
-        collections: {
-          contracts: 'mockDatabaseCollectionContracts',
-          providers: 'mockDatabaseCollectionProviders',
-        },
-        database: 'mockDatabase',
+  application: 'applicationName',
+  db: {
+    database: 'mockDbDatabase',
+    ethereum: {
+      collections: {
+        contracts: 'mockDatabaseCollectionContracts',
+        providers: 'mockDatabaseCollectionProviders',
       },
+      database: 'mockDatabase',
     },
-   };
-   
-   export default mock;
+    host: 'mockDbHost',
+    params: 'mockDbParams',
+    pass: 'mockDbPass',
+    port: 'mockDbPort',
+    protocol: 'mockDbProtocol',
+    user: 'mockDbUser',
+  },
+};
+
+export default mock;
