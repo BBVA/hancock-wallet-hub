@@ -32,7 +32,7 @@ nodePipeline{
   // ---- RELEASE ----
   if (env.BRANCH_NAME =~ 'release/*') {
 
-    stage('Install Dependencies'){
+    /*stage('Install Dependencies'){
       container('node'){
         sh """
           yarn cache clean --force
@@ -47,16 +47,16 @@ nodePipeline{
           yarn run coverage
         """
       }
-    }
-    
+    }*/
+
     docker_shuttle_stage()
 
-    qa_data_shuttle_stage()
+    //qa_data_shuttle_stage()
 
     deploy_shuttle_stage(project: "blockchainhub", environment: "qa", askForConfirmation: false)
 
-    stage ('Starting Functional Tests') {
-      build job: '/BlockchainHub/kst-hancock-ms-wallet-hub-tests/master'
+    stage ('Functional Tests') {
+      build job: '/blockchainhub/kst-hancock-ms-wallet-hub-tests/master'
     }
 
   }
