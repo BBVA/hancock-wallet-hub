@@ -6,7 +6,7 @@ import {AppRouter} from './routes/index';
 import config from './utils/config';
 import * as db from './utils/db';
 
-export function run() {
+export async function run() {
 
   return db.connect()
     .then(() => {

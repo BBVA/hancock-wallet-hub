@@ -18,7 +18,7 @@ export interface IEthereumProviderModel {
   endpoint: string;
 }
 
-export class IEthereumRawTransaction implements IRawTransaction {
+export interface IEthereumRawTransaction extends IRawTransaction {
   from: dltAddress;
   nonce: string;
   gasPrice: string;
