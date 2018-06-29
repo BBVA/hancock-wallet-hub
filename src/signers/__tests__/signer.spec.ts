@@ -35,22 +35,23 @@ describe('consumer', () => {
     endpoint = 'mockEndpoint';
     testSigner = new Signer(endpoint);
 
+    jest.restoreAllMocks();
+
   });
 
   it('should call signTx successfully', async () => {
 
     (request.post as any) = jest.fn().mockReturnValue(Promise.resolve(true));
-    const spy = jest.spyOn(Signer.prototype, 'getSenderFromRawTx')
+    const spy = jest.spyOn((Signer.prototype as any), 'getSenderFromRawTx')
     .mockImplementation(() => 'mock');
     await testSigner.signTx(tx);
     expect(spy).toHaveBeenCalledWith(tx);
-    spy.mockRestore();
   });
 
   it('should throw exception', async () => {
 
     try {
-      await testSigner.signTx(null);
+      await testSigner.signTx({} as any);
       fail('it should fail');
     } catch (error) {
       expect(error).toBeDefined();

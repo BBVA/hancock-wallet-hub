@@ -34,7 +34,6 @@ describe('CryptvaultSigner', () => {
       value: '0',
     };
     testSigner = new CryptvaultSigner('test');
-    jest.restoreAllMocks();
 
     response2 = {
       data: {
@@ -59,6 +58,7 @@ describe('CryptvaultSigner', () => {
         status_code: 200,
       },
     };
+    jest.restoreAllMocks();
 
   });
 
@@ -67,15 +67,13 @@ describe('CryptvaultSigner', () => {
     (request.get as any) = jest.fn().mockReturnValueOnce(response);
     (request.post as any) = jest.fn().mockReturnValueOnce(response2);
 
-    const getTokenspy = jest.spyOn(CryptvaultSigner.prototype, 'getToken')
+    const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
     .mockImplementation(() => Promise.resolve('whatever'));
 
     const responseData = await (testSigner as any).signTx(tx);
 
     expect(getTokenspy).toHaveBeenCalledTimes(1);
     expect(responseData).toEqual({ success: true });
-
-    getTokenspy.mockRestore();
 
   });
 
@@ -85,7 +83,7 @@ describe('CryptvaultSigner', () => {
 
     (request.get as any) = jest.fn().mockReturnValueOnce(response);
 
-    const getTokenspy = jest.spyOn(CryptvaultSigner.prototype, 'getToken')
+    const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
     .mockImplementation(() => Promise.resolve('whatever'));
 
     try {
@@ -94,8 +92,6 @@ describe('CryptvaultSigner', () => {
     } catch (error) {
       expect(error).toBeDefined();
     }
-
-    getTokenspy.mockRestore();
 
   });
 
@@ -105,8 +101,8 @@ describe('CryptvaultSigner', () => {
 
     (request.get as any) = jest.fn().mockReturnValueOnce(response);
     (request.post as any) = jest.fn().mockReturnValueOnce(response2);
-    
-    const getTokenspy = jest.spyOn(CryptvaultSigner.prototype, 'getToken')
+
+    const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
     .mockImplementation(() => Promise.resolve('whatever'));
 
     try {
@@ -116,100 +112,6 @@ describe('CryptvaultSigner', () => {
       expect(error).toBeDefined();
     }
 
-    getTokenspy.mockRestore();
-
   });
-
-  // it('should call cypherAndSendTransfer method on notify of not tx', async () => {
-
-  //   event.kind = 'log';
-
-  //   const spy = jest.spyOn(Consumer.prototype, 'notify')
-  //   .mockImplementation(() => Promise.resolve(true));
-  //   await testSigner.notify(event);
-  //   expect(spy).toHaveBeenCalledWith(event);
-  //   spy.mockRestore();
-  // });
-
-  // it('should call cypherAndSendTransfer method successfully', async () => {
-
-  //   const response = {
-  //     data: {
-  //       item_id: 'mockid',
-  //       public_key: 'mockKey',
-  //     },
-  //     result: {
-  //       description: 'mockdes',
-  //       internal_code: 'mockcode',
-  //       status_code: 200,
-  //     },
-  //   };
-  //   (request.get as any) = jest.fn().mockReturnValue(response);
-
-  //   const getTokenspy = jest.spyOn(CryptvaultSigner.prototype, 'getToken')
-  //   .mockImplementation(() => Promise.resolve('whatever'));
-  //   const getTxDirectionspy = jest.spyOn(CryptvaultSigner.prototype, 'getTxDirection')
-  //   .mockImplementation(() => Promise.resolve('whatever'));
-  //   const spy = jest.spyOn(Consumer.prototype, 'notify')
-  //   .mockImplementation(() => Promise.resolve(true));
-
-  //   await (testSigner as any).cypherAndSendTransfer(event);
-
-  //   expect(getTokenspy).toHaveBeenCalledTimes(1);
-  //   expect(getTxDirectionspy).toHaveBeenCalledTimes(1);
-  //   expect(spy).toHaveBeenCalledTimes(1);
-
-  //   getTokenspy.mockRestore();
-  //   getTxDirectionspy.mockRestore();
-  //   spy.mockRestore();
-  // });
-
-  // it('should call cypherAndSendTransfer method and throw exception', async () => {
-
-  //   const response = {
-  //     data: {
-  //       item_id: 'mockid',
-  //       public_key: 'mockKey',
-  //     },
-  //     result: {
-  //       description: 'mockdes',
-  //       internal_code: 'mockcode',
-  //       status_code: 500,
-  //     },
-  //   };
-  //   (request.get as any) = jest.fn().mockReturnValue(response);
-
-  //   const getTokenspy = jest.spyOn(CryptvaultSigner.prototype, 'getToken')
-  //   .mockImplementation(() => Promise.resolve('whatever'));
-  //   const getTxDirectionspy = jest.spyOn(CryptvaultSigner.prototype, 'getTxDirection')
-  //   .mockImplementation(() => Promise.resolve('whatever'));
-  //   const spy = jest.spyOn(Consumer.prototype, 'notify')
-  //   .mockImplementation(() => Promise.resolve(true));
-
-  //   try {
-  //     await (testSigner as any).cypherAndSendTransfer(event);
-  //     fail('it should fail');
-  //   } catch (error) {
-  //     expect(error).toBeDefined();
-  //   }
-
-  //   getTokenspy.mockRestore();
-  //   getTxDirectionspy.mockRestore();
-  //   spy.mockRestore();
-  // });
-
-  // it('should call getToken method successfully', () => {
-
-  //   (testSigner as any).getToken();
-  //   expect(jwt.sign).toHaveBeenCalledTimes(1);
-  //   expect(jwt.sign).toHaveBeenCalledWith(
-  //     {
-  //       iss: config.consumers.cryptvault.credentials.key,
-  //       txid: uuidv4(),
-  //      },
-  //      config.consumers.cryptvault.credentials.secret,
-  //      { expiresIn: config.consumers.cryptvault.credentials.expires_in },
-  //   );
-  // });
 
 });

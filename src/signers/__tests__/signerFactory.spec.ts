@@ -8,9 +8,8 @@ import { getSigner } from '../signerFactory';
 
 import { SIGNERS } from '../../types';
 
-import * as signer from '../signer';
 import * as cryptvaultSigner from '../cryptvaultSigner';
-
+import * as signer from '../signer';
 
 jest.mock('../../utils/config');
 
@@ -22,7 +21,6 @@ jest.mock('../signer');
 jest.mock('../cryptvaultSigner');
 
 describe('getSigner', async () => {
-
 
   beforeEach(() => {
     jest.clearAllMocks();
