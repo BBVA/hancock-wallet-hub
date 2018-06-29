@@ -1,4 +1,5 @@
-import Web3Lib = require('web3');
+// tslint:disable-next-line:no-var-requires
+const Web3Lib = require('web3');
 import config from '../config';
 import * as ethereum from '../ethereum';
 
