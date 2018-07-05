@@ -22,7 +22,7 @@ nodePipeline{
 
     docker_shuttle_stage()
 
-    // qa_data_shuttle_stage()
+    qa_data_shuttle_stage()
 
     deploy_shuttle_stage(project: "blockchainhub", environment: "develop", askForConfirmation: false)
     
@@ -49,15 +49,19 @@ nodePipeline{
       }
     }
 
+    check_unlocked_RC_shuttle_stage()
+
     docker_shuttle_stage()
 
-    //qa_data_shuttle_stage()
+    qa_data_shuttle_stage()
 
     deploy_shuttle_stage(project: "blockchainhub", environment: "qa", askForConfirmation: false)
+
+    set2rc_shuttle_stage()
 
     stage ('Functional Tests') {
       build job: '/blockchainhub/kst-hancock-ms-wallet-hub-tests/master'
     }
-
+ 
   }
 }
