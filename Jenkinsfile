@@ -20,7 +20,7 @@ nodePipeline{
       }
     }
 
-    sonar_shuttle_stage()
+    //sonar_shuttle_stage()
 
     docker_shuttle_stage()
 
@@ -51,8 +51,8 @@ nodePipeline{
       }
     }
 
-    sonar_shuttle_stage()
-    
+    //sonar_shuttle_stage()
+
     check_unlocked_RC_shuttle_stage()
 
     docker_shuttle_stage()
