@@ -51,7 +51,7 @@ nodePipeline{
       }
     }
 
-    //sonar_shuttle_stage()
+    sonar_shuttle_stage()
 
     check_unlocked_in_RC_shuttle_stage()
 
