@@ -32,7 +32,7 @@ nodePipeline{
   }
 
   // ---- RELEASE ----
-  if (env.BRANCH_NAME =~ 'release/*') {
+  if (env.BRANCH_NAME == 'qa' ||env.BRANCH_NAME =~ 'release/*') {
 
     stage('Install Dependencies'){
       container('node'){
@@ -41,7 +41,7 @@ nodePipeline{
           yarn install
         """
       }
-    }
+    }git
 
     stage('Unit tests'){
       container('node'){
