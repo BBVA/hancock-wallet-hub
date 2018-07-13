@@ -2,6 +2,8 @@ nodePipeline{
 
   // ---- DEVELOP ----
   if (env.BRANCH_NAME == 'develop') {
+  
+    sonar_shuttle_stage()
 
     stage('Install Dependencies'){
       container('node'){
@@ -20,7 +22,7 @@ nodePipeline{
       }
     }
 
-    //sonar_shuttle_stage()
+    
 
     docker_shuttle_stage()
 
@@ -34,6 +36,8 @@ nodePipeline{
   // ---- RELEASE ----
   if (env.BRANCH_NAME == 'qa' ||env.BRANCH_NAME =~ 'release/*') {
 
+    sonar_shuttle_stage()
+  
     stage('Install Dependencies'){
       container('node'){
         sh """
@@ -50,8 +54,6 @@ nodePipeline{
         """
       }
     }
-
-    //sonar_shuttle_stage()
 
     check_unlocked_in_RC_shuttle_stage()
 
