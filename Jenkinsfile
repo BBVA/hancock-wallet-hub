@@ -41,7 +41,7 @@ nodePipeline{
           yarn install
         """
       }
-    }git
+    }
 
     stage('Unit tests'){
       container('node'){
