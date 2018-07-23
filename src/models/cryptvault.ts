@@ -1,4 +1,4 @@
-import {IRawTransaction} from "./general";
+import {IRawTransaction} from './general';
 
 export interface ICryptoVaultResult {
   status_code: number;

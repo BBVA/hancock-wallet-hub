@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response, Router} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import * as domain from '../domain/ethereum';
 import {
   IApiSendSignedTxRequest,
@@ -8,7 +8,6 @@ import {
   IApiSignTxRequest,
   IApiSignTxResponse,
 } from '../models/ethereum';
-import {ISigner} from '../signers/iSigner';
 
 export async function SignTxController(req: Request, res: Response, next: NextFunction) {
   const body: IApiSignTxRequest = req.body;
@@ -36,7 +35,7 @@ export async function SendSignedTxController(req: Request, res: Response, next: 
   const body: IApiSendSignedTxRequest = req.body;
 
   console.log(`Request to send-signed-tx`);
-  
+
   await domain
     .sendSignedTx(body.tx)
     .then((response: IApiSendSignedTxResponse) => res.send(response))

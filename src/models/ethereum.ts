@@ -1,4 +1,4 @@
-import {dltAddress, IRawTransaction} from "./general";
+import {dltAddress, IRawTransaction} from './general';
 
 export type ethContractAddress = string;
 export type ethTxHash = string;

@@ -1,7 +1,6 @@
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as express from 'express';
-import * as http from 'http';
 import {AppRouter} from './routes/index';
 import config from './utils/config';
 import * as db from './utils/db';
