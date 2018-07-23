@@ -10,8 +10,9 @@ jest.mock('../../controllers/healthcheck');
 describe('HealthCheckRouter', () => {
 
   it('::run should route healthcheck', () => {
-    healthcheck.HealthCheckRouter.get('mockrouter', HealthCheckController );
+    healthcheck.healthCheckRouter.get('mockrouter', HealthCheckController);
   });
+  
 });
 
 // describe('HealthCheckRouter', () => {
