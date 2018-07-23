@@ -53,7 +53,7 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
 
   return new Promise<IApiSendSignedTxResponse>((resolve, reject) => {
 
-    const promise = web3.eth
+    web3.eth
       .sendSignedTransaction(tx)
       .on('error', (err: string) => {
         console.error(`On error: ${err}`);
