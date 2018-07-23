@@ -5,14 +5,14 @@ import * as path from 'path';
 import { SendSignedTxController, SendTxController, SignTxController } from '../controllers/ethereum';
 import config from '../utils/config';
 
-export const Router = ExpressRouter();
+export const router = ExpressRouter();
 
 const schemaPath: string = path.normalize(__dirname + '/../../../raml/schemas/eth');
-const SignTxSchema = JSON.parse(readFileSync(schemaPath + '/sign-tx.json', 'utf-8'));
-const SendTxSchema = JSON.parse(readFileSync(schemaPath + '/send-tx.json', 'utf-8'));
-const SendSignedTxSchema = JSON.parse(readFileSync(schemaPath + '/send-signed-tx.json', 'utf-8'));
+const signTxSchema = JSON.parse(readFileSync(schemaPath + '/sign-tx.json', 'utf-8'));
+const sendTxSchema = JSON.parse(readFileSync(schemaPath + '/send-tx.json', 'utf-8'));
+const sendSignedTxSchema = JSON.parse(readFileSync(schemaPath + '/send-signed-tx.json', 'utf-8'));
 
-Router
-  .post(config.api.signTxResource, validate({ body: SignTxSchema }), SignTxController)
-  .post(config.api.sendTxResource, validate({ body: SendTxSchema }), SendTxController)
-  .post(config.api.sendSignedTxResource, validate({ body: SendSignedTxSchema }), SendSignedTxController);
+router
+  .post(config.api.signTxResource, validate({ body: signTxSchema }), SignTxController)
+  .post(config.api.sendTxResource, validate({ body: sendTxSchema }), SendTxController)
+  .post(config.api.sendSignedTxResource, validate({ body: sendSignedTxSchema }), SendSignedTxController);

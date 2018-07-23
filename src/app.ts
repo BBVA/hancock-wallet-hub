@@ -1,7 +1,7 @@
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as express from 'express';
-import {AppRouter} from './routes/index';
+import {appRouter} from './routes/index';
 import config from './utils/config';
 import * as db from './utils/db';
 
@@ -16,7 +16,7 @@ export async function run() {
       app.use(cors());
       app.use(bodyParser.json());
 
-      app.use(config.server.base, AppRouter);
+      app.use(config.server.base, appRouter);
 
       app.listen(config.server.port, (error: any) => {
 

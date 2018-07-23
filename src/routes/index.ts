@@ -5,7 +5,7 @@ import { ErrorController } from '../controllers/error';
 import { FallbackController } from '../controllers/fallback';
 import { HealthCheckController } from '../controllers/healthcheck';
 
-export const AppRouter = Router();
+export const appRouter = Router();
 
 Object.keys(config.blockchain).forEach((dlt: string) => {
 
@@ -13,13 +13,13 @@ Object.keys(config.blockchain).forEach((dlt: string) => {
 
   if (router) {
 
-    AppRouter.use(`/${dlt}`, router);
+    appRouter.use(`/${dlt}`, router);
 
   }
 
 });
 
-AppRouter
+appRouter
   .use('/health', HealthCheckController)
   .use(FallbackController)
   .use(ErrorController);
