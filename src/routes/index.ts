@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Router } from 'express';
 import config from '../utils/config';
 
 import { ErrorController } from '../controllers/error';

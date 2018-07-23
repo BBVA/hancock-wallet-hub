@@ -1,10 +1,6 @@
-import * as crypto from 'crypto';
 import * as forge from 'node-forge';
-import {Bytes} from 'node-forge';
 import {
-  asymmetricPrivateKey, asymmetricPublicKey, encryptedData
-  , IRSAKeyPair, ISignature, ISymmetricEncData
-  , signature, symmetricKey,
+  asymmetricPublicKey, encryptedData, ISymmetricEncData, symmetricKey,
 } from '../models/crypto';
 
 // import ByteBuffer from "node-forge";
@@ -33,7 +29,7 @@ export class CryptoUtils {
    * @param {symmetricKey} key String Hex key to be used to cipher data.
    * @returns {ISymmetricEncData} Object which contains the data encrypted with a symmetric key
    */
-  public static aesGCMEncrypt(data: string, iv: symmetricKey, aad: string, key: symmetricKey): ISymmetricEncData { 
+  public static aesGCMEncrypt(data: string, iv: symmetricKey, aad: string, key: symmetricKey): ISymmetricEncData {
     const cipher = forge.cipher.createCipher('AES-GCM', forge.util.hexToBytes(key));
     cipher.start({
       additionalData: aad, // optional
@@ -61,7 +57,7 @@ export class CryptoUtils {
   //  * @returns {string | Object | null} Decrypted data
   //  */
   // public static aesGCMDecrypt
-  // (encData: encryptedData, iv: symmetricKey, aad: string, 
+  // (encData: encryptedData, iv: symmetricKey, aad: string,
   // tag: string, key: symmetricKey): string | Object | null {
   //   const decipher = forge.cipher.createDecipher('AES-GCM', forge.util.hexToBytes(key));
   //   const data64 = forge.util.decode64(encData);

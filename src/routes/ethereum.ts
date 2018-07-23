@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router as ExpressRouter } from 'express';
+import { Router as ExpressRouter } from 'express';
 import { validate } from 'express-jsonschema';
 import { readFileSync } from 'fs';
 import * as path from 'path';

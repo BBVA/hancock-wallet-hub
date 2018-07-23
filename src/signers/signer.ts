@@ -1,10 +1,8 @@
 import * as request from 'request-promise-native';
-import * as db from '../db/ethereum';
 import {
   IApiSignTxProviderRequest,
   IApiSignTxProviderResponse,
   IApiSignTxResponse,
-  IEthereumProviderModel,
   IEthereumRawTransaction,
 } from '../models/ethereum';
 import config from '../utils/config';
