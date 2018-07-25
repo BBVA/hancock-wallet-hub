@@ -9,7 +9,7 @@ export const appRouter = Router();
 
 Object.keys(config.blockchain).forEach((dlt: string) => {
 
-  const router: any = require(`./${dlt}`).Router;
+  const router: any = require(`./${dlt}`).router;
 
   if (router) {
 
