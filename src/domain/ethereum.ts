@@ -6,15 +6,15 @@ import {
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
 } from '../models/ethereum';
-import { ISigner } from '../signers/iSigner';
+import { ISigner } from '../signers/model';
+
 import { getSigner } from '../signers/signerFactory';
 import { getWeb3 } from '../utils/ethereum';
 
 export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
 
-  return await getSigner(provider)
-    .then((signer: ISigner) => signer.signTx(rawTx));
-  // .catch((err: Error) => {throw err});
+  const signer: ISigner = await getSigner(provider);
+  return signer.signTx(rawTx);
 
 }
 

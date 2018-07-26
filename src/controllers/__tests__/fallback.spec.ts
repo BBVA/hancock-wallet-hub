@@ -1,6 +1,6 @@
 import 'jest';
-import { ErrorController, Errors } from '../error';
-import { FallbackController } from '../fallback';
+import { errorController, hancockNotFoundError } from '../error';
+import { fallbackController } from '../fallback';
 
 jest.mock('../error');
 
@@ -11,11 +11,11 @@ describe('fallbackController', async () => {
 
   it('should call the error controller passing NOT_FOUND error argument', async () => {
 
-    const expectedErrorArg: any = { message: Errors.NOT_FOUND };
+    const expectedErrorArg: any = hancockNotFoundError;
 
-    await FallbackController(req, res, next);
+    await fallbackController(req, res, next);
 
-    expect(ErrorController).toHaveBeenCalledWith(expectedErrorArg, req, res, next);
+    expect(errorController).toHaveBeenCalledWith(expectedErrorArg, req, res, next);
 
   });
 

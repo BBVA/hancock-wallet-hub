@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { ErrorController, Errors } from './error';
+import { errorController, hancockNotFoundError } from './error';
 
-export function FallbackController(req: Request, res: Response, next: NextFunction) {
+export function fallbackController(req: Request, res: Response, next: NextFunction) {
 
-  return ErrorController({message: Errors.NOT_FOUND}, req, res, next);
+  return errorController(hancockNotFoundError, req, res, next);
 
 }

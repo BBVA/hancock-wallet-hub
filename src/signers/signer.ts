@@ -1,4 +1,5 @@
 import * as request from 'request-promise-native';
+import { error } from '../controllers/error';
 import {
   IApiSignTxProviderRequest,
   IApiSignTxProviderResponse,
@@ -6,7 +7,7 @@ import {
   IEthereumRawTransaction,
 } from '../models/ethereum';
 import config from '../utils/config';
-import {ISigner} from './iSigner';
+import { hancockSignTxProviderError, ISigner } from './model';
 
 export class Signer implements ISigner {
 
@@ -14,11 +15,8 @@ export class Signer implements ISigner {
   }
 
   public async signTx(rawTx: IEthereumRawTransaction): Promise<IApiSignTxResponse> {
-    const sender: string = this.getSenderFromRawTx(rawTx);
 
-    if (!sender) {
-      throw new Error('DEFAULT_ERROR');
-    }
+    const sender: string = this.getSenderFromRawTx(rawTx);
 
     const body: IApiSignTxProviderRequest = {
       // tslint:disable-next-line:max-line-length
@@ -27,14 +25,23 @@ export class Signer implements ISigner {
       sender,
     };
 
-    return request
-      .post(this.endpoint,
+    try {
+
+      const response: IApiSignTxProviderResponse = await request.post(
+        this.endpoint,
         {
           body,
           json: true,
-        })
-      .then((response: IApiSignTxProviderResponse) => response)
-      .catch((error: string) => { throw new Error('PROVIDER_ERROR'); });
+        },
+      );
+
+      return response;
+
+    } catch (e) {
+
+      throw error(hancockSignTxProviderError, e);
+
+    }
 
   }
 

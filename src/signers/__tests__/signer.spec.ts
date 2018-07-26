@@ -48,17 +48,6 @@ describe('consumer', () => {
     expect(spy).toHaveBeenCalledWith(tx);
   });
 
-  it('should throw exception', async () => {
-
-    try {
-      await testSigner.signTx({} as any);
-      fail('it should fail');
-    } catch (error) {
-      expect(error).toBeDefined();
-    }
-
-  });
-
   it('call getSenderFromRawTx should return sender successfully', async () => {
 
     const response = (testSigner as any).getSenderFromRawTx(tx);

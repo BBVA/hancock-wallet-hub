@@ -1,41 +1,76 @@
 import { NextFunction, Request, Response } from 'express';
 
-export interface ICustomError {
-  code_internal: string;
-  code_http: number;
+export interface IHancockError extends Error {
+  internalCode: string;
+  httpCode: number;
   message: string;
+  extendedMessage: string;
+  errorStack: HancockError[];
 }
 
-export interface IErrorMap {
-  [k: string]: ICustomError;
+export class HancockError extends Error implements IHancockError {
+
+  public name: string = 'HancockError';
+  public errorStack: HancockError[] = [];
+  private prefix: string = 'HKWH';
+
+  constructor(
+    public internalCode: string,
+    public httpCode: number,
+    public message: string,
+    public extendedError?: HancockError | Error) {
+
+    super(message);
+    this.internalCode = `${this.prefix}${internalCode}`;
+
+  }
+
+  get extendedMessage() {
+    return this.extendedError ? this.extendedError.message : '';
+  }
+
 }
 
-export enum Errors {
-  DEFAULT_ERROR = 'DEFAULT_ERROR',
-  NOT_FOUND = 'NOT_FOUND',
-  DLT_ERROR = 'DLT_ERROR',
-  PROVIDER_ERROR = 'PROVIDER_ERROR',
+export function error(hancockError: HancockError, originalError?: HancockError | Error): HancockError {
+
+  let retError: HancockError = hancockError;
+
+  if (originalError instanceof HancockError) {
+
+    retError = originalError;
+    retError.errorStack.push(hancockError);
+
+  } else {
+
+    retError.extendedError = originalError;
+
+  }
+
+  return retError;
+
 }
 
-export const errorMap: IErrorMap = {
-  DEFAULT_ERROR: { code_internal: 'DC4000', code_http: 400, message: 'Bad request' },
-  DLT_ERROR: { code_internal: 'DC5030', code_http: 503, message: 'Service Unavailable' },
-  NOT_FOUND: { code_internal: 'DC4040', code_http: 404, message: 'Not Found' },
-  PROVIDER_ERROR: { code_internal: 'DC5030', code_http: 503, message: 'Service Unavailable' },
-};
+export const hancockDefaultError = new HancockError('5000', 500, 'Internal error');
+export const hancockDbError = new HancockError('5001', 500, 'Error fetching from database');
+export const hancockBadRequestError = new HancockError('4000', 400, 'Bad request');
+export const hancockDltError = new HancockError('5030', 503, 'Service Unavailable');
+export const hancockNotFoundError = new HancockError('4040', 404, 'Not Found');
+export const hancockProviderError = new HancockError('5030', 503, 'Service Unavailable');
 
-export function ErrorController(error: any, req: Request, res: Response, next: NextFunction) {
+export function errorController(err: Error, req: Request, res: Response, next: NextFunction) {
 
-  const customError: ICustomError = errorMap[error.message] || errorMap[Errors.DEFAULT_ERROR];
-  // const logger = loggerUtils.getLogger(customError.code_internal);
+  const customError: HancockError = err instanceof HancockError ? err : hancockDefaultError;
 
-  console.log('-----------------------------------------------------------------------');
-  console.error(customError.message);
-  console.error(error);
-  console.log('-----------------------------------------------------------------------');
+  console.log('------------------------------- ERROR -------------------------------');
+  console.error(customError.message, customError.extendedMessage);
+  customError.errorStack.forEach((e: HancockError, index: number) => {
+    const tabs: string = new Array(index + 1).join('--');
+    console.error(`${tabs} from: ${e.message} ${e.extendedMessage}`);
+  });
+  console.log('---------------------------------------------------------------------');
 
   return res
-    .status(customError.code_http)
+    .status(customError.httpCode)
     .json(customError);
 
 }
