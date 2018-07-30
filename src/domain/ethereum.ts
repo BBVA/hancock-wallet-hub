@@ -34,7 +34,7 @@ export async function signTx(rawTx: IEthereumRawTransaction, provider: string): 
 
   try {
 
-    return signer.signTx(rawTx);
+    return await signer.signTx(rawTx);
 
   } catch (e) {
 
