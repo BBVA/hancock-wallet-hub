@@ -1,5 +1,6 @@
 import 'jest';
-import { errorController, hancockNotFoundError } from '../error';
+import { hancockNotFoundError } from '../../models/error';
+import { errorController } from '../error';
 import { fallbackController } from '../fallback';
 
 jest.mock('../error');

@@ -1,4 +1,4 @@
-import { HancockError } from '../controllers/error';
+import { HancockError } from '../models/error';
 import {
   IApiSignTxResponse,
   IEthereumRawTransaction,

@@ -1,4 +1,3 @@
-import { error } from '../controllers/error';
 import {
   IApiSendSignedTxResponse,
   IApiSendTxResponse,
@@ -8,6 +7,7 @@ import {
 } from '../models/ethereum';
 import { ISigner } from '../signers/model';
 import { getSigner } from '../signers/signerFactory';
+import { error } from '../utils/error';
 import { getWeb3 } from '../utils/ethereum';
 import logger from '../utils/logger';
 import {
@@ -61,14 +61,14 @@ export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
 
     web3.eth
       .sendTransaction(rawTx)
-      .on('error', (e: Error) => { throw error(hancockEthereumSendTransactionError, e); })
+      .on('error', (e: Error) => reject(error(hancockEthereumSendTransactionError, e)))
       .then((txReceipt: IEthTransactionReceiptBody) => {
 
         logger.info(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
         resolve({ success: true, txReceipt });
 
       })
-      .catch((e: Error) => { throw error(hancockEthereumSendTransactionError, e); });
+      .catch((e: Error) => reject(error(hancockEthereumSendTransactionError, e)));
 
   });
 
@@ -92,14 +92,14 @@ export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse
 
     web3.eth
       .sendSignedTransaction(tx)
-      .on('error', (e: Error) => { throw error(hancockEthereumSendSignedTransactionError, e); })
+      .on('error', (e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)))
       .then((txReceipt: IEthTransactionReceiptBody) => {
 
         logger.info(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
         resolve({ success: true, txReceipt });
 
       })
-      .catch((err: string) => (e: Error) => { throw error(hancockEthereumSendSignedTransactionError, e); });
+      .catch((e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)));
 
   });
 

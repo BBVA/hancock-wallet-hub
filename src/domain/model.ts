@@ -1,4 +1,4 @@
-import { HancockError } from '../controllers/error';
+import { HancockError } from '../models/error';
 
 export const hancockCantRetrieveSignerError = new HancockError('50009', 500, 'Error retrieving the signer');
 export const hancockSignTransactionError = new HancockError('50010', 500, 'Error signing the transaction');

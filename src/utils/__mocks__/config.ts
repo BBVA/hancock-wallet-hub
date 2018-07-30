@@ -1,4 +1,6 @@
 const mock = {
+  application: 'mockedApplicationName',
+  hostname: 'mockedHostname',
   api: {
     signTxResource: '/sign-tx',
     sendTxResource: '/send-tx',
@@ -17,7 +19,6 @@ const mock = {
       secret: 'mocksecret',
     },
   },
-  application: 'applicationName',
   blockchain: {
     ethereum: 'mockBlockchain',
   },
@@ -44,6 +45,9 @@ const mock = {
     externalPort: 'mockexternalport',
     base: 'mockbase',
     externalBase: 'mockexternalbase',
+  },
+  logger: {
+    logLevel: 'mockedLogLevel',
   },
 };
 

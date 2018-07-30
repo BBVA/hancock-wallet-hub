@@ -1,22 +1,15 @@
 import 'jest';
-
-import * as db from '../../utils/db';
-
 import * as ethereumDb from '../../db/ethereum';
-
-import { getSigner } from '../signerFactory';
-
 import { SIGNERS } from '../../types';
-
+import * as db from '../../utils/db';
 import * as cryptvaultSigner from '../cryptvaultSigner';
 import * as signer from '../signer';
+import { getSigner } from '../signerFactory';
 
 jest.mock('../../utils/config');
-
 jest.mock('../../utils/db');
-
+jest.mock('../../utils/logger');
 jest.mock('mongodb');
-
 jest.mock('../signer');
 jest.mock('../cryptvaultSigner');
 

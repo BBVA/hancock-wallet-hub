@@ -8,9 +8,11 @@ import 'jest';
 import { IEthereumRawTransaction } from '../../models/ethereum';
 import * as signerFactory from '../../signers/signerFactory';
 import * as ethereumUtils from '../../utils/ethereum';
+import { hancockEthereumSendSignedTransactionError, hancockEthereumSendTransactionError } from '../model';
 
 jest.mock('../../signers/signerFactory');
 jest.mock('../../utils/ethereum');
+jest.mock('../../utils/logger');
 
 describe('signTx', async () => {
 
@@ -33,22 +35,11 @@ describe('signTx', async () => {
     aa.mockResolvedValue(Promise.resolve(signer));
 
     await signTx(rawTx, provider);
-    expect(aa.mock.calls.length).toBe(1);
-    expect(aa.mock.calls).toEqual([['mockProvider']]);
+    expect(aa).toHaveBeenCalled();
+    expect(aa).toHaveBeenCalledWith('mockProvider');
 
   });
 
-  // it("should throw an error", async () => {
-
-  //   //(signerFactory.getSigner as jest.Mock).mockImplementationOnce((args) => {
-  //   //  return Promise.reject('Boom!');
-  //   //})
-  //   aa.mockResolvedValue(Promise.reject(new Error('Boom!')));
-
-  //   await signTx(rawTx,provider);
-  //   expect(signer.signTx.mock.calls.length).toBe(1);
-  //   expect(signer.signTx.mock.calls).toEqual([['Boom!']])
-  // });
 });
 
 describe('sendTx', async () => {
@@ -56,23 +47,23 @@ describe('sendTx', async () => {
   const rawTx = 'whatever';
 
   // tslint:disable-next-line:variable-name
-  const __mockWeb3__ = (ethereumUtils as any).__mockWeb3__.eth.sendTransaction as jest.Mock;
+  const web3Mock = (ethereumUtils as any).__mockWeb3__.eth.sendTransaction as jest.Mock;
 
   beforeEach(() => {
-    __mockWeb3__.mockClear();
+    web3Mock.mockClear();
   });
 
   it('should send tx success', async () => {
 
     await sendTx(rawTx);
-    expect(__mockWeb3__.mock.calls.length).toBe(1);
-    expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
+    expect(web3Mock).toHaveBeenCalled();
+    expect(web3Mock).toHaveBeenCalledWith('whatever');
   });
 
   it('should reject on error when try to send a tx', async () => {
 
-    (__mockWeb3__ as jest.Mock).mockImplementationOnce((args) => {
-      const promise = Promise.reject('Boom!');
+    (web3Mock as jest.Mock).mockImplementationOnce((args) => {
+      const promise = Promise.reject(new Error('Boom!'));
       (promise as any).on = jest.fn().mockReturnValue(promise);
       return promise;
     });
@@ -85,38 +76,40 @@ describe('sendTx', async () => {
 
     } catch (e) {
 
-      expect(e).toEqual(new Error('DLT_ERROR'));
+      console.log(e);
+      expect(e).toEqual(hancockEthereumSendTransactionError);
 
     }
 
-    expect(__mockWeb3__.mock.calls.length).toBe(1);
-    expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
+    expect(web3Mock).toHaveBeenCalled();
+    expect(web3Mock).toHaveBeenCalledWith('whatever');
 
   });
 });
 
-describe('sendSignedTx', async () => {
+describe('sendSignedTx', () => {
 
   const tx = 'whatever';
 
   // tslint:disable-next-line:variable-name
-  const __mockWeb3__ = (ethereumUtils as any).__mockWeb3__.eth.sendSignedTransaction as jest.Mock;
+  const web3Mock = (ethereumUtils as any).__mockWeb3__.eth.sendSignedTransaction as jest.Mock;
 
   beforeEach(() => {
-    __mockWeb3__.mockClear();
+    web3Mock.mockClear();
   });
 
   it('should send and sign tx success', async () => {
 
     await sendSignedTx(tx);
-    expect(__mockWeb3__.mock.calls.length).toBe(1);
-    expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
+    expect(web3Mock).toHaveBeenCalled();
+    expect(web3Mock).toHaveBeenCalledWith('whatever');
+
   });
 
   it('should reject on error when try send and sign a tx', async () => {
 
-    (__mockWeb3__ as jest.Mock).mockImplementationOnce((args) => {
-      const promise = Promise.reject('Boom!');
+    (web3Mock as jest.Mock).mockImplementationOnce((args) => {
+      const promise = Promise.reject(new Error('Boom!'));
       (promise as any).on = jest.fn().mockReturnValue(promise);
       return promise;
     });
@@ -129,12 +122,12 @@ describe('sendSignedTx', async () => {
 
     } catch (e) {
 
-      expect(e).toEqual(new Error('DLT_ERROR'));
+      expect(e).toEqual(hancockEthereumSendSignedTransactionError);
 
     }
 
-    expect(__mockWeb3__.mock.calls.length).toBe(1);
-    expect(__mockWeb3__.mock.calls).toEqual([['whatever']]);
+    expect(web3Mock).toHaveBeenCalled();
+    expect(web3Mock).toHaveBeenCalledWith('whatever');
 
   });
 });

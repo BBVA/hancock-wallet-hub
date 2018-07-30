@@ -26,10 +26,11 @@ describe('HealthcheckController', async () => {
 
     await healthCheckController(req, res, next);
 
-    expect(res.status.mock.calls).toEqual([[200]]);
-    expect(res.json.mock.calls).toEqual([[{
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      app: 'mockedApplicationName',
       success: true,
-    }]]);
+    });
 
   });
 

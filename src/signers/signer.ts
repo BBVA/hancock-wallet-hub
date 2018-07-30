@@ -1,5 +1,4 @@
 import * as request from 'request-promise-native';
-import { error } from '../controllers/error';
 import {
   IApiSignTxProviderRequest,
   IApiSignTxProviderResponse,
@@ -7,6 +6,7 @@ import {
   IEthereumRawTransaction,
 } from '../models/ethereum';
 import config from '../utils/config';
+import { error } from '../utils/error';
 import { hancockSignTxProviderError, ISigner } from './model';
 
 export class Signer implements ISigner {

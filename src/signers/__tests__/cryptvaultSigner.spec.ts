@@ -1,10 +1,8 @@
 import 'jest';
-import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
-import { v4 as uuidv4 } from 'uuid';
-import config from '../../utils/config';
 import { CryptvaultSigner } from '../cryptvaultSigner';
 
+jest.mock('../../utils/logger');
 jest.mock('../../utils/crypto');
 jest.mock('request-promise-native');
 jest.mock('jsonwebtoken');
@@ -68,7 +66,7 @@ describe('CryptvaultSigner', () => {
     (request.post as any) = jest.fn().mockReturnValueOnce(response2);
 
     const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
-    .mockImplementation(() => Promise.resolve('whatever'));
+      .mockImplementation(() => Promise.resolve('whatever'));
 
     const responseData = await (testSigner as any).signTx(tx);
 
@@ -84,7 +82,7 @@ describe('CryptvaultSigner', () => {
     (request.get as any) = jest.fn().mockReturnValueOnce(response);
 
     const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
-    .mockImplementation(() => Promise.resolve('whatever'));
+      .mockImplementation(() => Promise.resolve('whatever'));
 
     try {
       await (testSigner as any).signTx(tx);
@@ -103,7 +101,7 @@ describe('CryptvaultSigner', () => {
     (request.post as any) = jest.fn().mockReturnValueOnce(response2);
 
     const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
-    .mockImplementation(() => Promise.resolve('whatever'));
+      .mockImplementation(() => Promise.resolve('whatever'));
 
     try {
       await (testSigner as any).signTx(tx);
