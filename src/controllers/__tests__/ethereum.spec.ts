@@ -1,7 +1,7 @@
 import {
-    SendSignedTxController,
-    SendTxController,
-    SignTxController,
+    sendSignedTxController,
+    sendTxController,
+    signTxController,
   } from '../../controllers/ethereum';
 
 import {NextFunction, Request, Response, Router} from 'express';
@@ -29,7 +29,7 @@ describe('SignTxController', async () => {
   });
 
   it('should sign tx success', async () => {
-    await SignTxController(req, res, next);
+    await signTxController(req, res, next);
     expect((domain.signTx as jest.Mock).mock.calls.length).toBe(1);
     expect((domain.signTx as jest.Mock).mock.calls).toEqual([['whatever', 'mockProvider']]);
     expect(res.send.mock.calls.length).toBe(1);
@@ -42,7 +42,7 @@ describe('SignTxController', async () => {
       return Promise.reject('Boom!');
     })
 
-    await SignTxController(req, res, next);
+    await signTxController(req, res, next);
     expect(next.mock.calls.length).toBe(1);
     expect(next.mock.calls).toEqual([['Boom!']])
   });
@@ -65,7 +65,7 @@ describe('SendTxController', async () => {
   });
 
   it('should send tx success', async () => {
-    await SendTxController(req, res, next);
+    await sendTxController(req, res, next);
     expect((domain.sendTx as jest.Mock).mock.calls.length).toBe(1);
     expect((domain.sendTx as jest.Mock).mock.calls).toEqual([['whatever']]);
     expect(res.send.mock.calls.length).toBe(1);
@@ -78,7 +78,7 @@ describe('SendTxController', async () => {
       return Promise.reject('Boom!');
     })
 
-    await SendTxController(req, res, next);
+    await sendTxController(req, res, next);
     expect(next.mock.calls.length).toBe(1);
     expect(next.mock.calls).toEqual([['Boom!']])
   });
@@ -101,7 +101,7 @@ describe('SendSignedTxController', async () => {
   });
 
   it('should send tx success', async () => {
-    await SendSignedTxController(req, res, next);
+    await sendSignedTxController(req, res, next);
     expect((domain.sendSignedTx as jest.Mock).mock.calls.length).toBe(1);
     expect((domain.sendSignedTx as jest.Mock).mock.calls).toEqual([['whatever']]);
     expect(res.send.mock.calls.length).toBe(1);
@@ -114,7 +114,7 @@ describe('SendSignedTxController', async () => {
       return Promise.reject('Boom!');
     })
 
-    await SendSignedTxController(req, res, next);
+    await sendSignedTxController(req, res, next);
     expect(next.mock.calls.length).toBe(1);
     expect(next.mock.calls).toEqual([['Boom!']])
   });

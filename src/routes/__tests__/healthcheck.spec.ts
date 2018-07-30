@@ -1,6 +1,6 @@
 import 'jest';
 
-import { HealthCheckController } from '../../controllers/__mocks__/healthcheck';
+import { healthCheckController } from '../../controllers/__mocks__/healthcheck';
 import * as healthcheck from '../healthcheck';
 
 // import request = require('supertest');
@@ -10,9 +10,9 @@ jest.mock('../../controllers/healthcheck');
 describe('HealthCheckRouter', () => {
 
   it('::run should route healthcheck', () => {
-    healthcheck.healthCheckRouter.get('mockrouter', HealthCheckController);
+    healthcheck.healthCheckRouter.get('mockrouter', healthCheckController);
   });
-  
+
 });
 
 // describe('HealthCheckRouter', () => {

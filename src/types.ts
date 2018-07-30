@@ -3,4 +3,4 @@ enum SIGNERS {
   CryptvaultSigner = 'CryptvaultSigner',
 }
 
-export {SIGNERS};
+export { SIGNERS };

@@ -1,5 +1,5 @@
 import 'jest';
-import { ErrorController, errorMap, Errors } from '../error';
+import { errorController, errorMap, Errors } from '../error';
 
 jest.mock('../../utils/config');
 
@@ -35,25 +35,24 @@ describe('errorController', async () => {
  it('should return the correct status code and error body given an specific error', async () => {
 
    const expectedBody = errorMap[Errors.NOT_FOUND];
-   await ErrorController(error, req, res, next);
+   await errorController(error, req, res, next);
 
    expect(res.status.mock.calls).toEqual([[expectedBody.code_http]]);
    expect(res.json.mock.calls).toEqual([[expectedBody]]);
-   expect(console.error).toHaveBeenCalledWith(expectedBody.message);
-   expect(console.error).toHaveBeenCalledWith(error);
-
+   expect(LOG.error).toHaveBeenCalledWith(expectedBody.message);
+   expect(LOG.error).toHaveBeenCalledWith(error);
 
  });
 
  it('should return the default status code and error body when the given error is not matched', async () => {
 
    const expectedBody = errorMap[Errors.DEFAULT_ERROR];
-   await ErrorController(new Error('WHATEVER'), req, res, next);
+   await errorController(new Error('WHATEVER'), req, res, next);
 
    expect(res.status.mock.calls).toEqual([[expectedBody.code_http]]);
    expect(res.json.mock.calls).toEqual([[expectedBody]]);
-   expect(console.error).toHaveBeenCalledWith(expectedBody.message);
-   expect(console.error).toHaveBeenCalledWith(error);
+   expect(LOG.error).toHaveBeenCalledWith(expectedBody.message);
+   expect(LOG.error).toHaveBeenCalledWith(error);
 
  });
 

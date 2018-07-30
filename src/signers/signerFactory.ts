@@ -2,6 +2,7 @@ import { error } from '../controllers/error';
 import * as db from '../db/ethereum';
 import { IEthereumProviderModel } from '../models/ethereum';
 import { SIGNERS } from '../types';
+import logger from '../utils/logger';
 import { CryptvaultSigner } from './cryptvaultSigner';
 import { hancockCantFetchProviderError, hancockProviderNotFoundError, ISigner } from './model';
 import { Signer } from './signer';
@@ -20,7 +21,7 @@ export async function getSigner(provider: string): Promise<ISigner> {
 
   }
 
-  console.log(`Provider: ${JSON.stringify(providerModel)}`);
+  logger.info(`Provider: ${JSON.stringify(providerModel)}`);
 
   if (providerModel !== null) {
 

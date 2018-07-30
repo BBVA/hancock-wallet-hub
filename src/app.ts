@@ -1,13 +1,15 @@
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as express from 'express';
-import {appRouter} from './routes/index';
+import { appRouter } from './routes/index';
 import config from './utils/config';
 import * as db from './utils/db';
+import logger from './utils/logger';
 
 export async function run() {
 
-  return db.connect()
+  return db
+    .connect()
     .then(() => {
 
       const app = express();
@@ -21,26 +23,24 @@ export async function run() {
       app.listen(config.server.port, (error: any) => {
 
         if (error) {
-          return console.error('Service is not available', error);
+          return logger.error('Service is not available', error);
         }
 
-        console.log('-----------------------------------------------------------------------');
-        console.log('Service available in port', config.server.port);
-        console.log('-----------------------------------------------------------------------');
+        logger.info('Service available in port', config.server.port);
 
       });
 
     })
-    .catch(console.log);
+    .catch(logger.error);
 
 }
 
 function exitHook(err?: any) {
 
-  console.log('Exiting gracefully...');
+  logger.info('Exiting gracefully...');
 
   if (err) {
-    console.error(err);
+    logger.error(err);
   }
 
   db.close();
