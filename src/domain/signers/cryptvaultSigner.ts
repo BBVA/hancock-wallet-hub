@@ -1,20 +1,20 @@
 import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
 import { v4 as uuidv4 } from 'uuid';
-import { ISymmetricEncData, symmetricKey } from '../models/crypto';
+import { ISymmetricEncData, symmetricKey } from '../../models/crypto';
 import {
   ICryptoVaultDataToSign,
   ICryptoVaultSignResponse,
   ICryptoVaultWalletResponse,
-} from '../models/cryptvault';
+} from '../../models/cryptvault';
 import {
   IApiSignTxResponse,
-} from '../models/ethereum';
-import { IRawTransaction } from '../models/general';
-import config from '../utils/config';
-import { CryptoUtils } from '../utils/crypto';
-import { error } from '../utils/error';
-import logger from '../utils/logger';
+} from '../../models/ethereum';
+import { IRawTransaction } from '../../models/general';
+import config from '../../utils/config';
+import { CryptoUtils } from '../../utils/crypto';
+import { error } from '../../utils/error';
+import logger from '../../utils/logger';
 import {
   hancockCypherProviderMessagePayloadError,
   hancockGetProviderPkError,

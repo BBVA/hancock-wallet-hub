@@ -1,7 +1,6 @@
 import 'jest';
 import * as ethereumDomain from '../../domain/ethereum';
 import { IEthereumRawTransaction } from '../../models/ethereum';
-import * as signerFactory from '../../signers/signerFactory';
 import * as errorUtils from '../../utils/error';
 import * as ethereumUtils from '../../utils/ethereum';
 import {
@@ -11,8 +10,9 @@ import {
   hancockEthereumSendTransactionError,
   hancockSignTransactionError,
 } from '../model';
+import * as signerFactory from '../signers/signerFactory';
 
-jest.mock('../../signers/signerFactory');
+jest.mock('../signers/signerFactory');
 jest.mock('../../utils/ethereum');
 jest.mock('../../utils/logger');
 jest.mock('../../utils/error');

@@ -1,15 +1,12 @@
 import 'jest';
-import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
-import { v4 as uuidv4 } from 'uuid';
-import config from '../../utils/config';
 import { Signer } from '../signer';
 
-jest.mock('../../utils/crypto');
+jest.mock('../../../utils/crypto');
+jest.mock('../../../utils/config');
 jest.mock('request-promise-native');
 jest.mock('jsonwebtoken');
 jest.mock('uuid');
-jest.mock('../../utils/config');
 
 describe('consumer', () => {
 

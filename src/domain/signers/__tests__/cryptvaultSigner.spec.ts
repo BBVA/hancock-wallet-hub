@@ -2,12 +2,12 @@ import 'jest';
 import * as request from 'request-promise-native';
 import { CryptvaultSigner } from '../cryptvaultSigner';
 
-jest.mock('../../utils/logger');
-jest.mock('../../utils/crypto');
+jest.mock('../../../utils/logger');
+jest.mock('../../../utils/crypto');
+jest.mock('../../../utils/config');
 jest.mock('request-promise-native');
 jest.mock('jsonwebtoken');
 jest.mock('uuid');
-jest.mock('../../utils/config');
 
 describe('CryptvaultSigner', () => {
 

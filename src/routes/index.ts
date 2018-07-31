@@ -4,6 +4,7 @@ import config from '../utils/config';
 import { errorController } from '../controllers/error';
 import { fallbackController } from '../controllers/fallback';
 import { healthCheckController } from '../controllers/healthcheck';
+import { jsonSchemaError } from '../controllers/jsonSchemaError';
 
 export const appRouter = Router();
 
@@ -22,4 +23,5 @@ Object.keys(config.blockchain).forEach((dlt: string) => {
 appRouter
   .use('/health', healthCheckController)
   .use(fallbackController)
+  .use(jsonSchemaError)
   .use(errorController);

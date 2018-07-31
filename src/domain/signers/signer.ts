@@ -4,9 +4,9 @@ import {
   IApiSignTxProviderResponse,
   IApiSignTxResponse,
   IEthereumRawTransaction,
-} from '../models/ethereum';
-import config from '../utils/config';
-import { error } from '../utils/error';
+} from '../../models/ethereum';
+import config from '../../utils/config';
+import { error } from '../../utils/error';
 import { hancockSignTxProviderError, ISigner } from './model';
 
 export class Signer implements ISigner {
