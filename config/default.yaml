@@ -1,5 +1,7 @@
 env:
 app:
+  application: 'hancock:ms-wallet-hub'
+  hostname: 'localhost'
   server:
     protocol: 'http'
     host: 'localhost'
@@ -38,3 +40,5 @@ app:
     sendTxResource: '/send-tx'    
     sendSignedTxResource: '/send-signed-tx'
     signedTxHookResource: '/signed-tx-hook'
+  logger:
+    logLevel: debug

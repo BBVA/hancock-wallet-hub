@@ -1,10 +1,8 @@
 import 'jest';
-import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
-import { v4 as uuidv4 } from 'uuid';
-import config from '../../utils/config';
 import { CryptvaultSigner } from '../cryptvaultSigner';
 
+jest.mock('../../utils/logger');
 jest.mock('../../utils/crypto');
 jest.mock('request-promise-native');
 jest.mock('jsonwebtoken');
@@ -17,6 +15,7 @@ describe('CryptvaultSigner', () => {
   let tx: any;
   let response: any;
   let response2: any;
+  let getTokenspy: jest.Mock;
 
   beforeEach(() => {
 
@@ -58,7 +57,12 @@ describe('CryptvaultSigner', () => {
         status_code: 200,
       },
     };
+
     jest.restoreAllMocks();
+
+    getTokenspy = jest
+      .spyOn((CryptvaultSigner.prototype as any), 'getToken')
+      .mockImplementation(() => Promise.resolve('whatever'));
 
   });
 
@@ -66,9 +70,6 @@ describe('CryptvaultSigner', () => {
 
     (request.get as any) = jest.fn().mockReturnValueOnce(response);
     (request.post as any) = jest.fn().mockReturnValueOnce(response2);
-
-    const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
-    .mockImplementation(() => Promise.resolve('whatever'));
 
     const responseData = await (testSigner as any).signTx(tx);
 
@@ -82,9 +83,6 @@ describe('CryptvaultSigner', () => {
     response.result.status_code = 500;
 
     (request.get as any) = jest.fn().mockReturnValueOnce(response);
-
-    const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
-    .mockImplementation(() => Promise.resolve('whatever'));
 
     try {
       await (testSigner as any).signTx(tx);
@@ -101,9 +99,6 @@ describe('CryptvaultSigner', () => {
 
     (request.get as any) = jest.fn().mockReturnValueOnce(response);
     (request.post as any) = jest.fn().mockReturnValueOnce(response2);
-
-    const getTokenspy = jest.spyOn((CryptvaultSigner.prototype as any), 'getToken')
-    .mockImplementation(() => Promise.resolve('whatever'));
 
     try {
       await (testSigner as any).signTx(tx);

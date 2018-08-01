@@ -1,6 +1,6 @@
 
 import 'jest';
-import { HealthCheckController } from '../healthcheck';
+import { healthCheckController } from '../healthcheck';
 
 jest.mock('../../utils/config');
 
@@ -24,12 +24,13 @@ describe('HealthcheckController', async () => {
 
   it('should return 200 and state', async () => {
 
-    await HealthCheckController(req, res, next);
+    await healthCheckController(req, res, next);
 
-    expect(res.status.mock.calls).toEqual([[200]]);
-    expect(res.json.mock.calls).toEqual([[{
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      app: 'mockedApplicationName',
       success: true,
-    }]]);
+    });
 
   });
 

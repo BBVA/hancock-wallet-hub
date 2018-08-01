@@ -1,3 +1,5 @@
+import 'jest';
+
 export const res = {
     json: {
         success: true,
@@ -5,4 +7,4 @@ export const res = {
     status: 200,
   };
 
-export const HealthCheckController = jest.fn().mockResolvedValue(res);
+export const healthCheckController = jest.fn().mockResolvedValue(res);

@@ -2,7 +2,7 @@ import { Router as ExpressRouter } from 'express';
 import { validate } from 'express-jsonschema';
 import { readFileSync } from 'fs';
 import * as path from 'path';
-import { SendSignedTxController, SendTxController, SignTxController } from '../controllers/ethereum';
+import { sendSignedTxController, sendTxController, signTxController } from '../controllers/ethereum';
 import config from '../utils/config';
 
 export const router = ExpressRouter();
@@ -13,6 +13,6 @@ const sendTxSchema = JSON.parse(readFileSync(schemaPath + '/send-tx.json', 'utf-
 const sendSignedTxSchema = JSON.parse(readFileSync(schemaPath + '/send-signed-tx.json', 'utf-8'));
 
 router
-  .post(config.api.signTxResource, validate({ body: signTxSchema }), SignTxController)
-  .post(config.api.sendTxResource, validate({ body: sendTxSchema }), SendTxController)
-  .post(config.api.sendSignedTxResource, validate({ body: sendSignedTxSchema }), SendSignedTxController);
+  .post(config.api.signTxResource, validate({ body: signTxSchema }), signTxController)
+  .post(config.api.sendTxResource, validate({ body: sendTxSchema }), sendTxController)
+  .post(config.api.sendSignedTxResource, validate({ body: sendSignedTxSchema }), sendSignedTxController);

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import config from '../utils/config';
 
-import { ErrorController } from '../controllers/error';
-import { FallbackController } from '../controllers/fallback';
-import { HealthCheckController } from '../controllers/healthcheck';
+import { errorController } from '../controllers/error';
+import { fallbackController } from '../controllers/fallback';
+import { healthCheckController } from '../controllers/healthcheck';
 
 export const appRouter = Router();
 
@@ -20,6 +20,6 @@ Object.keys(config.blockchain).forEach((dlt: string) => {
 });
 
 appRouter
-  .use('/health', HealthCheckController)
-  .use(FallbackController)
-  .use(ErrorController);
+  .use('/health', healthCheckController)
+  .use(fallbackController)
+  .use(errorController);
