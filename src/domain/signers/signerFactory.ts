@@ -1,8 +1,8 @@
-import * as db from '../db/ethereum';
-import { IEthereumProviderModel } from '../models/ethereum';
-import { SIGNERS } from '../types';
-import { error } from '../utils/error';
-import logger from '../utils/logger';
+import * as db from '../../db/ethereum';
+import { IEthereumProviderModel } from '../../models/ethereum';
+import { SIGNERS } from '../../types';
+import { error } from '../../utils/error';
+import logger from '../../utils/logger';
 import { CryptvaultSigner } from './cryptvaultSigner';
 import { hancockCantFetchProviderError, hancockProviderNotFoundError, ISigner } from './model';
 import { Signer } from './signer';

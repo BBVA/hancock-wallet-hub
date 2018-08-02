@@ -5,8 +5,6 @@ import {
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
 } from '../models/ethereum';
-import { ISigner } from '../signers/model';
-import { getSigner } from '../signers/signerFactory';
 import { error } from '../utils/error';
 import { getWeb3 } from '../utils/ethereum';
 import logger from '../utils/logger';
@@ -17,6 +15,8 @@ import {
   hancockEthereumSendTransactionError,
   hancockSignTransactionError,
 } from './model';
+import { ISigner } from './signers/model';
+import { getSigner } from './signers/signerFactory';
 
 export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
 

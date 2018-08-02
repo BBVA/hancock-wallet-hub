@@ -1,8 +1,8 @@
-import { HancockError } from '../models/error';
+import { HancockError } from '../../models/error';
 import {
   IApiSignTxResponse,
   IEthereumRawTransaction,
-} from '../models/ethereum';
+} from '../../models/ethereum';
 
 export interface ISigner {
   signTx(rawTx: IEthereumRawTransaction): Promise<IApiSignTxResponse>;
