@@ -26,7 +26,7 @@ nodePipeline{
     
     lint()
     
-    sonar_shuttle_stage()
+    sonar_shuttle_stage(exclusions: 'node_modules')
 
     stage('Unit tests'){
       container('node'){
