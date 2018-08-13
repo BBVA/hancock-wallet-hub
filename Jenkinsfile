@@ -23,8 +23,10 @@ nodePipeline{
         """
       }
     }
-
+    
     lint()
+    
+    sonar_shuttle_stage()
 
     stage('Unit tests'){
       container('node'){
