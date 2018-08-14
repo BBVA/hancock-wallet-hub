@@ -14,7 +14,7 @@ nodePipeline{
   if (env.BRANCH_NAME == 'develop') {
   
     // sonar_shuttle_stage()
-
+    sonar_shuttle_stage( exclusions: './node_modules')
     stage('Install Dependencies'){
       container('node'){
         sh """
@@ -26,7 +26,7 @@ nodePipeline{
     
     lint()
     
-    sonar_shuttle_stage(sources:'./src', exclusions: './node_modules')
+
 
     stage('Unit tests'){
       container('node'){
