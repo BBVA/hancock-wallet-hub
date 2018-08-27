@@ -18,7 +18,7 @@
         "data": { "type": "string" },
         "chainId": { "type": "integer" }
       },
-      "required": [ "from", "nonce", "gasPrice", "to", "data" ]
+      "required": [ "from", "nonce", "gasPrice", "data" ]
     },
     "provider": {
       "type": "string",
