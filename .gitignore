@@ -11,3 +11,4 @@ config/local.yaml
 coverage/
 complexity/
 tests/reports/
+config/local.yaml
