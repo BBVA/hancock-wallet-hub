@@ -40,8 +40,7 @@ const mock = {
   },
   server: {
     protocol: 'mockprotocol',
-    host: 'mockhost',
-    port: 'mockport',
+    hosts: 'mockhost:mockport',
     externalPort: 'mockexternalport',
     base: 'mockbase',
     externalBase: 'mockexternalbase',
