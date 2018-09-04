@@ -48,6 +48,9 @@ const mock = {
   logger: {
     logLevel: 'mockedLogLevel',
   },
+  headers: {
+    hancockRequest: 'mockedHancockRequest',
+  },
 };
 
 export default mock;

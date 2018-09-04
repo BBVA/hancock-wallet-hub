@@ -11,6 +11,7 @@ import * as domain from '../../domain/ethereum';
 
 jest.mock('../../domain/ethereum');
 jest.mock('../../utils/logger');
+jest.mock('../../utils/config');
 
 describe('SignTxController', async () => {
   const req: any = {
