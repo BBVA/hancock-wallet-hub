@@ -11,7 +11,7 @@ import { hancockSignTxProviderError, ISigner } from './model';
 
 export class Signer implements ISigner {
 
-  constructor(protected endpoint: string) {
+  constructor(protected endpoint: string, protected requestId: string = '') {
   }
 
   public async signTx(rawTx: IEthereumRawTransaction): Promise<IApiSignTxResponse> {
@@ -32,6 +32,9 @@ export class Signer implements ISigner {
         {
           body,
           json: true,
+          headers: {
+            'Hancock-Request-Id': this.requestId,
+          },
         },
       );
 

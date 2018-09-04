@@ -47,7 +47,7 @@ describe('ethreumDomain', () => {
 
       getSignerMock.mockResolvedValue(signer);
 
-      await ethereumDomain.signTx(rawTx, provider);
+      await ethereumDomain.signTx({rawTx, provider});
 
       expect(getSignerMock).toHaveBeenCalled();
       expect(getSignerMock).toHaveBeenCalledWith('mockProvider');
@@ -61,7 +61,7 @@ describe('ethreumDomain', () => {
 
       try {
 
-        await ethereumDomain.signTx(rawTx, provider);
+        await ethereumDomain.signTx({rawTx, provider});
         fail('it should fail');
 
       } catch (e) {
@@ -83,7 +83,7 @@ describe('ethreumDomain', () => {
 
       try {
 
-        await ethereumDomain.signTx(rawTx, provider);
+        await ethereumDomain.signTx({rawTx, provider});
         fail('it should fail');
 
       } catch (e) {
@@ -181,7 +181,7 @@ describe('ethreumDomain', () => {
 
     it('should send and sign tx success', async () => {
 
-      await ethereumDomain.sendSignedTx(tx);
+      await ethereumDomain.sendSignedTx({tx});
       expect(web3Mock).toHaveBeenCalled();
       expect(web3Mock).toHaveBeenCalledWith('whatever');
 
@@ -197,7 +197,7 @@ describe('ethreumDomain', () => {
 
       try {
 
-        await ethereumDomain.sendSignedTx(tx);
+        await ethereumDomain.sendSignedTx({tx});
 
         fail('test should not reach this step');
 
@@ -219,7 +219,7 @@ describe('ethreumDomain', () => {
 
       try {
 
-        await ethereumDomain.sendSignedTx(tx);
+        await ethereumDomain.sendSignedTx({tx});
         fail('it should fail');
 
       } catch (e) {

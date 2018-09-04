@@ -34,6 +34,8 @@ export interface IEthereumRawTransaction extends IRawTransaction {
 export interface IApiSignTxRequest {
   provider: string;
   rawTx: IEthereumRawTransaction;
+  backUrl?: string;
+  requestId?: string | string[] | undefined;
 }
 
 export interface IApiSignTxProviderRequest {
@@ -65,6 +67,7 @@ export interface IApiSendTxResponse {
 
 export interface IApiSendSignedTxRequest {
   tx: string;
+  requestId?: string | string[] | undefined;
 }
 
 export interface IApiSendSignedTxResponse {

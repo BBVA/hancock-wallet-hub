@@ -31,7 +31,7 @@ const mock = {
       database: 'mockDatabase',
     },
     database: 'mockDbDatabase',
-    host: 'mockDbHost',
+    hosts: 'mockDbHost:mockDbPort',
     params: 'mockDbParams',
     pass: 'mockDbPass',
     port: 'mockDbPort',

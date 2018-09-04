@@ -23,6 +23,10 @@
     "provider": {
       "type": "string",
       "description": "A provider who will sign the transaction"
+    },
+    "backUrl": {
+      "type": "string",
+      "description": "Endpoint to call when the tx has been sent to the DLT"
     }
   },
   "required": [ "rawTx", "provider" ]

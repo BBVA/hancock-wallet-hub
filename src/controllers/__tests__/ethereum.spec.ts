@@ -10,6 +10,7 @@ import 'jest';
 import * as domain from '../../domain/ethereum';
 
 jest.mock('../../domain/ethereum');
+jest.mock('../../utils/logger');
 
 describe('SignTxController', async () => {
   const req: any = {
@@ -17,6 +18,7 @@ describe('SignTxController', async () => {
       provider: 'mockProvider',
       rawTx: 'whatever',
     },
+    headers: {},
   };
   const res: any = {
     send: jest.fn(),
@@ -31,7 +33,7 @@ describe('SignTxController', async () => {
   it('should sign tx success', async () => {
     await signTxController(req, res, next);
     expect((domain.signTx as jest.Mock).mock.calls.length).toBe(1);
-    expect((domain.signTx as jest.Mock).mock.calls).toEqual([['whatever', 'mockProvider']]);
+    expect((domain.signTx as jest.Mock).mock.calls).toEqual([[{provider: 'mockProvider', rawTx: 'whatever', requestId: undefined}]]);
     expect(res.send.mock.calls.length).toBe(1);
     expect(res.send.mock.calls).toEqual([['resolved']]);
   });
@@ -89,6 +91,7 @@ describe('SendSignedTxController', async () => {
     body: {
       tx: 'whatever',
     },
+    headers: {},
   };
   const res: any = {
     send: jest.fn(),
@@ -103,7 +106,7 @@ describe('SendSignedTxController', async () => {
   it('should send tx success', async () => {
     await sendSignedTxController(req, res, next);
     expect((domain.sendSignedTx as jest.Mock).mock.calls.length).toBe(1);
-    expect((domain.sendSignedTx as jest.Mock).mock.calls).toEqual([['whatever']]);
+    expect((domain.sendSignedTx as jest.Mock).mock.calls).toEqual([[{tx: 'whatever', requestId: undefined}]]);
     expect(res.send.mock.calls.length).toBe(1);
     expect(res.send.mock.calls).toEqual([['resolved']]);
   });

@@ -26,7 +26,7 @@ import { Signer } from './signer';
 
 export class CryptvaultSigner extends Signer {
 
-  private requestId: string = uuidv4();
+  private uuid: string = uuidv4();
 
   public async signTx(rawTx: IRawTransaction): Promise<IApiSignTxResponse> {
 
@@ -125,7 +125,7 @@ export class CryptvaultSigner extends Signer {
     try {
 
       return jwt.sign(
-        { iss: config.cryptvault.credentials.key, txid: this.requestId },
+        { iss: config.cryptvault.credentials.key, txid: this.uuid },
         config.cryptvault.credentials.secret,
         { expiresIn: config.cryptvault.credentials.expires_in },
       );
