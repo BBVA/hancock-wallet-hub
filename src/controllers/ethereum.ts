@@ -8,12 +8,15 @@ import {
   IApiSignTxDomainParams,
   IApiSignTxResponse,
 } from '../models/ethereum';
+import config from '../utils/config';
+
+const hancockHeaderRequest = config.headers.hancockRequest;
 
 export async function signTxController(req: Request, res: Response, next: NextFunction) {
 
   const signTxParams: IApiSignTxDomainParams = {
     ...req.body,
-    requestId : req.headers['vnd-hancock-request-id'],
+    requestId : req.headers[hancockHeaderRequest],
   };
 
   return domain
@@ -38,7 +41,7 @@ export async function sendSignedTxController(req: Request, res: Response, next: 
 
   const sendSignedTxParams: IApiSendSignedTxDomainParams = {
     ...req.body,
-    requestId: req.headers['vnd-hancock-request-id'],
+    requestId: req.headers[hancockHeaderRequest],
   };
 
   return domain

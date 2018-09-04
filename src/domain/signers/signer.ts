@@ -9,6 +9,8 @@ import config from '../../utils/config';
 import { error } from '../../utils/error';
 import { hancockSignTxProviderError, ISigner } from './model';
 
+const hancockHeaderRequest = config.headers.hancockRequest;
+
 export class Signer implements ISigner {
 
   constructor(protected endpoint: string) {
@@ -25,6 +27,8 @@ export class Signer implements ISigner {
       sender,
     };
 
+    const headers = {[hancockHeaderRequest]: requestId};
+
     try {
 
       const response: IApiSignTxProviderResponse = await request.post(
@@ -32,9 +36,7 @@ export class Signer implements ISigner {
         {
           body,
           json: true,
-          headers: {
-            'vnd-hancock-request-id': requestId,
-          },
+          headers,
         },
       );
 
