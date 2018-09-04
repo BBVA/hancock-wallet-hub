@@ -9,12 +9,14 @@ import config from '../../utils/config';
 import { error } from '../../utils/error';
 import { hancockSignTxProviderError, ISigner } from './model';
 
+const hancockHeaderRequest = config.headers.hancockRequest;
+
 export class Signer implements ISigner {
 
   constructor(protected endpoint: string) {
   }
 
-  public async signTx(rawTx: IEthereumRawTransaction): Promise<IApiSignTxResponse> {
+  public async signTx(rawTx: IEthereumRawTransaction, requestId: string): Promise<IApiSignTxResponse> {
 
     const sender: string = this.getSenderFromRawTx(rawTx);
 
@@ -25,6 +27,8 @@ export class Signer implements ISigner {
       sender,
     };
 
+    const headers = {[hancockHeaderRequest]: requestId};
+
     try {
 
       const response: IApiSignTxProviderResponse = await request.post(
@@ -32,6 +36,7 @@ export class Signer implements ISigner {
         {
           body,
           json: true,
+          headers,
         },
       );
 

@@ -41,3 +41,5 @@ app:
     signedTxHookResource: '/signed-tx-hook'
   logger:
     logLevel: debug
+  headers:
+    hancockRequest: 'vnd-hancock-request-id'

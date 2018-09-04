@@ -5,3 +5,4 @@ export const hancockSignTransactionError = new HancockError('50010', 500, 'Error
 export const hancockEthereumConnectionError = new HancockError('50011', 500, 'Error connecting with ethereum node');
 export const hancockEthereumSendTransactionError = new HancockError('50012', 500, 'Error sending an ethereum transaction');
 export const hancockEthereumSendSignedTransactionError = new HancockError('50013', 500, 'Error sending an ethereum signed transaction');
+export const hancockCallBackTxError = new HancockError('50014', 500, 'Error sending tx to the given callback');

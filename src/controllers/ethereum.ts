@@ -1,20 +1,26 @@
 import { NextFunction, Request, Response } from 'express';
 import * as domain from '../domain/ethereum';
 import {
-  IApiSendSignedTxRequest,
+  IApiSendSignedTxDomainParams,
   IApiSendSignedTxResponse,
   IApiSendTxRequest,
   IApiSendTxResponse,
-  IApiSignTxRequest,
+  IApiSignTxDomainParams,
   IApiSignTxResponse,
 } from '../models/ethereum';
+import config from '../utils/config';
+
+const hancockHeaderRequest = config.headers.hancockRequest;
 
 export async function signTxController(req: Request, res: Response, next: NextFunction) {
 
-  const body: IApiSignTxRequest = req.body;
+  const signTxParams: IApiSignTxDomainParams = {
+    ...req.body,
+    requestId : req.headers[hancockHeaderRequest],
+  };
 
   return domain
-    .signTx(body.rawTx, body.provider)
+    .signTx(signTxParams)
     .then((response: IApiSignTxResponse) => res.send(response))
     .catch(next);
 
@@ -33,10 +39,13 @@ export async function sendTxController(req: Request, res: Response, next: NextFu
 
 export async function sendSignedTxController(req: Request, res: Response, next: NextFunction) {
 
-  const body: IApiSendSignedTxRequest = req.body;
+  const sendSignedTxParams: IApiSendSignedTxDomainParams = {
+    ...req.body,
+    requestId: req.headers[hancockHeaderRequest],
+  };
 
   return domain
-    .sendSignedTx(body.tx)
+    .sendSignedTx(sendSignedTxParams)
     .then((response: IApiSendSignedTxResponse) => res.send(response))
     .catch(next);
 
