@@ -7,7 +7,7 @@ import { CryptvaultSigner } from './cryptvaultSigner';
 import { hancockCantFetchProviderError, hancockProviderNotFoundError, ISigner } from './model';
 import { Signer } from './signer';
 
-export async function getSigner(provider: string, requestId: string = ''): Promise<ISigner> {
+export async function getSigner(provider: string): Promise<ISigner> {
 
   let providerModel: IEthereumProviderModel | null = null;
 
@@ -35,7 +35,7 @@ export async function getSigner(provider: string, requestId: string = ''): Promi
 
       case SIGNERS.Signer:
       default:
-        signer = new Signer(providerModel.endpoint, requestId);
+        signer = new Signer(providerModel.endpoint);
 
     }
 

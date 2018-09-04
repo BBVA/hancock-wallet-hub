@@ -31,7 +31,7 @@ export interface IEthereumRawTransaction extends IRawTransaction {
 
 // SignTx Models
 
-export interface IApiSignTxRequest {
+export interface IApiSignTxDomainParams {
   provider: string;
   rawTx: IEthereumRawTransaction;
   backUrl?: string;
@@ -65,7 +65,7 @@ export interface IApiSendTxResponse {
 
 // SendSignedTx Models
 
-export interface IApiSendSignedTxRequest {
+export interface IApiSendSignedTxDomainParams {
   tx: string;
   requestId?: string | string[] | undefined;
 }

@@ -1,9 +1,10 @@
 import * as request from 'request-promise-native';
+import { v4 as uuidv4 } from 'uuid';
 import {
-  IApiSendSignedTxRequest,
+  IApiSendSignedTxDomainParams,
   IApiSendSignedTxResponse,
   IApiSendTxResponse,
-  IApiSignTxRequest,
+  IApiSignTxDomainParams,
   IApiSignTxResponse,
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
@@ -24,22 +25,21 @@ import { getSigner } from './signers/signerFactory';
 
 const pendingRequest = new Map();
 
-export async function signTx(body: IApiSignTxRequest): Promise<IApiSignTxResponse> {
+export async function signTx(params: IApiSignTxDomainParams): Promise<IApiSignTxResponse> {
 
   let signer: ISigner;
 
+  const requestId: string = params.requestId !== undefined ? (params.requestId as string) : uuidv4();
+
   try {
 
-    if (body.backUrl && body.requestId) {
+    if (params.backUrl && params.requestId) {
 
-      pendingRequest.set(body.requestId, body.backUrl);
-      signer = await getSigner(body.provider, body.requestId as string);
-
-    } else {
-
-      signer = await getSigner(body.provider);
+      pendingRequest.set(params.requestId, params.backUrl);
 
     }
+
+    signer = await getSigner(params.provider);
 
   } catch (e) {
 
@@ -49,7 +49,7 @@ export async function signTx(body: IApiSignTxRequest): Promise<IApiSignTxRespons
 
   try {
 
-    return await signer.signTx(body.rawTx);
+    return await signer.signTx(params.rawTx, requestId);
 
   } catch (e) {
 
@@ -89,7 +89,7 @@ export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
 
 }
 
-export async function sendSignedTx(body: IApiSendSignedTxRequest): Promise<IApiSendSignedTxResponse> {
+export async function sendSignedTx(params: IApiSendSignedTxDomainParams): Promise<IApiSendSignedTxResponse> {
 
   let web3: any;
 
@@ -106,18 +106,18 @@ export async function sendSignedTx(body: IApiSendSignedTxRequest): Promise<IApiS
   return new Promise<IApiSendSignedTxResponse>((resolve, reject) => {
 
     web3.eth
-      .sendSignedTransaction(body.tx)
+      .sendSignedTransaction(params.tx)
       .on('error', (e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)))
       .then((txReceipt: IEthTransactionReceiptBody) => {
 
-        if (body.requestId) {
+        if (params.requestId) {
 
-          const backUrl = pendingRequest.get(body.requestId);
+          const backUrl = pendingRequest.get(params.requestId);
 
           if (backUrl) {
 
-            _sendTxCallBack(txReceipt, backUrl, body.requestId as string);
-            pendingRequest.delete(body.requestId);
+            _sendTxCallBack(txReceipt, backUrl, params.requestId as string);
+            pendingRequest.delete(params.requestId);
 
           }
 

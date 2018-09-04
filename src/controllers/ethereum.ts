@@ -1,23 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
 import * as domain from '../domain/ethereum';
 import {
-  IApiSendSignedTxRequest,
+  IApiSendSignedTxDomainParams,
   IApiSendSignedTxResponse,
   IApiSendTxRequest,
   IApiSendTxResponse,
-  IApiSignTxRequest,
+  IApiSignTxDomainParams,
   IApiSignTxResponse,
 } from '../models/ethereum';
-import logger from '../utils/logger';
 
 export async function signTxController(req: Request, res: Response, next: NextFunction) {
 
-  const body: IApiSignTxRequest = req.body;
-  body.requestId = req.headers['hancock-request-id'];
-  logger.info(req.headers);
+  const signTxParams: IApiSignTxDomainParams = {
+    ...req.body,
+    requestId : req.headers['vnd-hancock-request-id'],
+  };
 
   return domain
-    .signTx(body)
+    .signTx(signTxParams)
     .then((response: IApiSignTxResponse) => res.send(response))
     .catch(next);
 
@@ -36,11 +36,13 @@ export async function sendTxController(req: Request, res: Response, next: NextFu
 
 export async function sendSignedTxController(req: Request, res: Response, next: NextFunction) {
 
-  const body: IApiSendSignedTxRequest = req.body;
-  body.requestId = req.headers['hancock-request-id'];
+  const sendSignedTxParams: IApiSendSignedTxDomainParams = {
+    ...req.body,
+    requestId: req.headers['vnd-hancock-request-id'],
+  };
 
   return domain
-    .sendSignedTx(body)
+    .sendSignedTx(sendSignedTxParams)
     .then((response: IApiSendSignedTxResponse) => res.send(response))
     .catch(next);
 

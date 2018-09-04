@@ -5,7 +5,7 @@ import {
 } from '../../models/ethereum';
 
 export interface ISigner {
-  signTx(rawTx: IEthereumRawTransaction): Promise<IApiSignTxResponse>;
+  signTx(rawTx: IEthereumRawTransaction, requestId: string): Promise<IApiSignTxResponse>;
 }
 
 export const hancockCantFetchProviderError = new HancockError('50002', 500, 'Can not fetch SignProvider');

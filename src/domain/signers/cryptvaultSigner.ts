@@ -1,6 +1,5 @@
 import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
-import { v4 as uuidv4 } from 'uuid';
 import { ISymmetricEncData, symmetricKey } from '../../models/crypto';
 import {
   ICryptoVaultDataToSign,
@@ -26,11 +25,9 @@ import { Signer } from './signer';
 
 export class CryptvaultSigner extends Signer {
 
-  private uuid: string = uuidv4();
+  public async signTx(rawTx: IRawTransaction, requestId: string): Promise<IApiSignTxResponse> {
 
-  public async signTx(rawTx: IRawTransaction): Promise<IApiSignTxResponse> {
-
-    const token: string = this.getToken();
+    const token: string = this.getToken(requestId);
 
     const walletEndpoint: string = config.cryptvault.api.getByAddressEndpoint.replace(':address', rawTx.from);
     let walletResponse: ICryptoVaultWalletResponse;
@@ -120,12 +117,12 @@ export class CryptvaultSigner extends Signer {
     }
   }
 
-  private getToken(): string {
+  private getToken(requestId: string): string {
 
     try {
 
       return jwt.sign(
-        { iss: config.cryptvault.credentials.key, txid: this.uuid },
+        { iss: config.cryptvault.credentials.key, txid: requestId },
         config.cryptvault.credentials.secret,
         { expiresIn: config.cryptvault.credentials.expires_in },
       );

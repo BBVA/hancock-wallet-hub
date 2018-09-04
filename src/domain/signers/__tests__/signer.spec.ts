@@ -41,7 +41,7 @@ describe('consumer', () => {
     (request.post as any) = jest.fn().mockReturnValue(Promise.resolve(true));
     const spy = jest.spyOn((Signer.prototype as any), 'getSenderFromRawTx')
     .mockImplementation(() => 'mock');
-    await testSigner.signTx(tx);
+    await testSigner.signTx(tx, 'requestMock');
     expect(spy).toHaveBeenCalledWith(tx);
   });
 
