@@ -55,7 +55,7 @@ export interface IApiSignTxResponse {
 // SendTx Models
 
 export interface IApiSendTxRequest {
-  tx: string;
+  tx: IEthereumRawTransaction;
 }
 
 export interface IApiSendTxResponse {

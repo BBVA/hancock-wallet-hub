@@ -9,6 +9,7 @@ import {
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
 } from '../models/ethereum';
+import config from '../utils/config';
 import { error } from '../utils/error';
 import { getWeb3 } from '../utils/ethereum';
 import logger from '../utils/logger';
@@ -23,7 +24,8 @@ import {
 import { ISigner } from './signers/model';
 import { getSigner } from './signers/signerFactory';
 
-const pendingRequest = new Map();
+export const pendingRequest = new Map();
+const hancockHeaderRequest = config.headers.hancockRequest;
 
 export async function signTx(params: IApiSignTxDomainParams): Promise<IApiSignTxResponse> {
 
@@ -58,7 +60,7 @@ export async function signTx(params: IApiSignTxDomainParams): Promise<IApiSignTx
   }
 }
 
-export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
+export async function sendTx(rawTx: IEthereumRawTransaction): Promise<IApiSendTxResponse> {
 
   let web3: any;
 
@@ -148,20 +150,20 @@ export const _getReceiverFromRawTx = (rawTx: IEthereumRawTransaction): string =>
 };
 
 // tslint:disable-next-line:variable-name
-export const _sendTxCallBack = (tx: IEthTransactionReceiptBody, backUrl: string, requestId: string): any => {
+export const _sendTxCallBack = async (tx: IEthTransactionReceiptBody, backUrl: string, requestId: string): Promise<any> => {
+
+  const headers = {[hancockHeaderRequest]: requestId};
 
   try {
 
-    return request.post(
+    return await request.post(
       backUrl,
       {
         body: {
           tx,
         },
         json: true,
-        headers: {
-          'Hancock-Request-Id': requestId,
-        },
+        headers,
       },
     );
 
