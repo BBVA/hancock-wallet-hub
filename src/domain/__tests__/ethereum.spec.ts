@@ -221,7 +221,7 @@ describe('ethreumDomain', () => {
       await ethereumDomain.sendSignedTx({tx, requestId: requestIdTest});
       expect(web3Mock).toHaveBeenCalled();
       expect(web3Mock).toHaveBeenCalledWith('whatever');
-      expect(_getResponseMock).toHaveBeenCalledWith('whatever', backUrlTest, requestIdTest);
+      expect(_getResponseMock).toHaveBeenCalledWith( {kind: 'pending', transactionHash: 'mockWhatever'}, backUrlTest, requestIdTest);
 
     });
 
