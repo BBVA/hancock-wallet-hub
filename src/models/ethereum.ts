@@ -55,7 +55,7 @@ export interface IApiSignTxResponse {
 // SendTx Models
 
 export interface IApiSendTxRequest {
-  tx: string;
+  tx: IEthereumRawTransaction;
 }
 
 export interface IApiSendTxResponse {
@@ -72,7 +72,7 @@ export interface IApiSendSignedTxDomainParams {
 
 export interface IApiSendSignedTxResponse {
   success: boolean;
-  txReceipt: IEthTransactionReceiptBody;
+  transactionHash: string;
 }
 
 // DLT
@@ -88,4 +88,16 @@ export interface IEthTransactionReceiptBody {
   logs: string[];
   status: string;
   logsBloom: string;
+}
+
+// CallBackResponses
+
+export interface ISendHashCallbackBody {
+  kind: string;
+  transactionHash: ethTxHash;
+}
+
+export interface ISendReceiptCallbackBody {
+  kind: string;
+  txReceipt: IEthTransactionReceiptBody;
 }

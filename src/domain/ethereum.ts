@@ -8,7 +8,10 @@ import {
   IApiSignTxResponse,
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
+  ISendHashCallbackBody,
+  ISendReceiptCallbackBody,
 } from '../models/ethereum';
+import config from '../utils/config';
 import { error } from '../utils/error';
 import { getWeb3 } from '../utils/ethereum';
 import logger from '../utils/logger';
@@ -23,7 +26,8 @@ import {
 import { ISigner } from './signers/model';
 import { getSigner } from './signers/signerFactory';
 
-const pendingRequest = new Map();
+export const pendingRequest = new Map();
+const hancockHeaderRequest = config.headers.hancockRequest;
 
 export async function signTx(params: IApiSignTxDomainParams): Promise<IApiSignTxResponse> {
 
@@ -58,7 +62,7 @@ export async function signTx(params: IApiSignTxDomainParams): Promise<IApiSignTx
   }
 }
 
-export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
+export async function sendTx(rawTx: IEthereumRawTransaction): Promise<IApiSendTxResponse> {
 
   let web3: any;
 
@@ -107,6 +111,28 @@ export async function sendSignedTx(params: IApiSendSignedTxDomainParams): Promis
 
     web3.eth
       .sendSignedTransaction(params.tx)
+      .on('transactionHash', (transactionHash: string) => {
+
+        if (params.requestId) {
+
+          const backUrl = pendingRequest.get(params.requestId);
+
+          if (backUrl) {
+
+            const body: ISendHashCallbackBody = {
+              kind: 'pending',
+              transactionHash,
+            };
+
+            _sendTxCallBack(body, backUrl, params.requestId as string);
+
+          }
+
+        }
+        logger.info(`tx has been sent in the DLT => ${transactionHash}`);
+        resolve({ success: true, transactionHash });
+
+      })
       .on('error', (e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)))
       .then((txReceipt: IEthTransactionReceiptBody) => {
 
@@ -116,19 +142,22 @@ export async function sendSignedTx(params: IApiSendSignedTxDomainParams): Promis
 
           if (backUrl) {
 
-            _sendTxCallBack(txReceipt, backUrl, params.requestId as string);
+            const body: ISendReceiptCallbackBody = {
+              kind: 'mined',
+              txReceipt,
+            };
+
+            _sendTxCallBack(body, backUrl, params.requestId as string);
             pendingRequest.delete(params.requestId);
 
           }
 
         }
 
-        logger.info(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
-        resolve({ success: true, txReceipt });
+        logger.info(`tx has been mined in the DLT => ${txReceipt.transactionHash}`);
 
       })
       .catch((e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)));
-
   });
 
 }
@@ -148,20 +177,20 @@ export const _getReceiverFromRawTx = (rawTx: IEthereumRawTransaction): string =>
 };
 
 // tslint:disable-next-line:variable-name
-export const _sendTxCallBack = (tx: IEthTransactionReceiptBody, backUrl: string, requestId: string): any => {
+export const _sendTxCallBack = async (tx: ISendReceiptCallbackBody | ISendHashCallbackBody, backUrl: string, requestId: string): Promise<any> => {
+
+  const headers = { [hancockHeaderRequest]: requestId };
 
   try {
 
-    return request.post(
+    return await request.post(
       backUrl,
       {
         body: {
           tx,
         },
         json: true,
-        headers: {
-          'Hancock-Request-Id': requestId,
-        },
+        headers,
       },
     );
 

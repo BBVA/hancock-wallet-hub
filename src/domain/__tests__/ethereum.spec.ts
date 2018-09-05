@@ -1,9 +1,14 @@
 import 'jest';
+import * as request from 'request-promise-native';
 import * as ethereumDomain from '../../domain/ethereum';
-import { IEthereumRawTransaction } from '../../models/ethereum';
+import {
+  IApiSignTxDomainParams,
+  IEthereumRawTransaction,
+} from '../../models/ethereum';
 import * as errorUtils from '../../utils/error';
 import * as ethereumUtils from '../../utils/ethereum';
 import {
+  hancockCallBackTxError,
   hancockCantRetrieveSignerError,
   hancockEthereumConnectionError,
   hancockEthereumSendSignedTransactionError,
@@ -16,6 +21,8 @@ jest.mock('../signers/signerFactory');
 jest.mock('../../utils/ethereum');
 jest.mock('../../utils/logger');
 jest.mock('../../utils/error');
+jest.mock('../../utils/config');
+jest.mock('request-promise-native');
 
 describe('ethreumDomain', () => {
 
@@ -24,6 +31,7 @@ describe('ethreumDomain', () => {
   beforeEach(() => {
 
     errorFnMock.mockClear();
+    ethereumDomain.pendingRequest.clear();
 
   });
 
@@ -31,6 +39,7 @@ describe('ethreumDomain', () => {
 
     const provider = 'mockProvider';
     const rawTx: IEthereumRawTransaction = {} as any;
+    let signTxParams: IApiSignTxDomainParams = {rawTx, provider};
     const signer = {
       signTx: jest.fn(),
     };
@@ -40,6 +49,7 @@ describe('ethreumDomain', () => {
 
       signer.signTx.mockClear();
       getSignerMock.mockClear();
+      signTxParams = {rawTx, provider};
 
     });
 
@@ -47,10 +57,23 @@ describe('ethreumDomain', () => {
 
       getSignerMock.mockResolvedValue(signer);
 
-      await ethereumDomain.signTx({rawTx, provider});
+      await ethereumDomain.signTx(signTxParams);
 
-      expect(getSignerMock).toHaveBeenCalled();
       expect(getSignerMock).toHaveBeenCalledWith('mockProvider');
+
+    });
+
+    it('should sign tx with urlBack and requestId successfuly', async () => {
+
+      getSignerMock.mockResolvedValue(signer);
+
+      signTxParams.requestId = 'RequestIdTest';
+      signTxParams.backUrl = 'BackUrlTest';
+
+      await ethereumDomain.signTx(signTxParams);
+
+      expect(getSignerMock).toHaveBeenCalledWith('mockProvider');
+      expect(signer.signTx).toHaveBeenCalledWith(rawTx, 'RequestIdTest');
 
     });
 
@@ -61,7 +84,7 @@ describe('ethreumDomain', () => {
 
       try {
 
-        await ethereumDomain.signTx({rawTx, provider});
+        await ethereumDomain.signTx(signTxParams);
         fail('it should fail');
 
       } catch (e) {
@@ -100,7 +123,7 @@ describe('ethreumDomain', () => {
 
   describe('sendTx', async () => {
 
-    const rawTx = 'whatever';
+    const rawTx: IEthereumRawTransaction = {from: '0x0test'} as any;
 
     // tslint:disable-next-line:variable-name
     const web3Mock = (ethereumUtils as any).__mockWeb3__.eth.sendTransaction as jest.Mock;
@@ -115,7 +138,7 @@ describe('ethreumDomain', () => {
 
       await ethereumDomain.sendTx(rawTx);
       expect(web3Mock).toHaveBeenCalled();
-      expect(web3Mock).toHaveBeenCalledWith('whatever');
+      expect(web3Mock).toHaveBeenCalledWith({from: '0x0test'});
 
     });
 
@@ -141,7 +164,7 @@ describe('ethreumDomain', () => {
       }
 
       expect(web3Mock).toHaveBeenCalled();
-      expect(web3Mock).toHaveBeenCalledWith('whatever');
+      expect(web3Mock).toHaveBeenCalledWith({from: '0x0test'});
 
     });
 
@@ -177,6 +200,7 @@ describe('ethreumDomain', () => {
     beforeEach(() => {
       web3Mock.mockClear();
       getWeb3Mock.mockClear();
+      jest.restoreAllMocks();
     });
 
     it('should send and sign tx success', async () => {
@@ -184,6 +208,20 @@ describe('ethreumDomain', () => {
       await ethereumDomain.sendSignedTx({tx});
       expect(web3Mock).toHaveBeenCalled();
       expect(web3Mock).toHaveBeenCalledWith('whatever');
+
+    });
+
+    it('should send and sign tx success with requestId', async () => {
+
+      const _getResponseMock = jest.spyOn(ethereumDomain, '_sendTxCallBack').mockReturnThis();
+      const requestIdTest = 'testRequest';
+      const backUrlTest = 'testBackUrl';
+      ethereumDomain.pendingRequest.set(requestIdTest, backUrlTest);
+
+      await ethereumDomain.sendSignedTx({tx, requestId: requestIdTest});
+      expect(web3Mock).toHaveBeenCalled();
+      expect(web3Mock).toHaveBeenCalledWith('whatever');
+      expect(_getResponseMock).toHaveBeenCalledWith( {kind: 'pending', transactionHash: 'mockWhatever'}, backUrlTest, requestIdTest);
 
     });
 
@@ -259,6 +297,52 @@ describe('ethreumDomain', () => {
       expect(result).toEqual('whatever');
 
     });
+  });
+
+  describe('_sendTxCallBack', () => {
+
+    const rawTx: any = {
+      to: 'whatever',
+    };
+
+    const requestToSend: any = {
+      body: {
+        tx: rawTx,
+      },
+      json: true,
+      headers: {
+        mockedHancockRequest: 'testReqId',
+      },
+    };
+
+    it('should call sentTxCallBack correctly', async () => {
+
+      (request.post as any) = jest.fn().mockResolvedValueOnce(true);
+
+      const result: string = await ethereumDomain._sendTxCallBack(rawTx, 'testUrl', 'testReqId');
+      expect(request.post).toHaveBeenCalledWith('testUrl', requestToSend);
+      expect(result).toBe(true);
+
+    });
+
+    it('should call sentTxCallBack and throw exception', async () => {
+
+      (request.post as any) = jest.fn().mockRejectedValueOnce(hancockCallBackTxError);
+
+      try {
+
+        const result: string = await ethereumDomain._sendTxCallBack(rawTx, 'testUrl', 'testReqId');
+        fail('it should fail');
+
+      } catch (error) {
+
+        expect(request.post).toHaveBeenCalledWith('testUrl', requestToSend);
+        expect(errorFnMock).toHaveBeenCalledWith(hancockCallBackTxError, hancockCallBackTxError);
+
+      }
+
+    });
+
   });
 
 });
