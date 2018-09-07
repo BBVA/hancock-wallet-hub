@@ -20,7 +20,11 @@ const mock = {
     },
   },
   blockchain: {
-    ethereum: 'mockBlockchain',
+    ethereum: {
+      protocol: 'http',
+      host: 'mockHost',
+      port: 'mockPort'
+    },
   },
   db: {
     ethereum: {

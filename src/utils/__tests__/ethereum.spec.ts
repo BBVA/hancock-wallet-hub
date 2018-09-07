@@ -2,6 +2,7 @@ import web3Lib = require('web3');
 import * as ethereum from '../ethereum';
 
 jest.mock('../config');
+jest.mock('../logger');
 jest.mock('web3');
 
 describe('getWeb3', async () => {

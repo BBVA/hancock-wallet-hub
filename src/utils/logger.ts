@@ -1,5 +1,5 @@
 import * as pinoLib from 'pino';
-import config from '../utils/config';
+import config from './config';
 
 const pino = pinoLib({
   name: config.application,
