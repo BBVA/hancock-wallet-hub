@@ -15,7 +15,7 @@
     "coverage": "jest --coverage",
     "lint": "tslint --project .",
     "lint:fix": "npm run lint -- --fix",
-    "docs": "rimraf documentation && mkdirp documentation && raml2html --theme raml2html-markdown-theme raml/api.raml > documentation/api.md",
+    "docs": "rimraf documentation && mkdirp documentation && raml2html --theme raml2html-markdown-theme raml/api.raml > documentation/api.md && raml2html raml/api.raml > documentation/api.html",
     "plato": "plato -r -d complexity dist",
     "watch:plato": "plato -r -d complexity dist && open complexity/index.html"
   },
