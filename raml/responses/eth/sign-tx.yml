@@ -4,7 +4,9 @@
     application/json:
       type: IApiSignTxResponse
       example: |
-        {}
+        {
+          "success": true
+        }
 400: 
   description: Bad Request
 404:

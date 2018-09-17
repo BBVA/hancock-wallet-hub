@@ -4,7 +4,10 @@
     application/json:
       type: IApiSendSignedTxResponse
       example: |
-        {}
+        {
+        "success": true,
+        "transactionHash": "0x57d1ecea38db60b46f269c5f3331a6ee7665952d13bb0cb8e6e3e462269ef498"
+        }
 400: 
   description: Bad Request
 404:
