@@ -1,13 +1,24 @@
 # Hancock Wallet Hub
 ====================
 
-## Before use this package
-This service send transactions to DLT and sign the transactions with the help of a sign provider configured before.
+This microservice belonging to Hancock's ecosystem, allows you to send transactions to DLT and to sign the transactions with the help of a sign provider service previously configured.
+
+### Current blockchains supported 
+
+* Ethereum 
 
 ### Requirements
+
 - [Node.js](https://nodejs.org/es/) >= v8.9.3 (npm v5.5.1)
 
 ## Using this package
+
+Clone the project: 
+```bash 
+  # Clone the project  
+  git clone ssh://git@bitbucket.kickstartteam.es:7999/bh/kst-hancock-ms-wallet-hub.git
+  cd kst-hancock-ms-dlt-adapter 
+``` 
 
 ### Installation
 
@@ -16,73 +27,57 @@ Once you have downloaded:
 ```bash
   # with npm
   npm install 
+  npm build:ts 
+  npm run serve:prod 
 
   # or using yarn
   yarn install
+  yarn build:ts 
+  yarn run serve:prod 
 ```
 
-### Config environment
+With [docker](https://www.docker.com/): 
+```bash 
+  # Build the docker image 
+  docker build -t hancock_wallet_hub . 
+  # Run the docker container 
+  docker run -d -it --name -p 80:80 hancock_wallet_hub_container hancock_wallet_hub 
+``` 
 
-Once the installation of the service have finished, we need to fix some environment vars.
+### Setting up the service 
 
-Parameters of server installation:
+Once the installation of the service have finished, we need to fix some environment vars. You can find all environment vars  
+availables to configure the service in `config/custom-environment-variables.yaml`. 
 
-```bash
-  hostname: HOSTNAME
-  server:
-    protocol: HANCOCK_SERVER_PROTOCOL
-    host: HANCOCK_SERVER_HOST
-    port: HANCOCK_SERVER_PORT
-    externalPort: HANCOCK_SERVER_EXTERNAL_PORT
-    base: HANCOCK_SERVER_BASE
-    externalBase: HANCOCK_SERVER_EXTERNAL_BASE
-```
-Parameters of DLT that we used, in this example we fixed the config of Ethereum node.
+An example of configuration of the most important vars:  
+- Ethereum rpc node: 
+  - HANCOCK_BLOCKCHAIN_ETHEREUM_PROTOCOL="http" 
+  - HANCOCK_BLOCKCHAIN_ETHEREUM_HOST="52.80.128.77" 
+  - HANCOCK_BLOCKCHAIN_ETHEREUM_PORT="34774" 
+ 
+- Mongo ddbb host 
+  - HANCOCK_DB_HOSTS="localhost:27017" 
+  - HANCOCK_DB_DATABASE="hancock" 
+  - HANCOCK_DB_ETHEREUM_DATABASE="hancock_eth" 
 
-```bash
-  blockchain:
-    ethereum:
-      protocol: HANCOCK_BLOCKCHAIN_ETHEREUM_PROTOCOL
-      host: HANCOCK_BLOCKCHAIN_ETHEREUM_HOST
-      port: HANCOCK_BLOCKCHAIN_ETHEREUM_PORT
-```
-Parameters of MongoDB instance that storage data of signer.
+### Select a sign provider
 
-```bash
-  db:
-    protocol: HANCOCK_DB_PROTOCOL
-    hosts: HANCOCK_DB_HOSTS
-    database: HANCOCK_DB_DATABASE
-    params: HANCOCK_DB_PARAMS
-    user: HANCOCK_DB_USER
-    pass: HANCOCK_DB_PASS
-    ethereum:
-      database: HANCOCK_DB_ETHEREUM_DATABASE
-```
+Before sign our transactions, we need to insert a new row in mongodb, into "providers" collection with the data of our signer.
 
-Parameters of the signer selected to use with this service.
+ - "alias" : "fakeprovider"
+ - "className" : "FakeProviderSigner" 
 
-```bash
-  cryptvault:
-    api:
-      getByAddressEndpoint: HANCOCK_CRYPTVAULT_GET_BY_ADDRESS_ENDPOINT
-      signEndpoint: HANCOCK_CRYPTVAULT_SIGN_ENDPOINT
-    credentials:
-      key: HANCOK_CRYPTVAULT_KEY
-      secret: HANCOCK_CRYPTVAULT_SECRET
-      expires_in: HANCOCK_CRYPTVAULT_EXPIRES_IN
-```
-We need to insert a new raw in mongodb, into providers colection with the data of our signer.
+We have an specific option to configure Cryptvault like our signer, to that end, we need to fill the cryptvault environment vars of the config section.
 
-```bash
-{ "_id" : ObjectId("5afbe5839440cfd1b38f7819"), "alias" : "cryptvault", "className" : "CryptvaultSigner" }
-```
+## Introduction and examples
 
+Wallet-HUB provides some endpoints to interact with the blockchain, allowing send and sing transactions with an external signer to a specific DLT. Take a look at the diferent sections of the API [documentation](https://docs.kickstartteam.es/blockchainhub/kst-hancock-ms-wallet-hub/docs/api.html) to see examples of use.
 
-### Introduction and examples
-
-Wallet-HUB provides some endpoints to interact with the blockchain, 
-allowing send and sing transactions with an external signer to a specific DLT. Take a look at the diferent sections of the [documentation](https://docs.kickstartteam.es/blockchainhub/kst-hancock-wallet-hub/docs/index.html) to see examples of use:
-
-- [[api]]
-- [[api.html]]
+### Contribution guidelines 
+ 
+If you are thinking in contribute to the project you should know that: 
+ 
+- The code has been written following the [clean architecture principles](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html), as well as [SOLID design principles](https://es.wikipedia.org/wiki/SOLID). 
+ 
+- The project is built in [typescript](https://www.typescriptlang.org/) v2.9.2 using the [recommended guidelines](https://github.com/palantir/tslint/blob/master/src/configs/recommended.ts). Also there is a linter rules configured to follow this guidelines, so you can search for a plugin for your favourite IDE to be warned about this linter errors. 
+first version of docs
