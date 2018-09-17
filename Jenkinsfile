@@ -39,6 +39,13 @@ nodePipeline{
       }
     }
 
+    stage('Docs'){ 
+      container('node'){ 
+      sh "yarn run docs" 
+      upload_doc_shuttle_stage(docName: "docs", docPath: "./documentation") 
+      } 
+    }
+
     docker_shuttle_stage()
 
     qa_data_shuttle_stage()
@@ -71,6 +78,13 @@ nodePipeline{
         """
       }
     }
+
+    stage('Docs'){ 
+      container('node'){ 
+      sh "yarn run docs" 
+      upload_doc_shuttle_stage(docName: "docs", docPath: "./documentation") 
+      } 
+    } 
 
     check_unlocked_in_RC_shuttle_stage()
 
