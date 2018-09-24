@@ -5,8 +5,20 @@
   "description": "Send transaction schema",
   "properties": {
     "tx": {
-      "type": "string",
-      "description": "Transaction which will be sent to the DLT"
+      "type": "object",
+      "description": "Transaction which will be sent to the DLT",
+      "properties": {
+        "from": { "type": "string" },
+        "nonce": { "type": "string" },
+        "gasPrice": { "type": "string" },
+        "gasLimit": { "type": "string" },
+        "gas": { "type": "string" },
+        "to": { "type": "string" },
+        "value": { "type": "string" },
+        "data": { "type": "string" },
+        "chainId": { "type": "integer" }
+      },
+      "required": [ "from", "nonce", "gasPrice", "to", "data" ]
     }
   },
   "required": [ "tx" ]

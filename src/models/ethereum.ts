@@ -1,4 +1,4 @@
-import {dltAddress, IRawTransaction} from "./general";
+import {dltAddress, IRawTransaction} from './general';
 
 export type ethContractAddress = string;
 export type ethTxHash = string;
@@ -18,7 +18,7 @@ export interface IEthereumProviderModel {
   endpoint: string;
 }
 
-export class IEthereumRawTransaction implements IRawTransaction {
+export interface IEthereumRawTransaction extends IRawTransaction {
   from: dltAddress;
   nonce: string;
   gasPrice: string;
@@ -31,9 +31,11 @@ export class IEthereumRawTransaction implements IRawTransaction {
 
 // SignTx Models
 
-export interface IApiSignTxRequest {
+export interface IApiSignTxDomainParams {
   provider: string;
   rawTx: IEthereumRawTransaction;
+  backUrl?: string;
+  requestId?: string | string[] | undefined;
 }
 
 export interface IApiSignTxProviderRequest {
@@ -53,7 +55,7 @@ export interface IApiSignTxResponse {
 // SendTx Models
 
 export interface IApiSendTxRequest {
-  tx: string;
+  tx: IEthereumRawTransaction;
 }
 
 export interface IApiSendTxResponse {
@@ -63,13 +65,14 @@ export interface IApiSendTxResponse {
 
 // SendSignedTx Models
 
-export interface IApiSendSignedTxRequest {
+export interface IApiSendSignedTxDomainParams {
   tx: string;
+  requestId?: string | string[] | undefined;
 }
 
 export interface IApiSendSignedTxResponse {
   success: boolean;
-  txReceipt: IEthTransactionReceiptBody;
+  transactionHash: string;
 }
 
 // DLT
@@ -85,4 +88,16 @@ export interface IEthTransactionReceiptBody {
   logs: string[];
   status: string;
   logsBloom: string;
+}
+
+// CallBackResponses
+
+export interface ISendHashCallbackBody {
+  kind: string;
+  transactionHash: ethTxHash;
+}
+
+export interface ISendReceiptCallbackBody {
+  kind: string;
+  txReceipt: IEthTransactionReceiptBody;
 }

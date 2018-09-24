@@ -1,42 +1,51 @@
-import {NextFunction, Request, Response, Router} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as domain from '../domain/ethereum';
 import {
-  IApiSendSignedTxRequest,
+  IApiSendSignedTxDomainParams,
   IApiSendSignedTxResponse,
+  IApiSendTxRequest,
   IApiSendTxResponse,
-  IApiSignTxRequest,
+  IApiSignTxDomainParams,
   IApiSignTxResponse,
 } from '../models/ethereum';
-import {ISigner} from "../signers/iSigner";
+import config from '../utils/config';
 
-export function SignTxController(req: Request, res: Response, next: NextFunction) {
-  const body: IApiSignTxRequest = req.body;
+const hancockHeaderRequest = config.headers.hancockRequest;
 
-  console.log(JSON.stringify(body));
+export async function signTxController(req: Request, res: Response, next: NextFunction) {
 
-  domain
-    .signTx(body.rawTx, body.provider)
+  const signTxParams: IApiSignTxDomainParams = {
+    ...req.body,
+    requestId : req.headers[hancockHeaderRequest],
+  };
+
+  return domain
+    .signTx(signTxParams)
     .then((response: IApiSignTxResponse) => res.send(response))
     .catch(next);
 
 }
 
-export function SendTxController(req: Request, res: Response, next: NextFunction) {
-  const body: IApiSendSignedTxRequest = req.body;
+export async function sendTxController(req: Request, res: Response, next: NextFunction) {
 
-  domain
+  const body: IApiSendTxRequest = req.body;
+
+  return domain
     .sendTx(body.tx)
     .then((response: IApiSendTxResponse) => res.send(response))
     .catch(next);
 
 }
 
-export function SendSignedTxController(req: Request, res: Response, next: NextFunction) {
-  const body: IApiSendSignedTxRequest = req.body;
+export async function sendSignedTxController(req: Request, res: Response, next: NextFunction) {
 
-  console.log(`Request to send-signed-tx`);
-  domain
-    .sendSignedTx(body.tx)
+  const sendSignedTxParams: IApiSendSignedTxDomainParams = {
+    ...req.body,
+    requestId: req.headers[hancockHeaderRequest],
+  };
+
+  return domain
+    .sendSignedTx(sendSignedTxParams)
     .then((response: IApiSendSignedTxResponse) => res.send(response))
     .catch(next);
 

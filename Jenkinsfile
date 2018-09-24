@@ -1,8 +1,61 @@
+def lint() {
+  stage('Linter'){
+    container('node'){
+      sh """
+        yarn run lint
+      """
+    }
+  }
+}
+
 nodePipeline{
 
   // ---- DEVELOP ----
   if (env.BRANCH_NAME == 'develop') {
+  
+    // sonar_shuttle_stage()
+    //sonar_shuttle_stage( exclusions: './node_modules')
+    
+    stage('Install Dependencies'){
+      container('node'){
+        sh """
+          yarn cache clean --force
+          yarn install
+        """
+      }
+    }
+    
+    lint()
 
+    stage('Unit tests'){
+      container('node'){
+        sh """
+          yarn run coverage
+        """
+      }
+    }
+
+    stage('Docs'){ 
+      container('node'){ 
+      sh "yarn run docs" 
+      upload_doc_shuttle_stage(docName: "docs", docPath: "./documentation") 
+      } 
+    }
+
+    docker_shuttle_stage()
+
+    qa_data_shuttle_stage()
+
+    deploy_shuttle_stage(project: "hancock", environment: "develop", askForConfirmation: false)
+    
+    
+  }
+
+  // ---- RELEASE ----
+  if (env.BRANCH_NAME =~ 'release/*') {
+
+    // sonar_shuttle_stage()
+  
     stage('Install Dependencies'){
       container('node'){
         sh """
@@ -12,6 +65,8 @@ nodePipeline{
       }
     }
 
+    lint()
+
     stage('Unit tests'){
       container('node'){
         sh """
@@ -20,44 +75,37 @@ nodePipeline{
       }
     }
 
-    docker_shuttle_stage()
+    stage('Docs'){ 
+      container('node'){ 
+      sh "yarn run docs" 
+      upload_doc_shuttle_stage(docName: "docs", docPath: "./documentation") 
+      } 
+    } 
 
-    // qa_data_shuttle_stage()
-
-    deploy_shuttle_stage(project: "blockchainhub", environment: "develop", askForConfirmation: false)
-    
-    
-  }
-
-  // ---- RELEASE ----
-  if (env.BRANCH_NAME =~ 'release/*') {
-
-    /*stage('Install Dependencies'){
-      container('node'){
-        sh """
-          yarn cache clean --force
-          yarn install
-        """
-      }
-    }
-
-    stage('Unit tests'){
-      container('node'){
-        sh """
-          yarn run coverage
-        """
-      }
-    }*/
+    check_unlocked_in_RC_shuttle_stage()
 
     docker_shuttle_stage()
 
-    //qa_data_shuttle_stage()
+    qa_data_shuttle_stage()
+    
+    logic_label_shuttle_stage()
 
-    deploy_shuttle_stage(project: "blockchainhub", environment: "qa", askForConfirmation: false)
+    deploy_shuttle_stage(project: "hancock", environment: "qa", askForConfirmation: false)
+
+    set2rc_shuttle_stage()
 
     stage ('Functional Tests') {
       build job: '/blockchainhub/kst-hancock-ms-wallet-hub-tests/master'
     }
+ 
+  }
+
+  // ---- DEMO ----
+  if (env.BRANCH_NAME == 'demo') {
+
+    docker_shuttle_stage()
+
+    deploy_shuttle_stage(project: "blockchainhub", environment: "demo", askForConfirmation: false)
 
   }
 }

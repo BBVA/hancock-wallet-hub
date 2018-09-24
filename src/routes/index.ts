@@ -1,25 +1,27 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Router } from 'express';
 import config from '../utils/config';
 
-import { ErrorController } from '../controllers/error';
-import { FallbackController } from '../controllers/fallback';
-import { HealthCheckController } from '../controllers/healthcheck';
+import { errorController } from '../controllers/error';
+import { fallbackController } from '../controllers/fallback';
+import { healthCheckController } from '../controllers/healthcheck';
+import { jsonSchemaError } from '../controllers/jsonSchemaError';
 
-export const AppRouter = Router();
+export const appRouter = Router();
 
 Object.keys(config.blockchain).forEach((dlt: string) => {
 
-  const router: any = require(`./${dlt}`).Router;
+  const router: any = require(`./${dlt}`).router;
 
   if (router) {
 
-    AppRouter.use(`/${dlt}`, router);
+    appRouter.use(`/${dlt}`, router);
 
   }
 
 });
 
-AppRouter
-  .use('/health', HealthCheckController)
-  .use(FallbackController)
-  .use(ErrorController);
+appRouter
+  .use('/health', healthCheckController)
+  .use(fallbackController)
+  .use(jsonSchemaError)
+  .use(errorController);

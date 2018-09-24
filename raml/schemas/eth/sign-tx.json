@@ -18,11 +18,15 @@
         "data": { "type": "string" },
         "chainId": { "type": "integer" }
       },
-      "required": [ "from", "nonce", "gasPrice", "to", "data" ]
+      "required": [ "from", "nonce", "gasPrice", "data" ]
     },
     "provider": {
       "type": "string",
       "description": "A provider who will sign the transaction"
+    },
+    "backUrl": {
+      "type": "string",
+      "description": "Endpoint to call when the tx has been sent to the DLT"
     }
   },
   "required": [ "rawTx", "provider" ]

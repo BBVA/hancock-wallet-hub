@@ -1,84 +1,203 @@
-import {ISigner} from '../signers/iSigner';
+import * as request from 'request-promise-native';
+import { v4 as uuidv4 } from 'uuid';
 import {
+  IApiSendSignedTxDomainParams,
   IApiSendSignedTxResponse,
   IApiSendTxResponse,
+  IApiSignTxDomainParams,
   IApiSignTxResponse,
   IEthereumRawTransaction,
   IEthTransactionReceiptBody,
+  ISendHashCallbackBody,
+  ISendReceiptCallbackBody,
 } from '../models/ethereum';
-import {getWeb3} from '../utils/web3';
-import {getSigner} from "../signers/signerFactory";
+import config from '../utils/config';
+import { error } from '../utils/error';
+import { getWeb3 } from '../utils/ethereum';
+import logger from '../utils/logger';
+import {
+  hancockCallBackTxError,
+  hancockCantRetrieveSignerError,
+  hancockEthereumConnectionError,
+  hancockEthereumSendSignedTransactionError,
+  hancockEthereumSendTransactionError,
+  hancockSignTransactionError,
+} from './model';
+import { ISigner } from './signers/model';
+import { getSigner } from './signers/signerFactory';
 
-export async function signTx(rawTx: IEthereumRawTransaction, provider: string): Promise<IApiSignTxResponse> {
-  return new Promise<IApiSignTxResponse>((resolve, reject) => {
-    getSigner(provider)
-      .then((signer: ISigner) => resolve(signer.signTx(rawTx)))
-      .catch((err: Error) => reject(err));
-  });
+export const pendingRequest = new Map();
+const hancockHeaderRequest = config.headers.hancockRequest;
 
-}
+export async function signTx(params: IApiSignTxDomainParams): Promise<IApiSignTxResponse> {
 
-export async function sendTx(rawTx: string): Promise<IApiSendTxResponse> {
-  if (!rawTx) {
-    throw new Error('DEFAULT_ERROR');
+  let signer: ISigner;
+
+  const requestId: string = params.requestId !== undefined ? (params.requestId as string) : uuidv4();
+
+  try {
+
+    if (params.backUrl && params.requestId) {
+
+      pendingRequest.set(params.requestId, params.backUrl);
+
+    }
+
+    signer = await getSigner(params.provider);
+
+  } catch (e) {
+
+    throw error(hancockCantRetrieveSignerError, e);
+
   }
 
-  const web3 = await getWeb3();
+  try {
+
+    return await signer.signTx(params.rawTx, requestId);
+
+  } catch (e) {
+
+    throw error(hancockSignTransactionError, e);
+
+  }
+}
+
+export async function sendTx(rawTx: IEthereumRawTransaction): Promise<IApiSendTxResponse> {
+
+  let web3: any;
+
+  try {
+
+    web3 = await getWeb3();
+
+  } catch (e) {
+
+    throw error(hancockEthereumConnectionError, e);
+
+  }
 
   return new Promise<IApiSendTxResponse>((resolve, reject) => {
 
     web3.eth
       .sendTransaction(rawTx)
-      .on('error', (err: string) => reject(new Error('DLT_ERROR')))
+      .on('error', (e: Error) => reject(error(hancockEthereumSendTransactionError, e)))
       .then((txReceipt: IEthTransactionReceiptBody) => {
 
-        console.log(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
-        resolve({success: true, txReceipt});
+        logger.info(`tx has been written in the DLT => ${txReceipt.transactionHash}`);
+        resolve({ success: true, txReceipt });
 
       })
-      .catch((err: string) => reject(new Error('DLT_ERROR')));
+      .catch((e: Error) => reject(error(hancockEthereumSendTransactionError, e)));
 
   });
 
 }
 
-export async function sendSignedTx(tx: string): Promise<IApiSendSignedTxResponse> {
-  if (!tx) {
-    throw new Error('DEFAULT_ERROR');
-  }
+export async function sendSignedTx(params: IApiSendSignedTxDomainParams): Promise<IApiSendSignedTxResponse> {
 
-  console.log(`Connecting to DLT`);
-  const web3 = await getWeb3();
-  console.log(`Initialized web3`);
+  let web3: any;
+
+  try {
+
+    web3 = await getWeb3();
+
+  } catch (e) {
+
+    throw error(hancockEthereumConnectionError, e);
+
+  }
 
   return new Promise<IApiSendSignedTxResponse>((resolve, reject) => {
 
-    const promise = web3.eth
-      .sendSignedTransaction(tx)
-      .on('error', (err: string) => {
-        console.error(`On error: ${err}`);
-        reject(new Error('DLT_ERROR'))
+    web3.eth
+      .sendSignedTransaction(params.tx)
+      .on('transactionHash', (transactionHash: string) => {
+
+        if (params.requestId) {
+
+          const backUrl = pendingRequest.get(params.requestId);
+
+          if (backUrl) {
+
+            const body: ISendHashCallbackBody = {
+              kind: 'pending',
+              transactionHash,
+            };
+
+            _sendTxCallBack(body, backUrl, params.requestId as string);
+
+          }
+
+        }
+        logger.info(`tx has been sent in the DLT => ${transactionHash}`);
+        resolve({ success: true, transactionHash });
+
       })
+      .on('error', (e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)))
       .then((txReceipt: IEthTransactionReceiptBody) => {
-        console.log(`tx has been sent in the DLT => ${txReceipt.transactionHash}`);
-        resolve({success: true, txReceipt});
+
+        if (params.requestId) {
+
+          const backUrl = pendingRequest.get(params.requestId);
+
+          if (backUrl) {
+
+            const body: ISendReceiptCallbackBody = {
+              kind: 'mined',
+              txReceipt,
+            };
+
+            _sendTxCallBack(body, backUrl, params.requestId as string);
+            pendingRequest.delete(params.requestId);
+
+          }
+
+        }
+
+        logger.info(`tx has been mined in the DLT => ${txReceipt.transactionHash}`);
 
       })
-      .catch((err: string) => {
-        console.error(`Catch error: ${err}`);
-        reject(new Error('DLT_ERROR'))
-      });
-
+      .catch((e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)));
   });
 
 }
 
-function getSenderFromRawTx(rawTx: IEthereumRawTransaction): string {
+// tslint:disable-next-line:variable-name
+export const _getSenderFromRawTx = (rawTx: IEthereumRawTransaction): string => {
+
   return rawTx.from;
 
-}
+};
 
-function getReceiverFromRawTx(rawTx: IEthereumRawTransaction): string {
+// tslint:disable-next-line:variable-name
+export const _getReceiverFromRawTx = (rawTx: IEthereumRawTransaction): string => {
+
   return rawTx.to;
 
-}
+};
+
+// tslint:disable-next-line:variable-name
+export const _sendTxCallBack = async (tx: ISendReceiptCallbackBody | ISendHashCallbackBody, backUrl: string, requestId: string): Promise<any> => {
+
+  const headers = { [hancockHeaderRequest]: requestId };
+
+  try {
+
+    return await request.post(
+      backUrl,
+      {
+        body: {
+          tx,
+        },
+        json: true,
+        headers,
+      },
+    );
+
+  } catch (e) {
+
+    throw error(hancockCallBackTxError, e);
+
+  }
+
+};

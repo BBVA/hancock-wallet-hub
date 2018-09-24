@@ -1,4 +1,5 @@
 app:
+  hostname: HOSTNAME
   server:
     protocol: HANCOCK_SERVER_PROTOCOL
     host: HANCOCK_SERVER_HOST
@@ -8,12 +9,12 @@ app:
     externalBase: HANCOCK_SERVER_EXTERNAL_BASE
   blockchain:
     ethereum:
+      protocol: HANCOCK_BLOCKCHAIN_ETHEREUM_PROTOCOL
       host: HANCOCK_BLOCKCHAIN_ETHEREUM_HOST
       port: HANCOCK_BLOCKCHAIN_ETHEREUM_PORT
   db:
     protocol: HANCOCK_DB_PROTOCOL
-    host: HANCOCK_DB_HOST
-    port: HANCOCK_DB_PORT
+    hosts: HANCOCK_DB_HOSTS
     database: HANCOCK_DB_DATABASE
     params: HANCOCK_DB_PARAMS
     user: HANCOCK_DB_USER

@@ -1,5 +1,7 @@
 env:
 app:
+  application: 'hancock:ms-wallet-hub'
+  hostname: 'localhost'
   server:
     protocol: 'http'
     host: 'localhost'
@@ -9,12 +11,12 @@ app:
     externalBase: ''
   blockchain:
     ethereum:
+      protocol: http
       host: ganache
       port: 8545
   db:
     protocol: mongodb
-    host: mongo
-    port: 27017
+    hosts: mongo:27017
     database: 'hancock'
     params: ''
     user: ''
@@ -37,3 +39,7 @@ app:
     sendTxResource: '/send-tx'    
     sendSignedTxResource: '/send-signed-tx'
     signedTxHookResource: '/signed-tx-hook'
+  logger:
+    logLevel: debug
+  headers:
+    hancockRequest: 'vnd-hancock-request-id'
