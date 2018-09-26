@@ -1,8 +1,38 @@
+def install_dependencies() {
+  stage('Install Dependencies'){
+    container('node'){
+      sh """
+        yarn cache clean --force
+        yarn install
+      """
+    }
+  }
+}
+
 def lint() {
   stage('Linter'){
     container('node'){
       sh """
         yarn run lint
+      """
+    }
+  }
+}
+
+def docs() {
+  stage('Docs'){
+    container('node'){
+      sh "yarn run docs"
+      upload_doc_shuttle_stage(docName: "docs", docPath: "./documentation")
+    }
+  }
+}
+
+def unit_tests() {
+  stage('Unit tests'){
+    container('node'){
+      sh """
+        yarn run coverage
       """
     }
   }
@@ -16,31 +46,13 @@ nodePipeline{
     // sonar_shuttle_stage()
     //sonar_shuttle_stage( exclusions: './node_modules')
     
-    stage('Install Dependencies'){
-      container('node'){
-        sh """
-          yarn cache clean --force
-          yarn install
-        """
-      }
-    }
+    install_dependencies()
     
     lint()
 
-    stage('Unit tests'){
-      container('node'){
-        sh """
-          yarn run coverage
-        """
-      }
-    }
+    unit_tests()
 
-    stage('Docs'){ 
-      container('node'){ 
-      sh "yarn run docs" 
-      upload_doc_shuttle_stage(docName: "docs", docPath: "./documentation") 
-      } 
-    }
+    docs()
 
     docker_shuttle_stage()
 
@@ -56,31 +68,13 @@ nodePipeline{
 
     // sonar_shuttle_stage()
   
-    stage('Install Dependencies'){
-      container('node'){
-        sh """
-          yarn cache clean --force
-          yarn install
-        """
-      }
-    }
+    install_dependencies()
 
     lint()
 
-    stage('Unit tests'){
-      container('node'){
-        sh """
-          yarn run coverage
-        """
-      }
-    }
+    unit_tests()
 
-    stage('Docs'){ 
-      container('node'){ 
-      sh "yarn run docs" 
-      upload_doc_shuttle_stage(docName: "docs", docPath: "./documentation") 
-      } 
-    } 
+    docs()
 
     check_unlocked_in_RC_shuttle_stage()
 
