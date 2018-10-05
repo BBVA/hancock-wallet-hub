@@ -42,8 +42,13 @@ nodePipeline{
 
   // ---- DEVELOP ----
   if (env.BRANCH_NAME == 'develop') {
-  
-    // sonar_shuttle_stage()
+
+    try {
+      sonar_shuttle_stage()
+    } catch (exc) {
+      echo 'Sonar shuttle stage crashed!'
+      echo 'Continue with the execution'
+    }
     //sonar_shuttle_stage( exclusions: './node_modules')
     
     install_dependencies()
