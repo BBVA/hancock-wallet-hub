@@ -61,18 +61,21 @@ nodePipeline{
 
     docker_shuttle_stage()
 
-    qa_data_shuttle_stage()
+    // qa_data_shuttle_stage()
 
     deploy_shuttle_stage(project: "hancock", environment: "develop", askForConfirmation: false)
-    
-    
+
   }
 
   // ---- RELEASE ----
   if (env.BRANCH_NAME =~ 'release/*') {
+    try {
+      sonar_shuttle_stage()
+    } catch (exc) {
+      echo 'Sonar shuttle stage crashed!'
+      echo 'Continue with the execution'
+    }
 
-    // sonar_shuttle_stage()
-  
     install_dependencies()
 
     lint()
@@ -81,17 +84,17 @@ nodePipeline{
 
     docs()
 
-    check_unlocked_in_RC_shuttle_stage()
+    // check_unlocked_in_RC_shuttle_stage()
 
     docker_shuttle_stage()
 
-    qa_data_shuttle_stage()
+    // qa_data_shuttle_stage()
     
-    logic_label_shuttle_stage()
+    // logic_label_shuttle_stage()
 
     deploy_shuttle_stage(project: "hancock", environment: "qa", askForConfirmation: false)
 
-    set2rc_shuttle_stage()
+    // set2rc_shuttle_stage()
 
     stage ('Functional Tests') {
       build job: '/blockchainhub/kst-hancock-ms-wallet-hub-tests/master'
@@ -99,12 +102,4 @@ nodePipeline{
  
   }
 
-  // ---- DEMO ----
-  if (env.BRANCH_NAME == 'demo') {
-
-    docker_shuttle_stage()
-
-    deploy_shuttle_stage(project: "blockchainhub", environment: "demo", askForConfirmation: false)
-
-  }
 }
