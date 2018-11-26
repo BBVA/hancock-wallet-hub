@@ -57,19 +57,19 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "config": "^1.29.2",
-    "cors": "^2.8.4",
-    "express": "^4.16.2",
-    "express-jsonschema": "^1.1.6",
-    "js-yaml": "^3.10.0",
-    "jsonwebtoken": "^7.1.9",
-    "mongodb": "^3.0.2",
-    "node-forge": "^0.7.5",
-    "pino": "^4.11.0",
+    "body-parser": "1.18.3",
+    "config": "1.29.2",
+    "cors": "2.8.4",
+    "express": "4.16.4",
+    "express-jsonschema": "1.1.6",
+    "js-yaml": "3.10.0",
+    "jsonwebtoken": "8.4.0",
+    "mongodb": "3.0.2",
+    "node-forge": "0.7.5",
+    "pino": "4.17.6",
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
-    "uuid": "^3.3.2",
-    "web3": "^1.0.0-beta.34"
+    "request-promise-native": "1.0.5",
+    "uuid": "3.3.2",
+    "web3": "1.0.0-beta.34"
   }
 }
