@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import {Db} from 'mongodb';
 import config from '../utils/config';
 import * as db from '../utils/db';
 import {getWeb3} from '../utils/ethereum';
@@ -8,7 +7,7 @@ import logger from '../utils/logger';
 export async function healthCheckController(req: Request, res: Response, next: NextFunction) {
 
   let ethereumIsListening: boolean = false;
-  let mongoIsAlive: Db;
+  let mongoIsAlive: any;
   let allConnected = false;
 
   try {
