@@ -10,7 +10,7 @@ app:
   blockchain:
     ethereum:
       protocol: HANCOCK_BLOCKCHAIN_ETHEREUM_PROTOCOL
-      url: HANCOCK_BLOCKCHAIN_ETHEREUM_HOST
+      url: HANCOCK_BLOCKCHAIN_ETHEREUM_URL
   db:
     protocol: HANCOCK_DB_PROTOCOL
     hosts: HANCOCK_DB_HOSTS
