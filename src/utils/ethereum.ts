@@ -11,11 +11,11 @@ export function initWeb3() {
   const cfg: any = config.blockchain.ethereum;
   if (cfg.protocol === 'ws' || cfg.protocol === 'wss') {
     logger.debug(`Creating WebsocketProvider...`);
-    web3Instance = new web3(new web3.providers.WebsocketProvider(`${cfg.protocol}://${cfg.host}:${cfg.port}`));
+    web3Instance = new web3(new web3.providers.WebsocketProvider(`${cfg.protocol}://${cfg.url}`));
 
   } else if (cfg.protocol === 'http' || cfg.protocol === 'https') {
     logger.debug(`Creating HttpProvider...`);
-    web3Instance = new web3(new web3.providers.HttpProvider(`${cfg.protocol}://${cfg.host}:${cfg.port}`));
+    web3Instance = new web3(new web3.providers.HttpProvider(`${cfg.protocol}://${cfg.url}`));
 
   } else {
     const msg = `Can not connect to Ethereum. Protocol: ${cfg.protocol}. Use http or ws`;
