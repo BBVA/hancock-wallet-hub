@@ -46,7 +46,7 @@ nodePipeline{
   // ---- RELEASE ----
   if (env.BRANCH_NAME =~ 'release/*') {
 
-    //sonar_shuttle_stage()
+    sonar_shuttle_stage()
     
 
 /*
