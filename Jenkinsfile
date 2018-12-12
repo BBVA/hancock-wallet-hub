@@ -24,20 +24,20 @@ nodePipeline{
   // ---- DEVELOP ----
   if (env.BRANCH_NAME == 'develop') {
 
-    sonar_shuttle_stage()
+    //sonar_shuttle_stage()
    
 
-    node_unit_tests_shuttle_stage(sh: """yarn cache clean --force
+    //node_unit_tests_shuttle_stage(sh: """yarn cache clean --force
                                         yarn install
                                         yarn run coverage
                                     """)
-    lint()
+    //lint()
 
-    docs()
+    //docs()
 
-    docker_shuttle_stage()
+    //docker_shuttle_stage()
 
-    qa_data_shuttle_stage()
+    //qa_data_shuttle_stage()
 
     deploy_shuttle_stage(project: "hancock", environment: "develop", askForConfirmation: false)
 
