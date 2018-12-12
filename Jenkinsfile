@@ -66,7 +66,7 @@ nodePipeline{
 
     //qa_data_shuttle_stage()
 
-    //set2rc_shuttle_stage()
+    set2rc_shuttle_stage()
     
     test_from_rc_shuttle_stage() 
     
