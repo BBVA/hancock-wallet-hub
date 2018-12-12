@@ -64,7 +64,7 @@ nodePipeline{
     
     //deploy_shuttle_stage(project: "hancock", environment: "qa", askForConfirmation: false)
 
-    //qa_data_shuttle_stage()
+    qa_data_shuttle_stage()
 
     set2rc_shuttle_stage()
     
