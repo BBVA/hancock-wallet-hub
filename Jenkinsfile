@@ -49,13 +49,11 @@ nodePipeline{
     sonar_shuttle_stage()
     
 
-/*
     node_unit_tests_shuttle_stage(sh: """yarn cache clean --force
                                         yarn install
                                         yarn run coverage
             """)
-            */
-    node_unit_tests_shuttle_stage(sh: 'ls')
+
                                 
     lint()
     
