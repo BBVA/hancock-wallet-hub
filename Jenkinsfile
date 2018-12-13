@@ -50,7 +50,7 @@ nodePipeline{
     
 
 
-    node_unit_tests_shuttle_stage(sh: """yarn cache clean --force
+    node_unit_tests_shuttle_stage(sh: """
                                         yarn install
                                         yarn run coverage
                                     """)
