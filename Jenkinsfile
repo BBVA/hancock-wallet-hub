@@ -57,12 +57,12 @@ nodePipeline{
                                 */
     lint()
     
-    //docs()
+    docs()
 
-    //docker_shuttle_stage()
+    docker_shuttle_stage()
     
     
-    //deploy_shuttle_stage(project: "hancock", environment: "qa", askForConfirmation: false)
+    deploy_shuttle_stage(project: "hancock", environment: "qa", askForConfirmation: false)
 
     qa_data_shuttle_stage()
 
