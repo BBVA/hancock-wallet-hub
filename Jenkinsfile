@@ -61,7 +61,6 @@ nodePipeline{
 
     docker_shuttle_stage()
     
-    
     deploy_shuttle_stage(project: "hancock", environment: "qa", askForConfirmation: false)
 
     qa_data_shuttle_stage()
