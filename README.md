@@ -75,7 +75,7 @@ We have an specific option to configure Cryptvault like our signer, to that end,
 
 ## Introduction and examples
 
-Wallet-HUB provides some endpoints to interact with the blockchain, allowing send and sing transactions with an external signer to a specific DLT. Take a look at the diferent sections of the API [documentation](https://BBVA.github.io/hancock-wallet-hub/docs/api.html) to see examples of use.
+Wallet-HUB provides some endpoints to interact with the blockchain, allowing send and sing transactions with an external signer to a specific DLT. Take a look at the diferent sections of the API [documentation](https://BBVA.github.io/hancock-wallet-hub/api.html) to see examples of use.
 
 ### Contribution guidelines 
  
