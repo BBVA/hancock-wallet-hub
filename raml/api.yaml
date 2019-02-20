@@ -3,7 +3,7 @@ openapi: 3.0.0
 
 info:
   title: Hancock wallet hub
-  version: "7.0.2"
+  version: "7.0.3"
   description: "Wallet hub allows you to send transactions to DLT and to sign the transactions with the help of a sign provider service previously configured 
 	\n \n <strong>Current blockchains supported {dlt}</strong> `ethereum`    "
   contact:
