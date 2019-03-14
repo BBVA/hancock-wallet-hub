@@ -16,7 +16,7 @@ This microservice belonging to Hancock's ecosystem, allows you to send transacti
 Clone the project: 
 ```bash 
   # Clone the project  
-  git clone ssh://git@bitbucket.kickstartteam.es:7999/bh/kst-hancock-ms-wallet-hub.git
+  git clone https://github.com/BBVA/hancock-wallet-hub.git
   cd kst-hancock-ms-dlt-adapter 
 ``` 
 
@@ -75,7 +75,7 @@ We have an specific option to configure Cryptvault like our signer, to that end,
 
 ## Introduction and examples
 
-Wallet-HUB provides some endpoints to interact with the blockchain, allowing send and sing transactions with an external signer to a specific DLT. Take a look at the diferent sections of the API [documentation](https://docs.kickstartteam.es/blockchainhub/kst-hancock-ms-wallet-hub/docs/api.html) to see examples of use.
+Wallet-HUB provides some endpoints to interact with the blockchain, allowing send and sing transactions with an external signer to a specific DLT. Take a look at the diferent sections of the API [documentation](https://BBVA.github.io/hancock-wallet-hub/docs/api.html) to see examples of use.
 
 ### Contribution guidelines 
  

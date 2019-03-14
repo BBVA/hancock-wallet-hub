@@ -1,0 +1,384 @@
+
+openapi: 3.0.0
+
+info:
+  title: Hancock wallet hub
+  version: "7.0.3"
+  description: "Wallet hub allows you to send transactions to DLT and to sign the transactions with the help of a sign provider service previously configured 
+	\n \n <strong>Current blockchains supported {dlt}</strong> `ethereum`    "
+  contact:
+    name: BBVA Hancock
+    url: https://github.com/BBVA/hancock-wallet-hub
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers: 
+  - url: https://host/{version}/wallet-hub
+host: "https://host/{version}/wallet-hub"
+
+paths:
+  /{dlt}/sign-tx:
+    post:
+      tags:
+      - "/{dlt}/sign-tx"
+      operationId: Sign transaction
+      description: Method for sign raw transactions through a sign provider.
+      consumes:
+        - "application/json"  
+      parameters:
+        - name: dlt
+          in: path
+          description: Dlt to work with 
+          required: true
+          schema:
+            type: string          
+      requestBody:
+        content:
+          application/json:              
+            schema: 
+              $ref: '#/components/schemas/signRequest'    
+        description: Sign request schema to request the signature  
+        required: true                       
+      responses:
+        '200':
+          description: Sign success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'  
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError' 
+  /{dlt}/send-signed-tx:
+    post:
+      tags:
+      - "/{dlt}/send-signed-tx"
+      operationId: Send signed transaction
+      description: Method for send a signed raw transactions to the dlt.
+      consumes:
+        - "application/json"  
+      parameters:
+        - name: dlt
+          in: path
+          description: Dlt to work with 
+          required: true
+          schema:
+            type: string          
+      requestBody:
+        content:
+          application/json:              
+            schema: 
+              $ref: '#/components/schemas/sendSignReqest'    
+        description: Send signed request schema to send to dlt
+        required: true                       
+      responses:
+        '200':
+          description: Send signed success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sendSignResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'  
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'      
+  /{dlt}/send-tx:
+    post:
+      tags:
+      - "/{dlt}/send-tx"
+      operationId: Send transaction
+      description: Method for send raw transactions to dlt.
+      consumes:
+        - "application/json"  
+      parameters:
+        - name: dlt
+          in: path
+          description: Dlt to work with 
+          required: true
+          schema:
+            type: string          
+      requestBody:
+        content:
+          application/json:              
+            schema: 
+              $ref: '#/components/schemas/sendRequest'    
+        description: Send request schema to send to dlt
+        required: true                       
+      responses:
+        '200':
+          description: Send success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sendResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'  
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'                                                                                                                                                                                  
+components:
+  schemas:
+    genericResponse:
+      $schema: 'http://json-schema.org/schema'
+      description: Generic Response Schema
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            code:
+              description: "Api code"
+              type: string
+            description:
+              description: "Description about the api code"
+              type: string
+          required:
+            - code
+            - description
+      required:
+        - result
+      example:
+        result:
+          code: 20X
+          description: "DLT - Operation successfully requested"
+    genericError:
+      $schema: 'http://json-schema.org/schema'
+      description: Generic Response Schema
+      type: object
+      properties:
+        error:
+          description: "Identification error code"
+          type: string
+        internalError:
+          description: "Hancock error code"
+          type: string
+        message:
+          description: "Hancock message"
+          type: string
+        extendedMessage:
+          description: "Detailed message"
+          type: string
+      required:
+        - error
+        - internalError
+      example:
+        error: 400 - 500
+        internalError: "HKAD5000X"
+        message: "Call Error"
+        extendedMessage: "Error: Description"
+    signRequest:            
+      $schema: 'http://json-schema.org/schema'
+      description: Sign request schema
+      type: object
+      properties:
+        provider:
+          description: "Alias of the provider signature"
+          type: string
+        rawTx:
+          type: object
+          properties:
+            nonce:
+              description: "Nonce assigned to transaction"
+              type: string
+            from:
+              description: "Address of the sender in the DLT"
+              type: string
+            gas:
+              description: "Gas value of transaction"
+              type: string
+            to:
+              description: "Address of the receiver in the DLT"
+              type: string
+            gasPrice:
+              description: "Gas estimated"
+              type: string
+            value:
+              description: "Value of Weis to be transferred"
+              type: string
+            data:
+              description: "Information about the transfer"
+              type: string         
+            chainId:
+              description: "Identifier number of the petition"
+              type: number                      
+      required:
+        - provider
+        - rawTx  
+      example: 
+        provider: "fakeprovider"
+        rawTx:
+          to: "0xcffffffffffffff000000000000000000000000"
+          from: "0xcffffffffffffff000000000000000000000001"
+          data: "transaction"
+          value: "2"
+          gasPrice: "0x3b9aca00"
+          nonce: "0x642"
+          gas: "0x5208"   
+          chainId: 1                   
+    signResponse:            
+      $schema: 'http://json-schema.org/schema'
+      description: Sign response schema
+      type: object
+      properties:
+        success: 
+          description: Boolean object to indicate that signer provider take in the order
+          type: boolean
+      required:
+        - success 
+      example: 
+        success: true      
+    sendSignReqest:            
+      $schema: 'http://json-schema.org/schema'
+      description: Send signed request schema
+      type: object
+      properties:
+        tx: 
+          description: Raw transaction signed
+          type: string
+      required:
+        - tx 
+      example: 
+        tx: "0xf865820642843b9aca008252089410578a2886306b0fc551c79e85a723f3418ca0d502801ca0c089da6d1e8b665def3d53d4c2cb79ff51742ecbc95580420922ee4a599ee73ba041102ef1cffd00c6a731c604a64742bcab70362dc7d081139946c867440104cc"             
+    sendSignResponse:            
+      $schema: 'http://json-schema.org/schema'
+      description: Send signed response schema
+      type: object
+      properties:
+        success: 
+          description: Boolean object to indicate that signer provider take in the order
+          type: boolean
+        transactionHash:
+          description: Transaction hash give us by dlt
+          type: string           
+      required:
+        - success 
+        - transactionHash
+      example: 
+        success: true   
+        transactionHash: "0x69cc5e3d33f1c12944b31b4953fc7a0301a42da1f48e7c35e3cdf114f4b3cb0e"
+    sendRequest:            
+      $schema: 'http://json-schema.org/schema'
+      description: Send request schema
+      type: object
+      properties:
+        tx:
+          type: object
+          properties:
+            nonce:
+              description: "Nonce assigned to transaction"
+              type: string
+            from:
+              description: "Address of the sender in the DLT"
+              type: string
+            gas:
+              description: "Gas value of transaction"
+              type: string
+            to:
+              description: "Address of the receiver in the DLT"
+              type: string
+            gasPrice:
+              description: "Gas estimated"
+              type: string
+            value:
+              description: "Value of Weis to be transferred"
+              type: string
+            data:
+              description: "Information about the transfer"
+              type: string         
+            chainId:
+              description: "Identifier number of the petition"
+              type: number                      
+      required:
+        - tx
+      example: 
+        tx:
+          to: "0xcffffffffffffff000000000000000000000000"
+          from: "0xcffffffffffffff000000000000000000000001"
+          data: "transaction"
+          value: "2"
+          gasPrice: "0x3b9aca00"
+          nonce: "0x642"
+          gas: "0x5208"   
+          chainId: 1      
+    sendResponse:
+      $schema: 'http://json-schema.org/schema'
+      type: object
+      description: Send response schema
+      properties:
+        success: 
+          description: Indicate if dlt network accepts the transaction 
+          type: boolean
+        txReceipt:
+          description: A payload with the transactions fields
+          type: object
+          properties:
+            contractAddress:
+              description: "The contract address created, if the transaction was a contract creation, otherwise null"
+              type: string
+            gasUsed:
+              description: "Gas value of transaction"
+              type: number
+            cumulativeGasUsed:
+              description: " The total amount of gas used when this transaction was executed in the block"
+              type: number
+            logsBloom:
+              description: "The bloom filter for the logs of the block"
+              type: string
+            logs:
+              description: "Array of log objects, which this transaction generated"
+              type: array              
+            status:
+              description: "True if transaction succeeded"
+              type: boolean  
+            blockHash:
+              description: "Hash of the block where this transaction was in"
+              type: string
+            blockNumber:
+              description: "Block number in wich registered the transaction"
+              type: number             
+            transactionIndex:
+              description: "Transactions index position in the block"
+              type: string   
+            transactionHash:
+              description: "Hash of the transaction"
+              type: string                                              
+      required:
+        - success
+        - txReceipt
+      example: 
+        success: true
+        txReceipt:
+        transactionHash: "0x80b0617a5e4865cc99d05106fe2c57c922c6fdbe9fa04c7ba37c9c44b68eddad"
+        transactionIndex: 0
+        blockHash: "0x10488ec191a8da55394450e645218eab871c3cb278ee4b759723da7db92b9e10"
+        blockNumber: 153
+        gasUsed: 21000
+        cumulativeGasUsed: 21000,
+        contractAddress: null
+        logs: []
+        status: true
+        logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"                
