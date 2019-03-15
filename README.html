@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Hancock Wallet Hub</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="hancock-wallet-hub"><a class="header-link" href="#hancock-wallet-hub"></a>Hancock Wallet Hub</h1>
+<p>This microservice belonging to Hancock&#39;s ecosystem, allows you to send transactions to DLT and to sign the transactions with the help of a sign provider service previously configured.</p>
+<h2 id="overview"><a class="header-link" href="#overview"></a>Overview</h2>
+<p>Hancock is a research product conceived within BBVA New digital business - R&amp;D that provides convenient services to integrate with different DLT networks. We provide simplicity, adaptability and efficiently to develop in any DLT. Hancock can be divided into three main components:</p>
+<ul class="list">
+<li><p><a href="https://github.com/BBVA/hancock-dlt-adapter">DLT Adapter</a> - Keep it simple
+Interface to abstract interaction with different DLT networks.</p>
+</li>
+<li><p><a href="https://github.com/BBVA/hancock-wallet-hub">Wallet Hub</a> - Enroute Interactions
+Enable connect their signer wallets, or wallet service providers, to the wallet hub, that will then route any ready-to-sign transaction.</p>
+</li>
+<li><p><a href="https://github.com/BBVA/hancock-dlt-broker">DLT Broker</a> - Real time notifications
+Provides a websocket connection that propagates any DLT event the user is subscribed. Thus, provides an interface to easily and efficiently subscribe to blockchain asynchronous events to avoid constant request of status.</p>
+</li>
+</ul>
+<h2 id="motivation"><a class="header-link" href="#motivation"></a>Motivation</h2>
+<p>To be able to sign transactions in blockchain we need a private key. To avoid centralizing the user&#39;s private key we need to support different signature providers. In order to have different signature providers, we need to add a service to the system that will allow suppliers to be registered, making it possible for the system to be able to consume them, thus allowing a user to choose their signature provider.able to consume them, thus allowing a user to choose their signature provider.</p>
+<h3 id="current-blockchains-supported"><a class="header-link" href="#current-blockchains-supported"></a>Current blockchains supported</h3>
+<ul class="list">
+<li>Ethereum </li>
+</ul>
+<h3 id="requirements"><a class="header-link" href="#requirements"></a>Requirements</h3>
+<ul class="list">
+<li><a href="https://nodejs.org/es/">Node.js</a> &gt;= v8.9.3 (npm v5.5.1)</li>
+</ul>
+<h2 id="using-this-package"><a class="header-link" href="#using-this-package"></a>Using this package</h2>
+<p>Clone the project: </p>
+<pre class="hljs"><code>  <span class="hljs-comment"># Clone the project  </span>
+  git <span class="hljs-built_in">clone</span> https://github.com/BBVA/hancock-wallet-hub.git
+  <span class="hljs-built_in">cd</span> kst-hancock-ms-dlt-adapter </code></pre><h3 id="installation"><a class="header-link" href="#installation"></a>Installation</h3>
+<p>Once you have downloaded:</p>
+<pre class="hljs"><code>  <span class="hljs-comment"># with npm</span>
+  npm install 
+  nnpm run build:ts 
+  npm run serve:prod 
+
+  <span class="hljs-comment"># or using yarn</span>
+  yarn install
+  yarn run build:ts   
+  yarn run serve:prod </code></pre><p>With <a href="https://www.docker.com/">docker</a>: </p>
+<pre class="hljs"><code>  <span class="hljs-comment"># Build the docker image </span>
+  docker build -t hancock_wallet_hub . 
+  <span class="hljs-comment"># Run the docker container </span>
+  docker run <span class="hljs-_">-d</span> -it --name -p 80:80 hancock_wallet_hub_container hancock_wallet_hub </code></pre><h3 id="setting-up-the-service"><a class="header-link" href="#setting-up-the-service"></a>Setting up the service</h3>
+<p>Once the installation of the service have finished, we need to fix some environment vars. You can find all environment vars<br>available to configure the service in <code>config/custom-environment-variables.yaml</code>. </p>
+<p>An example of configuration of the most important vars:  </p>
+<ul class="list">
+<li><p>Ethereum rpc node: </p>
+<pre class="hljs"><code><span class="hljs-built_in">export</span> HANCOCK_BLOCKCHAIN_ETHEREUM_PROTOCOL=<span class="hljs-string">"http"</span>  
+<span class="hljs-built_in">export</span> HANCOCK_BLOCKCHAIN_ETHEREUM_HOST=<span class="hljs-string">"52.80.128.77"</span>  
+<span class="hljs-built_in">export</span> HANCOCK_BLOCKCHAIN_ETHEREUM_PORT=<span class="hljs-string">"34774"</span>  </code></pre></li>
+<li><p>Mongo ddbb host:  </p>
+<pre class="hljs"><code><span class="hljs-built_in">export</span> HANCOCK_DB_HOSTS=<span class="hljs-string">"localhost:27017"</span>  
+<span class="hljs-built_in">export</span> HANCOCK_DB_DATABASE=<span class="hljs-string">"hancock"</span>  
+<span class="hljs-built_in">export</span> HANCOCK_DB_ETHEREUM_DATABASE=<span class="hljs-string">"hancock_eth"</span>  </code></pre></li>
+</ul>
+<h3 id="select-a-sign-provider"><a class="header-link" href="#select-a-sign-provider"></a>Select a sign provider</h3>
+<p>Before sign our transactions, we need to insert a new row in mongodb, into &quot;providers&quot; collection with the data of our signer.</p>
+<ul class="list">
+<li>&quot;alias&quot; : &quot;fakeprovider&quot;</li>
+<li>&quot;className&quot; : &quot;FakeProviderSigner&quot; </li>
+</ul>
+<p>We have an specific option to configure Cryptvault like our signer, to that end, we need to fill the cryptvault environment vars of the config section.</p>
+<h2 id="introduction-and-examples"><a class="header-link" href="#introduction-and-examples"></a>Introduction and examples</h2>
+<p>Wallet-HUB provides some endpoints to interact with the blockchain, allowing send and sing transactions with an external signer to a specific DLT. Take a look at the diferent sections of the API <a href="https://BBVA.github.io/hancock-wallet-hub/api.html">documentation</a> to see examples of use.</p>
+<h3 id="contribution-guidelines"><a class="header-link" href="#contribution-guidelines"></a>Contribution guidelines</h3>
+<p>If you are thinking about contributing to the project, you should know that: </p>
+<ul class="list">
+<li><p>The code has been written following the <a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">clean architecture principles</a>, as well as <a href="https://es.wikipedia.org/wiki/SOLID">SOLID design principles</a>. </p>
+</li>
+<li><p>The project is built in <a href="https://www.typescriptlang.org/">typescript</a> v2.9.2 using the <a href="https://github.com/palantir/tslint/blob/master/src/configs/recommended.ts">recommended guidelines</a>. Also there is a linter rules configured to follow this guidelines, so you can search for a plugin for your favourite IDE to be warned about this linter errors. 
+first version of docs</p>
+</li>
+</ul>
+    </article>
+  </body>
+</html>
