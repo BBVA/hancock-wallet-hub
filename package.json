@@ -19,8 +19,9 @@
     "raml2md": "raml2html --theme raml2html-markdown-theme raml/api.raml > documentation/api.md",
     "raml2html": "raml2html raml/api.raml > documentation/api.html",
     "md2html": "generate-md --layout github --input ./README.md --output ./documentation",
-    "yamlApi2html": "api2html -o ./documentation/api.html --raw -c raml/logo.png -l http raml/api.yaml", 
-    "docs": "npm run clean:docs && npm run md2html && npm run yamlApi2html" 
+    "yamlApi2html": "api2html -o ./documentation/api.html --raw -c raml/logo.png -l http raml/api.yaml",
+    "docs": "npm run clean:docs && npm run md2html && npm run yamlApi2html",
+    "deploy:gh": "push-dir --dir=documentation --branch=gh-pages --cleanup --remote github"
   },
   "repository": {
     "type": "git",
@@ -44,12 +45,14 @@
     "@types/request": "^2.47.1",
     "@types/request-promise-native": "^1.0.15",
     "@types/uuid": "^3.4.4",
+    "api2html": "^0.3.0",
     "concurrently": "^3.5.1",
     "jest": "^23.6.0",
     "jest-junit": "^5.1.0",
     "markdown-styles": "^3.1.10",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.14.12",
+    "push-dir": "^0.4.1",
     "raml2html": "^6.4.2",
     "raml2html-markdown-theme": "^1.0.2",
     "rimraf": "^2.6.2",
