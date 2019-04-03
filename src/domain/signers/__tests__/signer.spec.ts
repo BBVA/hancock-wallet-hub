@@ -1,6 +1,7 @@
 import 'jest';
 import * as request from 'request-promise-native';
 import { Signer } from '../signer';
+import { SIGNERS } from '../../../types';
 
 jest.mock('../../../utils/crypto');
 jest.mock('../../../utils/config');
@@ -12,7 +13,7 @@ describe('consumer', () => {
 
   let testSigner: Signer;
   let tx: any;
-  let endpoint: string;
+  let requestSigner: any;
 
   beforeEach(() => {
 
@@ -29,8 +30,14 @@ describe('consumer', () => {
       transactionIndex: 1,
       value: '0',
     };
-    endpoint = 'mockEndpoint';
-    testSigner = new Signer(endpoint);
+    requestSigner = {
+      providerName: 'string',
+      protocol: SIGNERS.SecureSigner,
+      singEndPoint: 'string',
+      jwt: 'string',
+      RecoverPkEndPoint: 'string',
+    }
+    testSigner = new Signer(requestSigner);
 
     jest.restoreAllMocks();
 

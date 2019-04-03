@@ -2,7 +2,7 @@ import 'jest';
 import * as ethereumDb from '../../../db/ethereum';
 import { SIGNERS } from '../../../types';
 import * as db from '../../../utils/db';
-import * as cryptvaultSigner from '../cryptvaultSigner';
+import * as secureSigner from '../secureSigner';
 import * as signer from '../signer';
 import { getSigner } from '../signerFactory';
 
@@ -11,7 +11,7 @@ jest.mock('../../../utils/db');
 jest.mock('../../../utils/logger');
 jest.mock('mongodb');
 jest.mock('../signer');
-jest.mock('../cryptvaultSigner');
+jest.mock('../secureSigner');
 
 describe('getSigner', async () => {
 
@@ -46,17 +46,19 @@ describe('getSigner', async () => {
 
   });
 
-  it('::getSigner should return the cryptvaultSigner successfully', async () => {
+  it('::getSigner should return the SecureSigner successfully', async () => {
 
     (ethereumDb as any).getProviderByAlias = jest.fn().mockResolvedValue(Promise.resolve({
-      alias: 'string',
-      className: SIGNERS.CryptvaultSigner,
-      endpoint: 'string',
+      providerName: 'string',
+      protocol: SIGNERS.SecureSigner,
+      singEndPoint: 'string',
+      jwt: 'string',
+      RecoverPkEndPoint: 'string',
     }));
     const response = await getSigner('whatever');
 
-    expect(cryptvaultSigner.CryptvaultSigner).toHaveBeenCalledTimes(1);
-    expect(response).toEqual((cryptvaultSigner as any).__cryptvaultSignerInstance__);
+    expect(secureSigner.SecureSigner).toHaveBeenCalledTimes(1);
+    expect(response).toEqual((secureSigner as any).__secureSignerInstance__);
 
   });
 });
