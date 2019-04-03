@@ -3,7 +3,7 @@ import { IEthereumProviderModel } from '../../models/ethereum';
 import { SIGNERS } from '../../types';
 import { error } from '../../utils/error';
 import logger from '../../utils/logger';
-import { CryptvaultSigner } from './cryptvaultSigner';
+import { SecureSigner } from './secureSigner';
 import { hancockCantFetchProviderError, hancockProviderNotFoundError, ISigner } from './model';
 import { Signer } from './signer';
 
@@ -27,15 +27,15 @@ export async function getSigner(provider: string): Promise<ISigner> {
 
     let signer: ISigner;
 
-    switch (providerModel.className) {
+    switch (providerModel.protocol) {
 
-      case SIGNERS.CryptvaultSigner:
-        signer = new CryptvaultSigner(providerModel.endpoint);
+      case SIGNERS.SecureSigner:
+        signer = new SecureSigner(providerModel);
         break;
 
       case SIGNERS.Signer:
       default:
-        signer = new Signer(providerModel.endpoint);
+        signer = new Signer(providerModel);
 
     }
 

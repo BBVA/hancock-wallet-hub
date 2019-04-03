@@ -1,6 +1,6 @@
 enum SIGNERS {
   Signer = 'Signer',
-  CryptvaultSigner = 'CryptvaultSigner',
+  SecureSigner = 'SecureSigner',
 }
 
 export { SIGNERS };

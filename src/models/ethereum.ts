@@ -13,9 +13,11 @@ export interface IEthereumContractModel {
 }
 
 export interface IEthereumProviderModel {
-  alias: string;
-  className: string;
-  endpoint: string;
+  providerName: string;
+  protocol: string;
+  singEndPoint: string;
+  jwt: string;
+  RecoverPkEndPoint: string;
 }
 
 export interface IEthereumRawTransaction extends IRawTransaction {

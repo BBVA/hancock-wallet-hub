@@ -23,13 +23,13 @@ import {
 } from './model';
 import { Signer } from './signer';
 
-export class CryptvaultSigner extends Signer {
+export class SecureSigner extends Signer {
 
   public async signTx(rawTx: IRawTransaction, requestId: string): Promise<IApiSignTxResponse> {
 
     const token: string = this.getToken(requestId);
 
-    const walletEndpoint: string = config.cryptvault.api.getByAddressEndpoint.replace(':address', rawTx.from);
+    const walletEndpoint: string = this.endpoint.RecoverPkEndPoint.replace(':address', rawTx.from);
     let walletResponse: ICryptoVaultWalletResponse;
 
     try {
@@ -69,7 +69,7 @@ export class CryptvaultSigner extends Signer {
 
         itemJson = CryptoUtils.aesGCMEncrypt(JSON.stringify(data), iv, aad, itemKey);
         itemEncKey = CryptoUtils.encryptRSA(walletResponse.data.public_key, itemKey);
-        signEndpoint = config.cryptvault.api.signEndpoint.replace(':address', rawTx.from);
+        signEndpoint = this.endpoint.singEndPoint.replace(':address', rawTx.from);
 
       } catch (e) {
 
