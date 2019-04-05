@@ -9,10 +9,8 @@ try {
     let res = [
       collection.drop(),
       collection.createIndex({ 'name': 1 }),
-      collection.insert({ "alias": "fake-provider-local", "endpoint": "http://hancock_sign_provider:3000/ethereum/sign-tx", "className": "Signer" }),
-      collection.insert({ "alias": "fake-provider-develop", "endpoint": "http://hancock_sign_provider:3000/ethereum/sign-tx", "className": "Signer" }),
-      collection.insert({ "alias": "fake-provider-demo", "endpoint": "http://hancock_sign_provider:3000/ethereum/sign-tx", "className": "Signer" }),
-      collection.insert({ "alias": "cryptvault", "className": "CryptvaultSigner" }),
+      collection.insert({ "providerName": "singleProvider", "protocol": "single", "singEndPoint": "https://kong-cryptvault-develop.kickstartteam.es/v1/wallets/:address/sign", "jwt": "", "recoverPkEndPoint": "" }),
+      collection.insert({ "providerName": "secureProvider", "protocol": "secure", "singEndPoint": "http://hancock_sign_provider:3000/ethereum/sign-tx", "jwt": "", "recoverPkEndPoint": "https://kong-cryptvault-develop.kickstartteam.es:443/v1/wallets/:address" }),
     ];
 
     printjson(res);

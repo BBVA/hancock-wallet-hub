@@ -1,10 +1,10 @@
 import 'jest';
 import * as ethereumDb from '../../../db/ethereum';
-import { SIGNERS } from '../../../types';
+import {PROTOCOLS} from '../../../types';
 import * as db from '../../../utils/db';
 import * as secureSigner from '../secureSigner';
 import * as signer from '../signer';
-import { getSigner } from '../signerFactory';
+import {getSigner} from '../signerFactory';
 
 jest.mock('../../../utils/config');
 jest.mock('../../../utils/db');
@@ -50,10 +50,10 @@ describe('getSigner', async () => {
 
     (ethereumDb as any).getProviderByAlias = jest.fn().mockResolvedValue(Promise.resolve({
       providerName: 'string',
-      protocol: SIGNERS.SecureSigner,
+      protocol: PROTOCOLS.SECURE,
       singEndPoint: 'string',
       jwt: 'string',
-      RecoverPkEndPoint: 'string',
+      recoverPkEndPoint: 'string',
     }));
     const response = await getSigner('whatever');
 

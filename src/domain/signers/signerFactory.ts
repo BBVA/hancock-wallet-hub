@@ -1,11 +1,12 @@
 import * as db from '../../db/ethereum';
-import { IEthereumProviderModel } from '../../models/ethereum';
-import { SIGNERS } from '../../types';
-import { error } from '../../utils/error';
+import {IEthereumProviderModel} from '../../models/ethereum';
+import {PROTOCOLS} from '../../types';
+import {error} from '../../utils/error';
 import logger from '../../utils/logger';
-import { SecureSigner } from './secureSigner';
-import { hancockCantFetchProviderError, hancockProviderNotFoundError, ISigner } from './model';
-import { Signer } from './signer';
+import {hancockCantFetchProviderError, hancockProviderNotFoundError, ISigner} from './model';
+import {SecureSigner} from './secureSigner';
+
+import {Signer} from './signer';
 
 export async function getSigner(provider: string): Promise<ISigner> {
 
@@ -29,11 +30,11 @@ export async function getSigner(provider: string): Promise<ISigner> {
 
     switch (providerModel.protocol) {
 
-      case SIGNERS.SecureSigner:
+      case PROTOCOLS.SECURE:
         signer = new SecureSigner(providerModel);
         break;
 
-      case SIGNERS.Signer:
+      case PROTOCOLS.SINGLE:
       default:
         signer = new Signer(providerModel);
 

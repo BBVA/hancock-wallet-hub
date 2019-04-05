@@ -1,3 +1,4 @@
+import {PROTOCOLS} from '../types';
 import {dltAddress, IRawTransaction} from './general';
 
 export type ethContractAddress = string;
@@ -14,10 +15,10 @@ export interface IEthereumContractModel {
 
 export interface IEthereumProviderModel {
   providerName: string;
-  protocol: string;
+  protocol: PROTOCOLS;
   singEndPoint: string;
   jwt: string;
-  RecoverPkEndPoint: string;
+  recoverPkEndPoint: string;
 }
 
 export interface IEthereumRawTransaction extends IRawTransaction {
@@ -102,4 +103,10 @@ export interface ISendHashCallbackBody {
 export interface ISendReceiptCallbackBody {
   kind: string;
   txReceipt: IEthTransactionReceiptBody;
+}
+
+// Provider model
+
+export interface IApiProviderResponse {
+  success: boolean;
 }

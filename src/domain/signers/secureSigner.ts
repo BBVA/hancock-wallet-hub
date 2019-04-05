@@ -1,18 +1,12 @@
 import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
-import { ISymmetricEncData, symmetricKey } from '../../models/crypto';
-import {
-  ICryptoVaultDataToSign,
-  ICryptoVaultSignResponse,
-  ICryptoVaultWalletResponse,
-} from '../../models/cryptvault';
-import {
-  IApiSignTxResponse,
-} from '../../models/ethereum';
-import { IRawTransaction } from '../../models/general';
+import {ISymmetricEncData, symmetricKey} from '../../models/crypto';
+import {ICryptoVaultDataToSign, ICryptoVaultSignResponse, ICryptoVaultWalletResponse,} from '../../models/cryptvault';
+import {IApiSignTxResponse,} from '../../models/ethereum';
+import {IRawTransaction} from '../../models/general';
 import config from '../../utils/config';
-import { CryptoUtils } from '../../utils/crypto';
-import { error } from '../../utils/error';
+import {CryptoUtils} from '../../utils/crypto';
+import {error} from '../../utils/error';
 import logger from '../../utils/logger';
 import {
   hancockCypherProviderMessagePayloadError,
@@ -21,7 +15,7 @@ import {
   hancockSignTxProviderError,
   hancockSignTxProviderResponseError,
 } from './model';
-import { Signer } from './signer';
+import {Signer} from './signer';
 
 export class SecureSigner extends Signer {
 
@@ -29,7 +23,7 @@ export class SecureSigner extends Signer {
 
     const token: string = this.getToken(requestId);
 
-    const walletEndpoint: string = this.endpoint.RecoverPkEndPoint.replace(':address', rawTx.from);
+    const walletEndpoint: string = this.endpoint.recoverPkEndPoint.replace(':address', rawTx.from);
     let walletResponse: ICryptoVaultWalletResponse;
 
     try {

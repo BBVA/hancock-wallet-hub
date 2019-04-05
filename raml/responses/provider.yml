@@ -1,0 +1,13 @@
+200:
+  description: Success dlt write response
+  body:
+    application/json:
+      type: IApiSendSignedTxResponse
+      example: |
+        {
+          "success": true
+        }
+400: 
+  description: Bad Request
+504:
+  description: Gateway Time-out

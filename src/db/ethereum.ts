@@ -1,5 +1,5 @@
-import { Collection, Db } from 'mongodb';
-import { IEthereumContractModel, IEthereumProviderModel } from '../models/ethereum';
+import {Collection, Db, InsertOneWriteOpResult} from 'mongodb';
+import {IEthereumContractModel, IEthereumProviderModel} from '../models/ethereum';
 import config from '../utils/config';
 import * as db from '../utils/db';
 
@@ -14,13 +14,22 @@ export async function getProviderByAlias(alias: string): Promise<IEthereumProvid
 
   const coll = await _getCollection(config.db.ethereum.collections.providers);
 
-  const provider = coll
-    .findOne({
+  return coll.findOne({
       alias,
     });
 
-  return provider;
+}
 
+export async function createProvider(provider: IEthereumProviderModel): Promise<boolean> {
+
+  const coll = await _getCollection(config.db.ethereum.collections.providers);
+
+  const result: InsertOneWriteOpResult = await coll.insertOne(provider);
+
+  if (result.insertedCount > 0) {
+    return true;
+  }
+  return false;
 }
 
 export async function getContractByAddress(address: string): Promise<IEthereumContractModel | null> {

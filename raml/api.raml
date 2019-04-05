@@ -67,3 +67,15 @@ securitySchemes:
   
       description: !include docs/eth/send-signed-tx.md
       responses: !include responses/eth/send-signed-tx.yml
+  /providers
+    description: |
+      Add new provider.
+    post:
+      securedBy: [ oauth_2_0 ]
+      body:
+        application/json:
+          type: !include schemas/provider.json
+          example: !include examples/provider.example
+
+      description: !include docs/provider.md
+      responses: !include responses/provider.yml

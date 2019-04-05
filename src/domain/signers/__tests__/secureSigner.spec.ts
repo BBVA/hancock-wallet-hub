@@ -1,7 +1,7 @@
 import 'jest';
 import * as request from 'request-promise-native';
-import { SecureSigner } from '../secureSigner';
-import { SIGNERS } from '../../../types';
+import {SecureSigner} from '../secureSigner';
+import {PROTOCOLS} from '../../../types';
 
 jest.mock('../../../utils/logger');
 jest.mock('../../../utils/crypto');
@@ -36,11 +36,11 @@ describe('SecureSigner', () => {
     };
     requestSigner = {
       providerName: 'string',
-      protocol: SIGNERS.SecureSigner,
+      protocol: PROTOCOLS.SECURE,
       singEndPoint: 'string',
       jwt: 'string',
-      RecoverPkEndPoint: 'string',
-    }
+      recoverPkEndPoint: 'string',
+    };
 
     testSigner = new SecureSigner(requestSigner);
 
