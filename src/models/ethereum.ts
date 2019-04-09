@@ -13,11 +13,17 @@ export interface IEthereumContractModel {
   abi: any[];
 }
 
+export interface IJwtModel {
+  key: string;
+  secret: string;
+  expires_in: string;
+}
+
 export interface IEthereumProviderModel {
   providerName: string;
   protocol: PROTOCOLS;
   singEndPoint: string;
-  jwt: string;
+  jwt: IJwtModel;
   recoverPkEndPoint: string;
 }
 
