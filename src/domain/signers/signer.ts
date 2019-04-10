@@ -1,19 +1,19 @@
 import * as request from 'request-promise-native';
 import {
   IApiSignTxProviderRequest,
-  IApiSignTxProviderResponse,
   IApiSignTxResponse,
+  IEthereumProviderModel,
   IEthereumRawTransaction,
 } from '../../models/ethereum';
 import config from '../../utils/config';
-import { error } from '../../utils/error';
-import { hancockSignTxProviderError, ISigner } from './model';
+import {error} from '../../utils/error';
+import {hancockSignTxProviderError, ISigner} from './model';
 
 const hancockHeaderRequest = config.headers.hancockRequest;
 
 export class Signer implements ISigner {
 
-  constructor(protected endpoint: string) {
+  constructor(protected endpoint: IEthereumProviderModel) {
   }
 
   public async signTx(rawTx: IEthereumRawTransaction, requestId: string): Promise<IApiSignTxResponse> {
@@ -31,16 +31,14 @@ export class Signer implements ISigner {
 
     try {
 
-      const response: IApiSignTxProviderResponse = await request.post(
-        this.endpoint,
+      return await request.post(
+        this.endpoint.singEndPoint,
         {
           body,
           json: true,
           headers,
         },
       );
-
-      return response;
 
     } catch (e) {
 

@@ -1,6 +1,7 @@
 import 'jest';
 import * as request from 'request-promise-native';
-import { CryptvaultSigner } from '../cryptvaultSigner';
+import {SecureSigner} from '../secureSigner';
+import {PROTOCOLS} from '../../../types';
 
 jest.mock('../../../utils/logger');
 jest.mock('../../../utils/crypto');
@@ -9,9 +10,10 @@ jest.mock('request-promise-native');
 jest.mock('jsonwebtoken');
 jest.mock('uuid');
 
-describe('CryptvaultSigner', () => {
+describe('SecureSigner', () => {
 
   let testSigner: any;
+  let requestSigner: any;
   let tx: any;
   let response: any;
   let response2: any;
@@ -32,7 +34,15 @@ describe('CryptvaultSigner', () => {
       transactionIndex: 1,
       value: '0',
     };
-    testSigner = new CryptvaultSigner('test');
+    requestSigner = {
+      providerName: 'string',
+      protocol: PROTOCOLS.SECURE,
+      singEndPoint: 'string',
+      jwt: 'string',
+      recoverPkEndPoint: 'string',
+    };
+
+    testSigner = new SecureSigner(requestSigner);
 
     response2 = {
       data: {
@@ -61,7 +71,7 @@ describe('CryptvaultSigner', () => {
     jest.restoreAllMocks();
 
     getTokenspy = jest
-      .spyOn((CryptvaultSigner.prototype as any), 'getToken')
+      .spyOn((SecureSigner.prototype as any), 'getToken')
       .mockImplementation(() => Promise.resolve('whatever'));
 
   });

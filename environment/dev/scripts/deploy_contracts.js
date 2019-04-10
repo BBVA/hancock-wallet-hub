@@ -34,17 +34,17 @@ web3.eth
       })
       .on('transactionHash', function (transactionHash) {
 
-        console.log('tx hash => ' + transactionHash) // tx hash  
+        console.log('tx hash => ' + transactionHash); // tx hash
       })
       .on('receipt', function (receipt) {
 
-        console.log('address => ' + receipt.contractAddress) // contains the new contract address
+        console.log('address => ' + receipt.contractAddress); // contains the new contract address
 
       })
       // .on('confirmation', function(confirmationNumber, receipt){ ... })
       .then(function (newContractInstance) {
 
-        console.log('new instasnce => ' + newContractInstance.options.address) // instance with the new contract address
+        console.log('new instasnce => ' + newContractInstance.options.address); // instance with the new contract address
         process.exit();
 
       });

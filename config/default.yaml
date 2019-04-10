@@ -38,6 +38,7 @@ app:
     sendTxResource: '/send-tx'    
     sendSignedTxResource: '/send-signed-tx'
     signedTxHookResource: '/signed-tx-hook'
+    providersResource: '/providers'
   logger:
     logLevel: debug
   headers:

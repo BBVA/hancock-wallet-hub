@@ -1,0 +1,7 @@
+{
+  "providerName": "singleProvider",
+  "protocol": "single",
+  "singEndPoint": "http://localhost:3000/ethereum/sign-tx",
+  "jwt": "",
+  "recoverPkEndPoint": ""
+}
