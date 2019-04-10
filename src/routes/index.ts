@@ -1,13 +1,14 @@
 import {Router} from 'express';
 import config from '../utils/config';
 
+import {validate} from 'express-jsonschema';
+import {readFileSync} from 'fs';
+import * as path from 'path';
 import {errorController} from '../controllers/error';
 import {fallbackController} from '../controllers/fallback';
 import {healthCheckController} from '../controllers/healthcheck';
 import {jsonSchemaError} from '../controllers/jsonSchemaError';
-import * as path from 'path';
-import {readFileSync} from 'fs';
-import {validate} from 'express-jsonschema';
+
 import {createProvider} from '../controllers/provider';
 
 export const appRouter = Router();

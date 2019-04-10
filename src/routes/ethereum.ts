@@ -15,4 +15,3 @@ router
   .post(config.api.signTxResource, validate({ body: signTxSchema }), signTxController)
   .post(config.api.sendTxResource, validate({ body: sendTxSchema }), sendTxController)
   .post(config.api.sendSignedTxResource, validate({ body: sendSignedTxSchema }), sendSignedTxController);
-

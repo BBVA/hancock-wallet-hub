@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
 import {ISymmetricEncData, symmetricKey} from '../../models/crypto';
-import {ICryptoVaultDataToSign, ICryptoVaultSignResponse, ICryptoVaultWalletResponse,} from '../../models/cryptvault';
-import {IApiSignTxResponse,} from '../../models/ethereum';
+import {ICryptoVaultDataToSign, ICryptoVaultSignResponse, ICryptoVaultWalletResponse} from '../../models/cryptvault';
+import {IApiSignTxResponse} from '../../models/ethereum';
 import {IRawTransaction} from '../../models/general';
 import config from '../../utils/config';
 import {CryptoUtils} from '../../utils/crypto';
