@@ -10,12 +10,12 @@ export const _getCollection = async (collection: string): Promise<Collection> =>
   return await db.getDb(database).then((client: Db) => client.collection(collection));
  };
 
-export async function getProviderByAlias(alias: string): Promise<IEthereumProviderModel | null> {
+export async function getProviderByAlias(providerName: string): Promise<IEthereumProviderModel | null> {
 
   const coll = await _getCollection(config.db.ethereum.collections.providers);
 
   return coll.findOne({
-      alias,
+      providerName,
     });
 
 }
