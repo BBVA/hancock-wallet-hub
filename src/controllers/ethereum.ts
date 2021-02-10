@@ -44,8 +44,10 @@ export async function sendSignedTxController(req: Request, res: Response, next: 
     requestId: req.headers[hancockHeaderRequest],
   };
 
+  const asyncCall: boolean = (req.body.async === null || req.body.async === undefined || req.body.async);
+
   return domain
-    .sendSignedTx(sendSignedTxParams)
+    .sendSignedTx(sendSignedTxParams, asyncCall)
     .then((response: IApiSendSignedTxResponse) => res.send(response))
     .catch(next);
 

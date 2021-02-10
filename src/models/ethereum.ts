@@ -81,7 +81,11 @@ export interface IApiSendSignedTxDomainParams {
 
 export interface IApiSendSignedTxResponse {
   success: boolean;
-  transactionHash: string;
+  transactionId: string;
+  blockHash?: ethBlockHash;
+  blockNumber?: number;
+  contractAddress?: ethContractAddress;
+  status: string;
 }
 
 // DLT
