@@ -1,3 +1,4 @@
+import {PROTOCOLS} from '../types';
 import {dltAddress, IRawTransaction} from './general';
 
 export type ethContractAddress = string;
@@ -12,10 +13,18 @@ export interface IEthereumContractModel {
   abi: any[];
 }
 
+export interface IJwtModel {
+  key: string;
+  secret: string;
+  expires_in: string;
+}
+
 export interface IEthereumProviderModel {
-  alias: string;
-  className: string;
-  endpoint: string;
+  providerName: string;
+  protocol: PROTOCOLS;
+  singEndPoint: string;
+  jwt: IJwtModel;
+  recoverPkEndPoint: string;
 }
 
 export interface IEthereumRawTransaction extends IRawTransaction {
@@ -72,7 +81,11 @@ export interface IApiSendSignedTxDomainParams {
 
 export interface IApiSendSignedTxResponse {
   success: boolean;
-  transactionHash: string;
+  transactionId: string;
+  blockHash?: ethBlockHash;
+  blockNumber?: number;
+  contractAddress?: ethContractAddress;
+  status: string;
 }
 
 // DLT
@@ -100,4 +113,10 @@ export interface ISendHashCallbackBody {
 export interface ISendReceiptCallbackBody {
   kind: string;
   txReceipt: IEthTransactionReceiptBody;
+}
+
+// Provider model
+
+export interface IApiProviderResponse {
+  success: boolean;
 }

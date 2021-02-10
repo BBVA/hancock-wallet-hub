@@ -1,10 +1,4 @@
-import {
-    sendSignedTxController,
-    sendTxController,
-    signTxController,
-  } from '../../controllers/ethereum';
-
-import {NextFunction, Request, Response, Router} from 'express';
+import {sendSignedTxController, sendTxController, signTxController} from '../../controllers/ethereum';
 
 import 'jest';
 import * as domain from '../../domain/ethereum';
@@ -43,7 +37,7 @@ describe('SignTxController', async () => {
 
     (domain.signTx as jest.Mock).mockImplementationOnce((args) => {
       return Promise.reject('Boom!');
-    })
+    });
 
     await signTxController(req, res, next);
     expect(next.mock.calls.length).toBe(1);
@@ -79,7 +73,7 @@ describe('SendTxController', async () => {
 
     (domain.sendTx as jest.Mock).mockImplementationOnce((args) => {
       return Promise.reject('Boom!');
-    })
+    });
 
     await sendTxController(req, res, next);
     expect(next.mock.calls.length).toBe(1);
@@ -116,11 +110,11 @@ describe('SendSignedTxController', async () => {
 
     (domain.sendSignedTx as jest.Mock).mockImplementationOnce((args) => {
       return Promise.reject('Boom!');
-    })
+    });
 
     await sendSignedTxController(req, res, next);
     expect(next.mock.calls.length).toBe(1);
-    expect(next.mock.calls).toEqual([['Boom!']])
+    expect(next.mock.calls).toEqual([['Boom!']]);
   });
 });
 

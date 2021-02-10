@@ -1,10 +1,7 @@
 import 'jest';
 import * as request from 'request-promise-native';
 import * as ethereumDomain from '../../domain/ethereum';
-import {
-  IApiSignTxDomainParams,
-  IEthereumRawTransaction,
-} from '../../models/ethereum';
+import {IApiSignTxDomainParams, IEthereumRawTransaction,} from '../../models/ethereum';
 import * as errorUtils from '../../utils/error';
 import * as ethereumUtils from '../../utils/ethereum';
 import {
@@ -331,7 +328,7 @@ describe('ethreumDomain', () => {
 
       try {
 
-        const result: string = await ethereumDomain._sendTxCallBack(rawTx, 'testUrl', 'testReqId');
+        await ethereumDomain._sendTxCallBack(rawTx, 'testUrl', 'testReqId');
         fail('it should fail');
 
       } catch (error) {

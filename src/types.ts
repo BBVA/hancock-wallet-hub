@@ -1,6 +1,11 @@
-enum SIGNERS {
+/*enum SIGNERS {
   Signer = 'Signer',
-  CryptvaultSigner = 'CryptvaultSigner',
+  SecureSigner = 'SecureSigner',
+}*/
+
+enum PROTOCOLS {
+  SINGLE = 'single',
+  SECURE = 'secure',
 }
 
-export { SIGNERS };
+export { /*SIGNERS,*/ PROTOCOLS };

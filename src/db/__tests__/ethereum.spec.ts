@@ -1,22 +1,14 @@
 import 'jest';
 
+import * as ethereumDb from '../../db/ethereum';
 import * as db from '../../utils/db';
 
-import * as ethereumDb from '../../db/ethereum';
-
-
-
 jest.mock('../../utils/config');
-
 jest.mock('../../utils/db');
-
+jest.mock('../../utils/logger');
 jest.mock('mongodb');
 
-
-
 describe('dbEthereum', async () => {
-
-
 
   it('::getCollection should return the mongodb collection successfully', async () => {
 
@@ -36,11 +28,7 @@ describe('dbEthereum', async () => {
 
   });
 
-
-
   describe('with contracts collection', async () => {
-
-
 
     let getColl: jest.Mock;
 
@@ -49,8 +37,6 @@ describe('dbEthereum', async () => {
     const collName: string = 'mockDatabaseCollectionContracts';
 
     const collProvider: string = 'mockDatabaseCollectionProviders';
-
-
 
     beforeAll(() => {
 
@@ -68,7 +54,6 @@ describe('dbEthereum', async () => {
 
     });
 
-
     it('::getContractByAddress should call getCollection and call dbClient.findOne with params', async () => {
 
       const mockedAddress: string = 'mockAddress';
@@ -81,8 +66,6 @@ describe('dbEthereum', async () => {
 
     });
 
-
-
     it('::getProviderByAlias should call getCollection and call dbClient.findOne with params', async () => {
 
       const mockedAlias: string = 'mockAlias';
@@ -91,7 +74,7 @@ describe('dbEthereum', async () => {
 
       expect(getColl).toHaveBeenCalledWith(collProvider);
 
-      expect(coll.findOne).toHaveBeenCalledWith({ alias: mockedAlias });
+      expect(coll.findOne).toHaveBeenCalledWith({ providerName: mockedAlias });
 
     });
 
