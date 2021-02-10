@@ -1,18 +1,12 @@
 import * as jwt from 'jsonwebtoken';
 import * as request from 'request-promise-native';
-import { ISymmetricEncData, symmetricKey } from '../../models/crypto';
-import {
-  ICryptoVaultDataToSign,
-  ICryptoVaultSignResponse,
-  ICryptoVaultWalletResponse,
-} from '../../models/cryptvault';
-import {
-  IApiSignTxResponse,
-} from '../../models/ethereum';
-import { IRawTransaction } from '../../models/general';
+import {ISymmetricEncData, symmetricKey} from '../../models/crypto';
+import {ICryptoVaultDataToSign, ICryptoVaultSignResponse, ICryptoVaultWalletResponse} from '../../models/cryptvault';
+import {IApiSignTxResponse} from '../../models/ethereum';
+import {IRawTransaction} from '../../models/general';
 import config from '../../utils/config';
-import { CryptoUtils } from '../../utils/crypto';
-import { error } from '../../utils/error';
+import {CryptoUtils} from '../../utils/crypto';
+import {error} from '../../utils/error';
 import logger from '../../utils/logger';
 import {
   hancockCypherProviderMessagePayloadError,
@@ -21,15 +15,15 @@ import {
   hancockSignTxProviderError,
   hancockSignTxProviderResponseError,
 } from './model';
-import { Signer } from './signer';
+import {Signer} from './signer';
 
-export class CryptvaultSigner extends Signer {
+export class SecureSigner extends Signer {
 
   public async signTx(rawTx: IRawTransaction, requestId: string): Promise<IApiSignTxResponse> {
 
     const token: string = this.getToken(requestId);
 
-    const walletEndpoint: string = config.cryptvault.api.getByAddressEndpoint.replace(':address', rawTx.from);
+    const walletEndpoint: string = this.endpoint.recoverPkEndPoint.replace(':address', rawTx.from);
     let walletResponse: ICryptoVaultWalletResponse;
 
     try {
@@ -69,7 +63,7 @@ export class CryptvaultSigner extends Signer {
 
         itemJson = CryptoUtils.aesGCMEncrypt(JSON.stringify(data), iv, aad, itemKey);
         itemEncKey = CryptoUtils.encryptRSA(walletResponse.data.public_key, itemKey);
-        signEndpoint = config.cryptvault.api.signEndpoint.replace(':address', rawTx.from);
+        signEndpoint = this.endpoint.singEndPoint.replace(':address', rawTx.from);
 
       } catch (e) {
 

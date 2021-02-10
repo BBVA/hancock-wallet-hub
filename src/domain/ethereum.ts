@@ -93,7 +93,7 @@ export async function sendTx(rawTx: IEthereumRawTransaction): Promise<IApiSendTx
 
 }
 
-export async function sendSignedTx(params: IApiSendSignedTxDomainParams): Promise<IApiSendSignedTxResponse> {
+export async function sendSignedTx(params: IApiSendSignedTxDomainParams, async: boolean = true): Promise<IApiSendSignedTxResponse> {
 
   let web3: any;
 
@@ -130,7 +130,10 @@ export async function sendSignedTx(params: IApiSendSignedTxDomainParams): Promis
 
         }
         logger.info(`tx has been sent in the DLT => ${transactionHash}`);
-        resolve({ success: true, transactionHash });
+
+        if(async) {
+          resolve({ success: true, status: 'pending', transactionHash });
+        }
 
       })
       .on('error', (e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)))
@@ -156,6 +159,16 @@ export async function sendSignedTx(params: IApiSendSignedTxDomainParams): Promis
 
         logger.info(`tx has been mined in the DLT => ${txReceipt.transactionHash}`);
 
+        if(!async) {
+          resolve({
+            success: true,
+            transactionHash: txReceipt.transactionId,
+            blockHash: txReceipt.blockHash,
+            blockNumber: txReceipt.blockNumber,
+            contractAddress: txReceipt.contractAddress,
+            status: txReceipt.status,
+          });
+        }
       })
       .catch((e: Error) => reject(error(hancockEthereumSendSignedTransactionError, e)));
   });

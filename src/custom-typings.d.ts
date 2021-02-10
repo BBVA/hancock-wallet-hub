@@ -8,7 +8,7 @@ declare module 'express-jsonschema' {
   export interface JsonSchemaError extends Error {
     validations: {
       body: JsonSchemaValidation[];
-    }
+    };
   }
 }
 

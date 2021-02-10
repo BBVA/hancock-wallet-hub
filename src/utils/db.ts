@@ -1,5 +1,5 @@
 import * as mongodb from 'mongodb';
-import { Db } from 'mongodb';
+import {Db} from 'mongodb';
 import config from './config';
 import logger from './logger';
 
@@ -40,7 +40,7 @@ export const connect = async (): Promise<Db> => {
 
     })
     .catch((err: any) => {
-
+      logger.debug('Error conecting with mongo', err);
       throw new Error('Error conecting with mongo ' + err);
 
     });

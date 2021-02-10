@@ -6,6 +6,7 @@ const mock = {
     sendTxResource: '/send-tx',
     sendSignedTxResource: '/send-signed-tx',
     signedTxHookResource: '/signed-tx-hook',
+    providersResource: '/providers',
   },
   cryptvault: {
     api: {
@@ -23,7 +24,7 @@ const mock = {
     ethereum: {
       protocol: 'http',
       host: 'mockHost',
-      port: 'mockPort'
+      port: 'mockPort',
     },
   },
   db: {
